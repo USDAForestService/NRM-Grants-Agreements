@@ -1,0 +1,2 @@
+# .github
+default-community-health
