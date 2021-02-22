@@ -1,0 +1,8 @@
+---
+applications:
+- name: nrm-fs
+  services:
+  - fs-nrm-db
+  buildpacks:
+    - python_buildpack
+  memory: 256M
