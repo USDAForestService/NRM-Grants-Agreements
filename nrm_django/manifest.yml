@@ -1,6 +1,6 @@
 ---
 applications:
-- name: nrm-fs
+- name: fs-nrm
   services:
   - fs-nrm-db
   buildpacks:
