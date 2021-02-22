@@ -10,14 +10,10 @@ assignees: ''
 **Background**
 
 
-**Acceptance criteria** 
+**We'll know we're done when...**
 - [ ] 
 - [ ] 
 
 **Tasks**
 - [ ] 
-- [ ] 
-
-**Definition of done**
-- [ ]  
 - [ ]
