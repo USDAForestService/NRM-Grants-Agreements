@@ -1,3 +1,4 @@
+{% load static %}
 <footer class="usa-footer">
     <div class="grid-container usa-footer__return-to-top">
       <a href="#">Return to top</a>
@@ -29,7 +30,7 @@
         <div class="grid-row grid-gap">
           <div class="usa-footer__logo grid-row mobile-lg:grid-col-6 mobile-lg:grid-gap-2">
             <div class="mobile-lg:grid-col-auto">
-              <img class="usa-footer__logo-img" src="../../dist/img/logo-img.png" alt="">
+              <img class="usa-footer__logo-img" src="{% static 'vendor/uswds-2.10.1/img/logo-img.png' %}" alt="">
             </div>
             <div class="mobile-lg:grid-col-auto">
               <p class="usa-footer__logo-heading">Name of Agency</p>
