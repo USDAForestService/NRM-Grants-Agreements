@@ -16,3 +16,5 @@ The focal point for an 18F/TTS project with the United States Forest Service on 
 
 ## Local development
 We use pipenv to sandbox our prototypes. If you've developed with pipenv before, you should be able to `pipenv install django` and be up and running locally. If you haven't, then [this may be a useful starter guide](https://djangoforbeginners.com/initial-setup/).
+
+Locally, you can run the basic [Django runserver](https://docs.djangoproject.com/en/3.1/ref/django-admin/#runserver). You will need to run `python manage.py migrate` to intialize a local sqlite db.
