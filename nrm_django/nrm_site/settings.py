@@ -29,7 +29,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-   'fs-nrm.app.cloud.gov'
+    '127.0.0.1',
+    'fs-nrm.app.cloud.gov'
 ]
 
 
@@ -120,5 +121,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = '/static/'
+
+# For testing purposes, I'm putting static in the app, so per the docs
+# we don't need STATICFILES_DIRS. However, given that the static assets
+# are site-wide, it would make more sense to have them in nrm_site.
+# So I'm leaving this here as a potential TO-DO, knowing that we'll need 
+# to figure out the cloud path and resolve that. -- tcb
+#STATICFILES_DIRS = [
+#    BASE_DIR / "static",
+#    '/var/www/static/',
+#]
