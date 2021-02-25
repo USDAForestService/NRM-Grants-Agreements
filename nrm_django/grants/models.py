@@ -120,3 +120,37 @@ class Grant(models.Model):
         return self.proj_title
     
     #TO-DO: Write save to write GID from Application ID
+
+
+class GrantAuthority(models.Model):
+    grant_cn = models.CharField(max_length=34, primary_key=True)
+    authority_cd = models.CharField(max_length=40)
+    authority_desc = models.CharField('Authority Description', max_length=120, blank=True, null=True)
+    last_update = models.DateField()
+
+    class Meta:
+        managed = False
+        db_table = 'ii_ga_authorities'
+        verbose_name_plural = "Grant authorities"
+
+
+class Note(models.Model):
+    cn = models.CharField(primary_key=True, max_length=34)
+    grant_cn = models.CharField(max_length=34)
+    note_by = models.CharField(max_length=30)
+    note_date = models.DateField()
+    comments = models.CharField(max_length=2000)
+    created_by = models.CharField(max_length=30)
+    created_date = models.DateField()
+    created_in_instance = models.DecimalField(max_digits=6, decimal_places=0)
+    modified_by = models.CharField(max_length=30, blank=True, null=True)
+    modified_date = models.DateField(blank=True, null=True)
+    modified_in_instance = models.DecimalField(max_digits=6, decimal_places=0, blank=True, null=True)
+    note_type = models.CharField(max_length=50, blank=True, null=True)
+    email_to = models.CharField(max_length=500, blank=True, null=True)
+    email_date = models.DateField(blank=True, null=True)
+    last_update = models.DateField()
+
+    class Meta:
+        managed = False
+        db_table = 'ii_ga_notes'

@@ -1,13 +1,13 @@
 from django.contrib import admin
 
-from .models import Grant
+from .models import Grant, GrantAuthority, Note
 
 class GrantAdmin(admin.ModelAdmin):
     list_display = ('proj_title', 'application_id', 'application_type', 'status', 'app_submit_date', 'app_received_date', 'proposed_start_date')
     list_filter = ('status',)
     readonly_fields = ['created_date', 'created_in_instance', 'modified_date', "status_date"]
     search_fields = ['proj_title', 'proj_desc', 'application_id']
-    list_editable = ['status',]
+    #list_editable = ['status',]
     fieldsets = (
         ('Project info', {
             'fields': (
@@ -91,3 +91,5 @@ class GrantAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Grant, GrantAdmin)
+admin.site.register(GrantAuthority)
+admin.site.register(Note)
