@@ -12,7 +12,8 @@ Using a SQL client, export a single G&A table as a TSV file.
 
 The open-source (SQLWorkbench/J)[https://www.sql-workbench.eu/] is java-based
 and can be run most anywhere, on GSA and Forest Service laptops. It can create
-compressed TSV exports of tables using a command `WbExport`:
+compressed TSV exports of tables using a command `WbExport` (change the path
+of the file to match your user and operating system):
 
 ```
 WbExport -type=text -compress
@@ -21,10 +22,10 @@ WbExport -type=text -compress
 -schema='NRM_GA';
 ```
 
-The Oracle PL/SQL Developer is available in NRM's Citrix environment and can
-also create TSV exports by running the SQL command `SELECT * FROM
-NRM_GA.II_GA_NOTES` and then clicking on the `Export Query Results...` button
-and selecting `TSV`.
+The Oracle PL/SQL Developer application is available in NRM's Citrix
+environment and can also create TSV exports by running the SQL command `SELECT
+* FROM NRM_GA.II_GA_NOTES` and then clicking on the `Export Query Results...`
+button and selecting `TSV`.
 
 ## Export a DDL for the Oracle Table
 
@@ -56,10 +57,13 @@ header. Remove the first line of the file
 tail -n +2 notes.tsv > notes_no_header.tsv
 ```
 
-Get the edited DDL script and TSV data file onto a computer that has access
-to cloud.gov and the `connect-to-service` Cloudflare plugin. Run `cf
-connect-to-service APP_NAME SERVICE_NAME` to get a `psql` session connected to
-the Postgres database. Create the table by running the SQL script:
+Get the edited DDL script and TSV data file onto a computer that has access to
+cloud.gov and the `connect-to-service` (CloudFoundry
+plugin)[https://github.com/cloud-gov/cf-service-connect]. Run `cf
+connect-to-service fs-nrm fs-nrm-db` to get a `psql` session connected to the
+Postgres database (where `fs-nrm` is the name of the Cloud.gov app and
+`fs-nrm-db` is the name of the database service). Create the table by running
+the SQL script inside of `psql`:
 
 ```
 \i notes.create.sql
