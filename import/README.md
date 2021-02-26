@@ -78,3 +78,18 @@ directory as examples of how to make Postgres-compatible versions of Oracle
 tables.  These aren't guaranteed to be up-to-date as we improve the fidelity
 of our processes for importing matching data structures, but we intend them to
 be good examples.
+
+
+## Using the imported data
+
+Once you have the tables populated in the database, you can run Django's [inspectdb command](https://docs.djangoproject.com/en/3.1/ref/django-admin/#django-admin-inspectdb) to build a draft version of your models. A few things to note:
+
+1. In most cases, `inspectdb` will not understand ForeignKeys and other relationships between tables. You will have to change those yourself, and you may need to migrate afterward.
+2. In most cases `inspectdb` will specify `db_table` in the generated models' Meta information. When working with legacy databases, this is very helpful and allows you to rename the model to improve readability in the admin while using the original database table names. Similarly, verbose name option on individual fields can be useful for improving readability.
+3. By default, inspectdb creates unmanaged models. That is, `managed = False` in the model’s Meta class tells Django not to manage each table’s creation, modification, and deletion. If you do want to allow Django to manage the table’s lifecycle, you’ll need to change the managed option to True (or remove it because True is its default value).
+
+You can copy and paste the results of `inspectdb` into your models by hand, or, if you prefer,  output it straight to a file: `python manage.py inspectdb > models.py`.
+
+When your models are created, you will also have to go through the usual Django steps of adding them to `INSTALLED_APPS` in the site settings and [making them editable in the admin](https://docs.djangoproject.com/en/3.1/intro/tutorial02/#make-the-poll-app-modifiable-in-the-admin).
+
+
