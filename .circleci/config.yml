@@ -48,6 +48,12 @@ jobs:
           working_directory: ~/project/nrm_django
           command: |
             pipenv run flake8 --exclude .venv
+      - run:
+          name: Run black to verify code auto-formatting
+          working_directory: ~/project/nrm_django
+          command: |
+            pipenv run black --check --diff .
+
 
 workflows:
   version: 2
