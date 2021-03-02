@@ -5,12 +5,14 @@
 install-python-dependencies: &install-python-dependencies
   run:
     name: Install python dependencies
+    working_directory: ~/project/nrm_django
     command: |
       pipenv install
 
 install-python-dev-dependencies: &install-python-dev-dependencies
   run:
     name: Install python dependencies
+    working_directory: ~/project/nrm_django
     command: |
       pipenv install --dev
 
