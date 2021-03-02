@@ -1,7 +1,7 @@
 import dj_database_url
 import os
 
-from .base import *
+from .base import *  # noqa
 
 
 # Cloud.gov DB connection
