@@ -47,7 +47,7 @@ jobs:
           name: Run flake8 test for Python code style
           working_directory: ~/project/nrm_django
           command: |
-            pipenv run flake8
+            pipenv run flake8 --exclude .venv
 
 workflows:
   version: 2
