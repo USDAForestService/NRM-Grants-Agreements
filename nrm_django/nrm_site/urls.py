@@ -19,6 +19,6 @@ from django.urls import path
 from nrm_app.views import HomePageView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', HomePageView.as_view(), name='home'),
+    path("admin/", admin.site.urls),
+    path("", HomePageView.as_view(), name="home"),
 ]
