@@ -31,12 +31,12 @@ jobs:
       - run:
           name: Create the database
           working_directory: ~/project/nrm_django
-          command: pipenv run python manage.py migrate
+          command: pipenv run python manage.py migrate --settings=nrm_site.settings.test
       - run:
           name: Run unit tests & check coverage
           working_directory: ~/project/nrm_django
           command: |
-            pipenv run coverage run --source='nrm_app' python manage.py test --settings=nrm_site.settings.base nrm_app
+            pipenv run coverage run --source='nrm_app' python manage.py test --settings=nrm_site.settings.test nrm_app
             pipenv run coverage report --fail-under=70 -m  # TODO: raise this back up when we have tests
       - run: 
           name: Run bandit (Python security) tests
