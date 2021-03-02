@@ -30,18 +30,22 @@ jobs:
       - *install-python-dev-dependencies
       - run:
           name: Create the database
-          command: pipenv run nrm_django/manage.py migrate
+          working_directory: ~/project/nrm_django
+          command: pipenv run manage.py migrate
       - run:
           name: Run unit tests & check coverage
+          working_directory: ~/project/nrm_django
           command: |
             pipenv run coverage run --source='nrm_app' nrm_django/manage.py test --settings=nrm_site.settings.base nrm_app
             pipenv run coverage report --fail-under=70 -m  # TODO: raise this back up when we have tests
       - run: 
           name: Run bandit (Python security) tests
+          working_directory: ~/project/nrm_django
           command: |
             pipenv run bandit -r nrm_django/nrm_app
       - run:
           name: Run flake8 test for Python code style
+          working_directory: ~/project/nrm_django
           command: |
             pipenv run flake8
 
