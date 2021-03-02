@@ -17,8 +17,6 @@ install-python-dev-dependencies: &install-python-dev-dependencies
 version: 2
 jobs:
   build-and-test: # runs not using Workflows must have a `build` job as entry point
-    # directory where steps are run
-    working_directory: ~/nrm_django
     docker:
       - image: cimg/python:3.9.1
     environment: # environment variables for primary container
