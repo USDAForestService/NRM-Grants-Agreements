@@ -1,0 +1,52 @@
+# Python CircleCI 2.0 configuration file
+# Circle docs https://circleci.com/docs/2.0/language-python/
+# Set deployment variables in CircleCI as environment variables
+
+install-python-dependencies: &install-python-dependencies
+  run:
+    name: Install python dependencies
+    command: |
+      pipenv install
+
+install-python-dev-dependencies: &install-python-dev-dependencies
+  run:
+    name: Install python dependencies
+    command: |
+      pipenv install --dev
+
+version: 2
+jobs:
+  build: # runs not using Workflows must have a `build` job as entry point
+    # directory where steps are run
+    working_directory: ~/nrm_django
+    machine:
+      image: cimg/python:3.9.1
+    environment: # environment variables for primary container
+      PIPENV_VENV_IN_PROJECT: true
+      DATABASE_URL: 
+    steps:
+      - checkout
+      - *install-python-dependencies
+      - *install-python-dev-dependencies
+      - run:
+          name: Create the database
+          command: pipenv run manage.py migrate
+      - run:
+          name: Run unit tests & check coverage
+          command: |
+            pipenv run coverage run --source='nrm_app' manage.py test --settings=nrm_site.settings.base nrm_app
+            pipenv run coverage report --fail-under=70 -m  # TODO: raise this back up when we have tests
+      - run: 
+          name: Run bandit (Python security) tests
+          command: |
+            pipenv run bandit -r nrm_app/
+      - run:
+          name: Run flake8 test for Python code style
+          command: |
+            pipenv run flake8
+
+workflows:
+  version: 2
+  build_test:
+    jobs:
+      - build_and_test

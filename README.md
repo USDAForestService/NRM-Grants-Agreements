@@ -15,6 +15,36 @@ The focal point for an 18F/TTS project with the United States Forest Service on 
 * We (18F) are already very familiar with it.
 
 ## Local development
-We use pipenv to sandbox our prototypes. If you've developed with pipenv before, you should be able to `pipenv install django` and be up and running locally. If you haven't, then [this may be a useful starter guide](https://djangoforbeginners.com/initial-setup/).
 
-Locally, you can run the basic [Django runserver](https://docs.djangoproject.com/en/3.1/ref/django-admin/#runserver). You will need to run `python manage.py migrate` to intialize a local sqlite db.
+We use pipenv to sandbox our prototypes. If you've developed with pipenv
+before, you should be able to `pipenv install django` and be up and running
+locally. If you haven't, then [this may be a useful starter
+guide](https://djangoforbeginners.com/initial-setup/).
+
+Locally, you can run the basic [Django
+runserver](https://docs.djangoproject.com/en/3.1/ref/django-admin/#runserver).
+You will need to run `python manage.py migrate` to intialize a local sqlite
+db.
+
+To get up and running, you will need a machine with Python 3 and `pip`
+installed. Then you can install `pipenv`:
+
+```
+$ pip install --user pipenv
+```
+
+Now, in the `nrm_django/` directory, run `pipenv install` to install all of
+the dependencies into an isolated virtual environment.
+
+Then, set Django's `SECRET KEY` environment variable:
+
+```
+$ export SECRET_KEY="dont pick this as your secret key, promise me"
+```
+
+Finally, you can create a local Sqlite database and run the application
+
+```
+$ pipenv run manage.py migrate --settings=nrm_site.settings.base
+$ pipenv run manage.py runserver --settings=nrm_site.settings.base
+```
