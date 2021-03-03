@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.urls import path
+from django.shortcuts import render
 
 from .models import Grant, GrantAuthority, Note
 
@@ -140,6 +142,17 @@ class GrantAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('my_view/', self.admin_site.admin_view(self.my_view)),
+        ]
+        return my_urls + urls 
+
+    def my_view(self, request):
+        """Just a view that does nothing yet."""
+        return render(request, "grants/index.html", {"context_key": "data"})
 
 
 admin.site.register(Grant, GrantAdmin)
