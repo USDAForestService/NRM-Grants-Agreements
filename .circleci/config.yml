@@ -1,0 +1,62 @@
+# Python CircleCI 2.0 configuration file
+# Circle docs https://circleci.com/docs/2.0/language-python/
+# Set deployment variables in CircleCI as environment variables
+
+install-python-dependencies: &install-python-dependencies
+  run:
+    name: Install python dependencies
+    working_directory: ~/project/nrm_django
+    command: |
+      pipenv install
+
+install-python-dev-dependencies: &install-python-dev-dependencies
+  run:
+    name: Install python dependencies
+    working_directory: ~/project/nrm_django
+    command: |
+      pipenv install --dev
+
+version: 2
+jobs:
+  build-and-test: # runs not using Workflows must have a `build` job as entry point
+    docker:
+      - image: cimg/python:3.9.1
+    environment: # environment variables for primary container
+      PIPENV_VENV_IN_PROJECT: true
+      DATABASE_URL: 
+    steps:
+      - checkout
+      - *install-python-dependencies
+      - *install-python-dev-dependencies
+      - run:
+          name: Create the database
+          working_directory: ~/project/nrm_django
+          command: pipenv run python manage.py migrate --settings=nrm_site.settings.test
+      - run:
+          name: Run unit tests & check coverage
+          working_directory: ~/project/nrm_django
+          command: |
+            pipenv run coverage run --source='nrm_app' manage.py test --settings=nrm_site.settings.test nrm_app
+            pipenv run coverage report --fail-under=10 -m  # TODO: raise this back up when we have tests
+      - run: 
+          name: Run bandit (Python security) tests
+          working_directory: ~/project/nrm_django
+          command: |
+            pipenv run bandit -r nrm_django/nrm_app
+      - run:
+          name: Run flake8 test for Python code style
+          working_directory: ~/project/nrm_django
+          command: |
+            pipenv run flake8 --exclude .venv
+      - run:
+          name: Run black to verify code auto-formatting
+          working_directory: ~/project/nrm_django
+          command: |
+            pipenv run black --check --diff .
+
+
+workflows:
+  version: 2
+  build_test:
+    jobs:
+      - build-and-test

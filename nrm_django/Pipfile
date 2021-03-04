@@ -9,6 +9,10 @@ dj-database-url = "*"
 psycopg2-binary = "*"
 
 [dev-packages]
+coverage = "*"
+bandit = "*"
+flake8 = "*"
+black = "==20.8b1"
 
 [requires]
 python_version = "3.9"
