@@ -8,6 +8,11 @@ Usage: `python anonymizer.py <fixture>`
 
 Where <fixture> is the path to the JSON fixture you wish to anonymize.
 
+Two files will be created in the same directory:
+
+* replacements.txt is a list of the original values and what they were replaced with. 
+  This can be used in subsequent migrations
+
 """
 import json
 import random
@@ -18,24 +23,6 @@ from faker import Faker
 
 fake = Faker()
 Faker.seed(0)
-
-def anonymize_rows(rows):
-    """
-    Rows is an iterable of dictionaries that contain name and
-    email fields that need to be anonymized.
-    """
-    # Load the faker and its providers
-    faker  = Factory.create()
-    # Create mappings of names & emails to faked names & emails.
-    names  = defaultdict(faker.name)
-    emails = defaultdict(faker.email)
-    # Iterate over the rows and yield anonymized rows.
-    for row in rows:
-        # Replace the name and email fields with faked fields.
-        row['name']  = names[row['name']]
-        row['email'] = emails[row['email']]
-        # Yield the row back to the caller
-        yield row
 
 
 def anonymize_json(source, target=None):
@@ -58,9 +45,9 @@ def anonymize_json(source, target=None):
         'proj_title': 'fake.catch_phrase().upper() + random.choice(FS_WORDS).upper()',
         'created_by': 'fake.first_name()[0] + fake.last_name().upper()', 
         'modified_by': 'fake.first_name()[0] + fake.last_name().upper()',
-        'comments': 'fake.paragraph(nb_sentences=1).upper()', # 2 grafs?
+        'comments': 'fake.paragraph(nb_sentences=1).upper()',
         'applicant_name': 'fake.company().upper() + random.choice(FS_WORDS).upper()',
-        'authority_desc': 'fake.paragraph()', # 1 graf?
+        'authority_desc': 'fake.paragraph(nb_sentences=1)',
     }
 
     print('attempting to read source: %s' % str(source))
