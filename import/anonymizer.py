@@ -68,7 +68,7 @@ def anonymize_json(source, target=None):
         new_data_list.append(data_dict)
     # Output our replacements file
 
-    fixture_file = open(str(source[0]) +'_mod.txt', "w")
+    fixture_file = open(str(source[0]) +'_mod.json', "w")
     fixture_file.write(str(new_data_list))
     fixture_file.close()
 
