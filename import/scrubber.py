@@ -42,12 +42,12 @@ def anonymize_json(source, target=None):
     # in this case, with no user input and as a one-time thing, it should be OK.
 
     REPLACEMENT_FUNCTIONS = {
-        'proj_title': 'fake.catch_phrase().upper() + random.choice(FS_WORDS).upper()',
-        'created_by': 'fake.first_name()[0] + fake.last_name().upper()', 
-        'modified_by': 'fake.first_name()[0] + fake.last_name().upper()',
-        'comments': 'fake.paragraph(nb_sentences=1).upper()',
-        'applicant_name': 'fake.company().upper() + random.choice(FS_WORDS).upper()',
-        'authority_desc': 'fake.paragraph(nb_sentences=1)',
+        "proj_title": "fake.catch_phrase().upper() + random.choice(FS_WORDS).upper()",
+        "created_by": "fake.first_name()[0] + fake.last_name().upper()", 
+        "modified_by": "fake.first_name()[0] + fake.last_name().upper()",
+        "comments": "fake.paragraph(nb_sentences=1).upper()",
+        "applicant_name": "fake.company().upper() + random.choice(FS_WORDS).upper()",
+        "authority_desc": "fake.paragraph(nb_sentences=1)",
     }
 
     print('attempting to read source: %s' % str(source))
@@ -55,7 +55,7 @@ def anonymize_json(source, target=None):
     data_list = json.loads(f.read())
     new_data_list = []
     for data_dict in data_list:
-        for key, original_value in data_dict['fields'].items():
+        for key, original_value in data_dict["fields"].items():
             #check to see if it's a field we want to replace and isn't None
             if key in REPLACEMENT_FUNCTIONS.keys() and original_value: 
                 # if the value isn't in replacements already, build it
@@ -63,14 +63,16 @@ def anonymize_json(source, target=None):
                     replacement = eval(REPLACEMENT_FUNCTIONS[key])
                     REPLACEMENTS[original_value] = replacement
                 print('replacing', original_value)
-                data_dict['fields'][key] = REPLACEMENTS[original_value]
-                print('with', data_dict['fields'][key])
+                data_dict["fields"][key] = REPLACEMENTS[original_value]
+                print('with', data_dict["fields"][key])
         new_data_list.append(data_dict)
     # Output our replacements file
-
-    fixture_file = open(str(source[0]) +'_mod.json', "w")
-    fixture_file.write(str(new_data_list))
-    fixture_file.close()
+    new_file_name = source[0].replace('.json', '_mod.json')
+    with open(new_file_name, 'w') as outfile:
+        json.dump(new_data_list, outfile)
+    #fixture_file = open(new_file_name, "w")
+    #fixture_file.write(str(new_data_list))
+    #ixture_file.close()
 
 if __name__ == "__main__":
    anonymize_json(sys.argv[1:])
