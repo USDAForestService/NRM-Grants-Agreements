@@ -97,3 +97,18 @@ You can copy and paste the results of `inspectdb` into your models by hand, or, 
 When your models are created, you will also have to go through the usual Django steps of adding them to `INSTALLED_APPS` in the site settings and [making them editable in the admin](https://docs.djangoproject.com/en/3.1/intro/tutorial02/#make-the-poll-app-modifiable-in-the-admin).
 
 
+## Importing cleaned data
+
+First, you'll need a JSON fixture. If the data has already been in a database, Django's `dumpdata` will create one for you.
+
+With that fixture in hand locally: `python scrubber.py <fixture>`
+
+See the scrubber.py file for more details.
+
+That will output a new fixture with `_mod.json` at the end.
+
+You can then use Django's `loaddata` command to import it.
+
+Note that you may need to pass the correct settings file to the manage.py command.
+
+Note also that if you have existing DB rows for the fixture you may want to run `<model>.objects.all().delete()` from a Django shell to remove them.
