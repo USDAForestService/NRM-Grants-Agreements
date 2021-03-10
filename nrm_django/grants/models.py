@@ -103,7 +103,9 @@ class Grant(models.Model):
     )
     date_mailed = models.DateField(blank=True, null=True)
     date_signed = models.DateField(blank=True, null=True)
-    extramural_ind = models.CharField("Extramural", choices=BOOL_CHOICES, max_length=1, null=True)  # should be a boolean, but appears to be null in some DB instances
+    extramural_ind = models.CharField(
+        "Extramural", choices=BOOL_CHOICES, max_length=1, null=True
+    )  # should be a boolean, but appears to be null in some DB instances
     research_type = models.CharField(max_length=1, blank=True, null=True)
     journal_ind = models.CharField("Journal", max_length=1, blank=True, null=True)
     mod_number = models.DecimalField(
@@ -112,7 +114,9 @@ class Grant(models.Model):
     orig_fed_id = models.CharField(max_length=120, blank=True, null=True)
     comments = models.TextField(max_length=2000, blank=True, null=True)
     master_fed_id = models.CharField(max_length=120, blank=True, null=True)
-    aop_ind = models.CharField("AOP", choices=BOOL_CHOICES, max_length=1, null=True)  # should be a boolean, but appears to be null in some DB instances
+    aop_ind = models.CharField(
+        "AOP", choices=BOOL_CHOICES, max_length=1, null=True
+    )  # should be a boolean, but appears to be null in some DB instances
     geo_type = models.CharField(max_length=2, blank=True, null=True)
     managing_state_county = models.CharField(max_length=240, blank=True, null=True)
     areas_effected = models.CharField(max_length=200, blank=True, null=True)
@@ -178,7 +182,7 @@ class Grant(models.Model):
     admin_open = models.CharField(max_length=1, blank=True, null=True)
     last_update = (
         models.DateField()
-    )  # last update for what? The Grant? Should this be user-editable?
+    )  # last update for what? The grant? Should this be user-editable?
 
     class Meta:
         db_table = "ii_grants"
