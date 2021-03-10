@@ -4,7 +4,7 @@ Anonymizer for Django json fixtures using Faker.
 First be sure fake factory is installed:
 `pip install Faker`
 
-Usage: `python anonymizer.py <fixture>`
+Usage: `python scrubber.py <fixture>`
 
 Where <fixture> is the path to the JSON fixture you wish to anonymize.
 
@@ -70,9 +70,7 @@ def anonymize_json(source, target=None):
     new_file_name = source[0].replace('.json', '_mod.json')
     with open(new_file_name, 'w') as outfile:
         json.dump(new_data_list, outfile)
-    #fixture_file = open(new_file_name, "w")
-    #fixture_file.write(str(new_data_list))
-    #ixture_file.close()
+
 
 if __name__ == "__main__":
    anonymize_json(sys.argv[1:])
