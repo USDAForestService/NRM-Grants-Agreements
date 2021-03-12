@@ -88,8 +88,7 @@ def anonymize_json(source, target=None):
     new_file_name = source[0].replace(".json", "_mod.json")
     with open(new_file_name, "w") as outfile:
         json.dump(new_data_list, outfile)
-    replacements_file = open("replacements.txt", "w")
-    with open("replacements.txt", "w") as replacementsfile:
+    with open("replacements.txt", "w") as replacements_file:
         json.dump(REPLACEMENTS, replacements_file)
 
 
