@@ -56,6 +56,11 @@
 <body id="{% block bodyid %}default{% endblock %}" class="{% block bodyclass %}{% endblock %}">
   <header class="usa-header usa-header--extended" role="banner">
     <a class="usa-skipnav" href="#main-content">Skip to main content</a>
+    <section class="beta-banner">
+        <div class="grid-container">
+        <p class="grid-col-auto"><strong>BETA SITE:</strong> We are developing a new Grants Management application.</p>
+        </div>
+    </section>
     {% include "includes/header.html" %}
     {% block navigation %}{% endblock navigation %}
   </header>
