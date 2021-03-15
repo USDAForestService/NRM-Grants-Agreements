@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path
+from django.views.generic.list import ListView
 from django.shortcuts import render
 
 from .models import Grant, GrantAuthority, Note
@@ -146,13 +147,22 @@ class GrantAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            path('my_view/', self.admin_site.admin_view(self.my_view)),
+            path('my_view/<username>', self.admin_site.admin_view(CustomView.as_view())),
         ]
         return my_urls + urls 
 
-    def my_view(self, request):
-        """Just a view that does nothing yet."""
-        return render(request, "grants/index.html", {"context_key": "data"})
+
+class CustomView(ListView):
+
+    template_name = "grants/index.html"
+
+    def get_queryset(self):
+        return Grant.objects.filter(created_by=self.kwargs.get("username")).values("cn", "proj_title", "status").order_by("-status_date")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["username"] = self.kwargs.get("username")
+        return context
 
 
 admin.site.register(Grant, GrantAdmin)
