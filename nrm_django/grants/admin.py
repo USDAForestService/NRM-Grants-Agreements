@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path
 from django.views.generic.list import ListView
-from django.shortcuts import render
 
 from .models import Grant, GrantAuthority, Note
 
@@ -147,9 +146,11 @@ class GrantAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            path('my_view/<username>', self.admin_site.admin_view(CustomView.as_view())),
+            path(
+                "my_view/<username>", self.admin_site.admin_view(CustomView.as_view())
+            ),
         ]
-        return my_urls + urls 
+        return my_urls + urls
 
 
 class CustomView(ListView):
@@ -157,7 +158,11 @@ class CustomView(ListView):
     template_name = "grants/index.html"
 
     def get_queryset(self):
-        return Grant.objects.filter(created_by=self.kwargs.get("username")).values("cn", "proj_title", "status").order_by("-status_date")
+        return (
+            Grant.objects.filter(created_by=self.kwargs.get("username"))
+            .values("cn", "proj_title", "status")
+            .order_by("-status_date")
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

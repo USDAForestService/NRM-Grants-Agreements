@@ -1,4 +1,3 @@
-
 """Dev allows localhost access, and DATABASE_URL environment variable."""
 
 import os
