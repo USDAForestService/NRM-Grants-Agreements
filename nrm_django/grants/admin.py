@@ -5,7 +5,21 @@ from django.views.generic.list import ListView
 from .models import Grant, GrantAuthority, Note
 
 
+class NoteInline(admin.TabularInline):
+    model = Note
+
+
+class NoteAdmin(admin.ModelAdmin):
+    list_display = (
+        "note_date",
+        "comments",
+        "note_by",
+        "grant",
+    )
+
+
 class GrantAdmin(admin.ModelAdmin):
+    inlines = [NoteInline]
     list_display = (
         "proj_title",
         "application_id",
@@ -172,4 +186,4 @@ class CustomView(ListView):
 
 admin.site.register(Grant, GrantAdmin)
 admin.site.register(GrantAuthority)
-admin.site.register(Note)
+admin.site.register(Note, NoteAdmin)

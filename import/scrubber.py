@@ -62,9 +62,11 @@ def anonymize_json(source, target=None):
         "proj_title": "fake.catch_phrase().upper() + random.choice(FS_WORDS).upper()",
         "created_by": "fake.first_name()[0] + fake.last_name().upper()",
         "modified_by": "fake.first_name()[0] + fake.last_name().upper()",
+        "note_by": "fake.first_name()[0] + fake.last_name().upper()",
         "comments": "fake.paragraph(nb_sentences=1).upper()",
         "applicant_name": "fake.company().upper() + random.choice(FS_WORDS).upper()",
         "authority_desc": "fake.paragraph(nb_sentences=1)",
+        "email_to": "fake.email()",
     }
 
     print("attempting to read source: %s" % str(source))
