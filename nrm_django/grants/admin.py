@@ -6,7 +6,7 @@ from .models import Grant, GrantAuthority, Note
 
 
 class NoteInline(admin.TabularInline):
-    model=Note
+    model = Note
 
 
 class NoteAdmin(admin.ModelAdmin):
@@ -16,6 +16,7 @@ class NoteAdmin(admin.ModelAdmin):
         "note_by",
         "grant",
     )
+
 
 class GrantAdmin(admin.ModelAdmin):
     inlines = [NoteInline]

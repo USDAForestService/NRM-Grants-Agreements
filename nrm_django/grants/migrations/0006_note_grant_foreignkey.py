@@ -7,18 +7,23 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('grants', '0005_auto_20210310_1825'),
+        ("grants", "0005_auto_20210310_1825"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='note',
-            name='grant_cn',
+            model_name="note",
+            name="grant_cn",
         ),
         migrations.AddField(
-            model_name='note',
-            name='grant',
-            field=models.ForeignKey(db_column='grant_cn', default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='grants.grant'),
+            model_name="note",
+            name="grant",
+            field=models.ForeignKey(
+                db_column="grant_cn",
+                default=1,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                to="grants.grant",
+            ),
             preserve_default=False,
         ),
     ]

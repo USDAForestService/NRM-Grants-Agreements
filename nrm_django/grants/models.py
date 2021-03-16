@@ -226,7 +226,7 @@ class Note(models.Model):
     last_update = models.DateField()
 
     def __str__(self):
-        return ' - '.join([comments[:80], str(self.grant)])
+        return " - ".join([self.comments[:80], str(self.grant)])
 
     class Meta:
         db_table = "ii_ga_notes"
