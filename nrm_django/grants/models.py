@@ -186,6 +186,8 @@ class Grant(models.Model):
 
     class Meta:
         db_table = "ii_grants"
+        verbose_name = "Grant/Agreement"
+        verbose_name_plural = "Grants and Agreements"
 
     def __str__(self):
         return self.proj_title
