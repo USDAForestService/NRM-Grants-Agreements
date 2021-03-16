@@ -3,7 +3,20 @@ from django.contrib import admin
 from .models import Grant, GrantAuthority, Note
 
 
+class NoteInline(admin.TabularInline):
+    model=Note
+
+
+class NoteAdmin(admin.ModelAdmin):
+    list_display = (
+        "note_date",
+        "comments",
+        "note_by",
+        "grant",
+    )
+
 class GrantAdmin(admin.ModelAdmin):
+    inlines = [NoteInline]
     list_display = (
         "proj_title",
         "application_id",
@@ -144,4 +157,4 @@ class GrantAdmin(admin.ModelAdmin):
 
 admin.site.register(Grant, GrantAdmin)
 admin.site.register(GrantAuthority)
-admin.site.register(Note)
+admin.site.register(Note, NoteAdmin)
