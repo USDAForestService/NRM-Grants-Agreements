@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+
+<h1>Grants created by user {{ username }}</h1>
+
+<ul>
+{% for grant in object_list %}
+    <li><a href="/admin/grants/grant/{{ grant.cn }}">{{ grant.cn }}</a> - {{ grant.proj_title }} ({{ grant.status }})</li>
+{% empty %}
+    <li>No grants created by that user.</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
