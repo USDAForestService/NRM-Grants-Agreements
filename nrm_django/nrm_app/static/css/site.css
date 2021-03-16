@@ -1,3 +1,10 @@
 .usa-hero{
     background-image:url("/static/vendor/uswds-2.10.1/img/hero.png");
 }
+
+.beta-banner {
+    background-color: #FFE396;
+    color: #122D52;
+    margin: auto 0;
+    padding: 0.1rem 0;
+}
