@@ -1,61 +1,67 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_urls static admin_modify %}
 
-{% block extrahead %}{{ block.super }}
-<script src="{% url 'admin:jsi18n' %}"></script>
-{{ media }}
+{% block extrahead %}
+  {{ block.super }}
+  <script src="{% url 'admin:jsi18n' %}"></script>
+  {{ media }}
 {% endblock %}
 
-{% block extrastyle %}{{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% static " admin/css/forms.css" %}">{% endblock %}
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}">
+{% endblock %}
 
 {% block coltype %}colM{% endblock %}
 
 {% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}
 
 {% if not is_popup %}
-{% block breadcrumbs %}
-<nav class="usa-breadcrumb" aria-label="Breadcrumbs">
-    <ol class="usa-breadcrumb__list">
-        <li class="usa-breadcrumb__list-item">
-            <a href="{% url 'admin:index' %}" class="usa-breadcrumb__link">
-                <span>{% translate 'Home' %}</span>
-            </a>
-        </li>
-        <li class="usa-breadcrumb__list-item">
-            <a href="{% url 'admin:app_list' app_label=opts.app_label %}" class="usa-breadcrumb__link">
-                <span>{{ opts.app_config.verbose_name }}</span>
-            </a>
-        </li>
-        <li class="usa-breadcrumb__list-item">
-            {% if has_view_permission %}
-            <a href="{% url opts|admin_urlname:'changelist' %}" class="usa-breadcrumb__link">
-                <span>
-                    {{ opts.verbose_name_plural|capfirst }}
-                </span>
-            </a>
-            {% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %}
-        </li>
-        <li class="usa-breadcrumb__list-item usa-current" aria-current="page">
-            <span>{% if add %}{% blocktranslate with name=opts.verbose_name %}Add {{ name }}{% endblocktranslate %}
-                {% else %}{{ original|truncatewords:"18" }}{% endif %}</span>
-        </li>
-    </ol>
-</nav>
-{% endblock %}
+  {% block breadcrumbs %}
+    <nav class="usa-breadcrumb" aria-label="Breadcrumbs">
+        <ol class="usa-breadcrumb__list">
+            <li class="usa-breadcrumb__list-item">
+                <a href="{% url 'admin:index' %}" class="usa-breadcrumb__link">
+                    <span>{% translate 'Home' %}</span>
+                </a>
+            </li>
+            <li class="usa-breadcrumb__list-item">
+                <a href="{% url 'admin:app_list' app_label=opts.app_label %}" class="usa-breadcrumb__link">
+                    <span>{{ opts.app_config.verbose_name }}</span>
+                </a>
+            </li>
+            <li class="usa-breadcrumb__list-item">
+                {% if has_view_permission %}
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="usa-breadcrumb__link">
+                    <span>{{ opts.verbose_name_plural|capfirst }}</span>
+                </a>
+                {% else %}
+                  {{ opts.verbose_name_plural|capfirst }}
+                {% endif %}
+            </li>
+            <li class="usa-breadcrumb__list-item usa-current" aria-current="page">
+                <span>{% if add %}{% blocktranslate with name=opts.verbose_name %}Add {{ name }}{% endblocktranslate %}
+                    {% else %}{{ original|truncatewords:"18" }}{% endif %}</span>
+            </li>
+        </ol>
+    </nav>
+  {% endblock breadcrumbs %}
 {% endif %}
-{% block content %}<div id="content-main">
+{% block content %}
+  <div id="content-main">
     {% block object-tools %}
-    {% if change %}{% if not is_popup %}
-    <ul class="object-tools">
-        {% block object-tools-items %}
-        {% change_form_object_tools %}
-        {% endblock %}
-    </ul>
-    {% endif %}{% endif %}
-    {% endblock %}
-    <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}{% if form_url %} action="{{ form_url }}" {%
-        endif %} method="post" id="{{ opts.model_name }}_form" novalidate>
+      {% if change %}
+        {% if not is_popup %}
+        <ul class="object-tools">
+            {% block object-tools-items %}
+            {% change_form_object_tools %}
+            {% endblock %}
+        </ul>
+      {% endif %}
+    {% endif %}
+    {% endblock object-tools %}
+    <form {% if form_url %} action="{{ form_url }}" {% endif %} method="post" id="{{ opts.model_name }}_form" 
+        {% if has_file_field %}enctype="multipart/form-data" {% endif %} novalidate>
         {% csrf_token %}{% block form_top %}{% endblock %}
         <div>
             {% if is_popup %}<input type="hidden" name="{{ is_popup_var }}" value="1">{% endif %}
@@ -88,9 +94,8 @@
             {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
 
             {% block admin_change_form_document_ready %}
-            <script id="django-admin-form-add-constants" {% if adminform and add %}
-                data-model-name="{{ opts.model_name }}" {% endif %} src="{% static 'admin/js/change_form.js' %}" async>
-                </script>
+              <script id="django-admin-form-add-constants" src="{% static 'admin/js/change_form.js' %}"
+                {% if adminform and add %} data-model-name="{{ opts.model_name }}" {% endif %} async></script>
             {% endblock %}
 
             {# JavaScript for prepopulated fields #}
@@ -98,5 +103,5 @@
 
         </div>
     </form>
-</div>
+  </div>
 {% endblock %}
