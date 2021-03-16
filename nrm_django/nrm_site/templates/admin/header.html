@@ -1,0 +1,50 @@
+{% load static i18n %}
+
+<div class="usa-overlay"></div>
+<header class="usa-header usa-header--basic">
+    <div class="usa-nav-container">
+        <div class="usa-navbar">
+            <div class="usa-logo" id="basic-logo">
+                <em class="usa-logo__text"><a href="/" title="Home" aria-label="Home">NRM Administration</a></em>
+            </div>
+        </div>
+        {% block usertools %}
+        <nav aria-label="Primary navigation" class="usa-nav">
+            {% if has_permission %}
+            <ul class="usa-nav__primary">
+                {% block welcome-msg %}
+                <li class="usa-nav__primary-item usa-nav__text">{% translate 'Welcome,' %}
+                    <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+                </li>
+                {% endblock %}
+                {% block userlinks %}
+                {% if site_url %}
+                <li class="usa-nav__primary-item">
+                    <a href="{{ site_url }}" class="usa-nav__link">{% translate 'View site' %}</a>
+                </li>
+                {% endif %}
+                {% if user.is_active and user.is_staff %}
+                {% url 'django-admindocs-docroot' as docsroot %}
+                {% if docsroot %}
+                <li class="usa-nav__primary-item">
+                    <a href="{{ docsroot }}" class="usa-nav__link">{% translate 'Documentation' %}</a>
+                </li>
+                {% endif %}
+                {% endif %}
+                {% if user.has_usable_password %}
+                <li class="usa-nav__primary-item">
+                    <a href="{% url 'admin:password_change' %}" class="usa-nav__link">
+                        {% translate 'Change password' %}
+                    </a>
+                </li>
+                {% endif %}
+                <li class="usa-nav__primary-item">
+                    <a href="{% url 'admin:logout' %}" class="usa-nav__link">{% translate 'Log out' %}</a>
+                </li>
+                {% endblock userlinks %}
+            </ul>
+            {% endif %}
+            {% endblock %}
+        </nav>
+    </div>
+</header>

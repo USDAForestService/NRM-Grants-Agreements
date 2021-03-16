@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" {% block html_tag_extra %} {% endblock html_tag_extra %} class="no-js">
+
 <head {% block head_tag_extra %} {% endblock head_tag_extra %}>
   <meta charset="utf-8">
   <title>
@@ -23,31 +24,12 @@
 
   {% block extra_meta %}{% endblock extra_meta %}
 
-  <link href="{% static 'vendor/uswds-2.10.1/css/uswds.min.css' %}" rel="stylesheet" type="text/css"/>
-  <link href="{% static 'css/site.css' %}" rel="stylesheet" type="text/css"/>
+  <link href="{% static 'vendor/uswds-2.10.1/css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'css/site.css' %}" rel="stylesheet" type="text/css" />
 
   {% block canonical %}{% endblock %}
 
-  <!-- Favicons (cribbed from https://nciinc.github.io/fs-fork-uswds-site/page-templates/)
-================================================== -->
-  <!-- 128x128 -->
-  <link rel="shortcut icon" type="image/ico" href="{% static 'img/favicons/favicon.ico' %}">
-  <link rel="icon" type="image/png" href="{% static 'img/favicons/favicon.png' %}">
-
-  <!-- 192x192, as recommended for Android
-  http://updates.html5rocks.com/2014/11/Support-for-theme-color-in-Chrome-39-for-Android
-  -->
-  <link rel="icon" type="image/png" sizes="192x192" href="{% static 'img/favicons/favicon-192.png' %}">
-
-  <!-- 57x57 (precomposed) for iPhone 3GS, pre-2011 iPod Touch and older Android devices -->
-  <link rel="apple-touch-icon-precomposed" href="{% static 'img/favicons/favicon-57.png' %}">
-  <!-- 72x72 (precomposed) for 1st generation iPad, iPad 2 and iPad mini -->
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'img/favicons/favicon-72.png' %}">
-  <!-- 114x114 (precomposed) for iPhone 4, 4S, 5 and post-2011 iPod Touch -->
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'img/favicons/favicon-114.png' %}">
-  <!-- 144x144 (precomposed) for iPad 3rd and 4th generation -->
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'img/favicons/favicon-144.png' %}">
-
+  {% include "includes/favicons.html" %}
 
   {% block extrahead %}{% endblock %}
   {% block feeds %}{% endblock %}
@@ -56,10 +38,11 @@
 <body id="{% block bodyid %}default{% endblock %}" class="{% block bodyclass %}{% endblock %}">
   <header class="usa-header usa-header--extended" role="banner">
     <a class="usa-skipnav" href="#main-content">Skip to main content</a>
-    <section class="beta-banner">
-        <div class="grid-container">
-        <p class="grid-col-auto"><strong>BETA SITE:</strong> We are developing a new Grants Management application.</p>
-        </div>
+    <section class="usa-alert usa-alert--warning">
+      <div class="usa-alert__body">
+        <h3 class="usa-alert__heading">BETA SITE:</h3>
+        <p class="usa-alert__text">We are developing a new Grants Management application.</p>
+      </div>
     </section>
     {% include "includes/header.html" %}
     {% block navigation %}{% endblock navigation %}
@@ -67,13 +50,13 @@
   <main id="main-content">
     {% block messages %}
     {% if messages %}
-        <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-            {{ message }}
-            </li>
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+        {{ message }}
+        </li>
         {% endfor %}
-        </ul>
+    </ul>
     {% endif %}
     {% endblock %}
     {% block main %}{% endblock %}
@@ -95,4 +78,5 @@
   {% block app_js %}{% endblock %}
 
 </body>
+
 </html>
