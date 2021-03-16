@@ -114,7 +114,7 @@ Loading your scrubbed fixture back into Django can be tricky. In theory you coul
 2. Be sure you've targeted the correct space: `cf target -o <org name> -s <space name>`. You'll need to know your cloud org and space name.
 3. Now connect: `cf connect-to-service -no-client <app name> <service name>`. If you get an error, you probably don't have the service-connect plugin installed, so back up and do that.
 
-At this point, assuming you have no errors, service-connect will output new database connection parameters. You will need to either temporarily modify django settings or creeate a new `DATABASE_URL` environment variable to reflect these settings. Whichever route you go, don't make it too permanent: the next time you use service-connect they'll change.
+At this point, assuming you have no errors, service-connect will output new database connection parameters. You will need to either temporarily modify django settings or create a new `DATABASE_URL` environment variable to reflect these settings. Whichever route you go, don't make it too permanent: the next time you use service-connect they'll change.
 
 Leave the service-connect terminal alone and open a new shell. From that new shell, with your temp settings in place, you should now be able to push data. Assuming you're in the `pipenv` shell inside `nrm_django`, that command would be `python manage.py loaddata ../import/<fixture>_mod.json --settings=nrm_site.settings.base --verbosity=3`
 
