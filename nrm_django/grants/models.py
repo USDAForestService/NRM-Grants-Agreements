@@ -210,7 +210,7 @@ class GrantAuthority(models.Model):
 
 class Note(models.Model):
     cn = models.CharField(primary_key=True, max_length=34)
-    grant_cn = models.CharField(max_length=34)
+    grant = models.ForeignKey(Grant, on_delete=models.DO_NOTHING, db_column="grant_cn")
     note_by = models.CharField(max_length=30)
     note_date = models.DateField()
     comments = models.CharField(max_length=2000)
@@ -226,6 +226,9 @@ class Note(models.Model):
     email_to = models.CharField(max_length=500, blank=True, null=True)
     email_date = models.DateField(blank=True, null=True)
     last_update = models.DateField()
+
+    def __str__(self):
+        return " - ".join([self.comments[:80], str(self.grant)])
 
     class Meta:
         db_table = "ii_ga_notes"
