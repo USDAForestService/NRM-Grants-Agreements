@@ -97,3 +97,27 @@ You can copy and paste the results of `inspectdb` into your models by hand, or, 
 When your models are created, you will also have to go through the usual Django steps of adding them to `INSTALLED_APPS` in the site settings and [making them editable in the admin](https://docs.djangoproject.com/en/3.1/intro/tutorial02/#make-the-poll-app-modifiable-in-the-admin).
 
 
+## Importing cleaned data
+
+First, you'll need a JSON fixture. If the data has already been in a database, Django's `dumpdata` will create one for you.
+
+You will need that file in hand on your local machine as well as an up-to-date copy of your `replacements.txt` file, if one has been created. Both of those should be in the `/import` folder. You'll then `cd` into the `/import` folder to run `python scrubber.py <fixture>`, with `<fixture>` being the name of your downloaded fixture.
+
+See the scrubber.py file for more details.
+
+That will output a new fixture with `_mod.json` at the end, as well as an updated (or new) `requirements.txt` file.
+
+Loading your scrubbed fixture back into Django can be tricky. In theory you could upload it and then use Django's `loaddata` command to import it directly on cloud. However, we have found it more reliable to use the [cf-service-connect plugin](https://github.com/cloud-gov/cf-service-connect) to establish a long-running tunnel to Cloud, as outlined below. 
+
+### Establishing a long-running shell to load data
+1. If you haven't already, log in to cloud: `cf login -a api.fr.cloud.gov --sso`
+2. Be sure you've targeted the correct space: `cf target -o <org name> -s <space name>`. You'll need to know your cloud org and space name.
+3. Now connect: `cf connect-to-service -no-client <app name> <service name>`. If you get an error, you probably don't have the service-connect plugin installed, so back up and do that.
+
+At this point, assuming you have no errors, service-connect will output new database connection parameters. You will need to either temporarily modify django settings or create a new `DATABASE_URL` environment variable to reflect these settings. Whichever route you go, don't make it too permanent: the next time you use service-connect they'll change.
+
+Leave the service-connect terminal alone and open a new shell. From that new shell, with your temp settings in place, you should now be able to push data. Assuming you're in the `pipenv` shell inside `nrm_django`, that command would be `python manage.py loaddata ../import/<fixture>_mod.json --settings=nrm_site.settings.base --verbosity=3`
+
+Note that you will need to pass the correct settings file to the manage.py command, as well as give it the path to the fixture you're trying to load. The `--verbosity=3` argument will provide some useful  progress feedback.
+
+Note also that if you have existing DB rows in the table you may want to jump into a Django shell and run `<model>.objects.all().delete()` to remove them before loading your fixture.
