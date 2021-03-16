@@ -1,0 +1,89 @@
+{% load i18n static %}
+<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:'en-us' }}" dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr,auto' }}">
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}">
+    {% if not is_popup and is_nav_sidebar_enabled %}
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/nav_sidebar.css' %}">
+    <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
+    {% endif %}
+    <link href="{% static 'vendor/uswds-2.10.1/css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/site.css' %}" rel="stylesheet" type="text/css" />
+
+    {% block extrastyle %}{% endblock %}
+    {% block extrahead %}{% endblock %}
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    {% include "includes/favicons.html" %}
+
+    {% block blockbots %}
+    <meta name="robots" content="NONE,NOARCHIVE">
+    {% endblock %}
+</head>
+
+<body id="{% block bodyid %}default{% endblock %}"
+    class="admin {% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+    data-admin-utc-offset="{% now ' Z' %}">
+
+    <!-- Container -->
+    <div id="container">
+
+        {% if not is_popup %}
+        <!-- Header -->
+        <a class="usa-skipnav" href="#main-content">Skip to main content</a>
+        <section class="usa-alert usa-alert--warning">
+            <div class="usa-alert__body">
+                <h3 class="usa-alert__heading">BETA SITE:</h3>
+                <p class="usa-alert__text">We are developing a new Grants Management application.</p>
+            </div>
+        </section>
+        {% include "admin/header.html" %}
+        {% block navigation %}{% endblock navigation %}
+        <!-- END Header -->
+        {% block breadcrumbs %}
+        <div class="usa-breadcrumbs">
+            <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+            {% if title %} &rsaquo; {{ title }}{% endif %}
+        </div>
+        {% endblock %}
+        {% endif %}
+
+        <div class="main shifted" id="main">
+            {% if not is_popup and is_nav_sidebar_enabled %}
+            {% block nav-sidebar %}
+            {% include "admin/nav_sidebar.html" %}
+            {% endblock %}
+            {% endif %}
+            <div class="content">
+                {% block messages %}
+                {% if messages %}
+                <ul class="messagelist">{% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message|capfirst }}</li>
+                        {% endfor %}
+                </ul>
+                {% endif %}
+                {% endblock messages %}
+                <!-- Content -->
+                <div id="content" class="{% block coltype %}colM{% endblock %}">
+                    {% block pretitle %}{% endblock %}
+                    {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+                    {% block content_subtitle %}{% if subtitle %}<h2>{{ subtitle }}</h2>{% endif %}{% endblock %}
+                    {% block content %}
+                    {% block object-tools %}{% endblock %}
+                    {{ content }}
+                    {% endblock %}
+                    {% block sidebar %}{% endblock %}
+                    <br class="clear">
+                </div>
+                <!-- END Content -->
+                {% block footer %}<div id="footer"></div>{% endblock %}
+            </div>
+        </div>
+    </div>
+    <!-- END Container -->
+</body>
+
+</html>

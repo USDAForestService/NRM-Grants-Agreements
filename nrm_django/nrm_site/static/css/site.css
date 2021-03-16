@@ -1,0 +1,41 @@
+/* Color values may change based on issue #105 */
+:root {
+  --fs-green: #2f4a0b;
+  --fs-green-lighter: #537d1a;
+  --fs-yellow: #f5ea53;
+}
+
+.usa-hero{
+    background-image:url("/static/vendor/uswds-2.10.1/img/hero.png");
+}
+
+/* Admin */
+.admin .usa-nav-container { /* USWDS overrides */
+    max-width: 100%;
+    background-color: var(--fs-green); 
+    color: #fff
+}
+/* Override Django admin link handling */
+.admin a { color: var(--fs-green-lighter); }
+.admin a:hover { color:var(--fs-green); }
+
+.admin .usa-nav-container a { color: #fff; } /* USWDS override to account for bg color ^ */
+.admin .usa-nav-container a.usa-nav__link:hover {
+    color: var(--fs-yellow);
+}
+.admin .usa-nav-container a.usa-nav__link:hover::after {
+    background-color: var(--fs-yellow);
+}
+.admin .usa-logo { margin-top: 0; }
+.admin .usa-logo__text { white-space: nowrap; } /* USWDS override */
+.admin .usa-nav__primary { margin-bottom: 0; } /* Django override */
+.admin .usa-nav__primary li { list-style-type: none; } /* Django override */
+.admin .usa-nav__primary .usa-nav__text { padding: 1rem; } /* Make welcome text match nav links */
+.admin #content { padding-top: 0 }
+.module h2, .module caption, .inline-group h2 { /* Django overrides */
+    background-color: var(--fs-green-lighter);
+}
+.usa-breadcrumb {
+    padding-left: 2em;
+    border-bottom: 1px solid #ccc;
+}
