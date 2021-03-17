@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.safestring import mark_safe
 
 # Since the legacy DB didn't treat booleans as booleans,
 # we're trying to clean up. Really, they need to be updated/migrated.
@@ -18,6 +19,38 @@ STATUS_CHOICES = (
     ("GA-TERMINATED", "GA terminated"),
 )
 
+APPLICATION_TYPE_CHOICES = (
+    ("Initial", "Initial"),
+    ("CONTINUATION", "Continuation"),
+    ("NEW", "New"),
+    ("OTHER", "Other"),
+    ("REVISION A-INCREASE AWARD", "Revision A - Increase Award"),
+    ("REVISION C-INCREASE AWARD", "Revision C - Increase Duration"),
+)
+
+APP_SUBMISSION_TYPE_CHOICES = (
+    ("NEW", "New"),
+    ("Application", "Application"),
+    ("Preapplication", "Pre-application"),
+    ("NON-CONSTRUCTION PRE-APPLICATION", "Non-construction Pre-application"),
+    ("NON-CONSTRUCTION APPLICATION", "Non-construction Application"),
+    # ('Non-construction', "Non-Construction"), # In the DB, but probably needs to be normalized with the above.
+    # ('NON-Construction', "Non-Construction"), # In the DB, but probably needs to be normalized with the above.
+    ("CONSTRUCTION PRE-APPLICATION", "Construction Pre-application"),
+    ("CONSTRUCTION APPLICATION", "Construction Application"),
+    ("MOU", "Mou"),
+    ("OTHER", "Other"),
+    (
+        "8/1/2004NON-CONSTRUCTION APPLICATION",
+        "8/1/2004NON-CONSTRUCTION APPLICATION",
+    ),  # In the database, but probably not valid
+    (
+        "5/1/2005NON-CONSTRUCTION APPLICATION",
+        "5/1/2005NON-CONSTRUCTION APPLICATION",
+    ),  # In the database, but probably not valid
+    # ("%", "%") # In the database, but probably not valid
+)
+
 
 class Grant(models.Model):
     """
@@ -32,10 +65,12 @@ class Grant(models.Model):
         "Project status", max_length=15, blank=True, null=True
     )  # choices????
     application_id = models.CharField(max_length=34)
-    application_type = models.CharField(max_length=30)
+    application_type = models.CharField(max_length=30, choices=APPLICATION_TYPE_CHOICES)
     app_submission_type = models.CharField(
-        "Application submission type", max_length=100
-    )  # choices???
+        "Application submission type",
+        max_length=100,
+        choices=APP_SUBMISSION_TYPE_CHOICES,
+    )
     app_submit_date = models.DateField("Application submitted")
     app_received_date = models.DateField("Application received")
     hhs_payment_ind = models.CharField(
@@ -73,6 +108,9 @@ class Grant(models.Model):
     )
 
     # Fields describing project(s) and significant dates.
+    proj_type = models.CharField(
+        "Project Type", max_length=3, blank=True, null=True
+    )  # Choices? FK?
     proj_desc = models.TextField(
         "Project description", max_length=2000, blank=True, null=True
     )
@@ -87,11 +125,11 @@ class Grant(models.Model):
     proj_expiration_dt = models.DateField(
         "Project expiration date", blank=True, null=True
     )
-    proj_rwu = models.CharField(max_length=10, blank=True, null=True)  # What's RWU
     proj_close_dt = models.DateField("Project close date", blank=True, null=True)
     proj_cancellation_dt = models.DateField(
         "Project cancellation date", blank=True, null=True
     )
+    proj_rwu = models.CharField(max_length=10, blank=True, null=True)  # What's RWU
     proj_cfda_no = models.CharField(
         "Project CFDA", max_length=40, blank=True, null=True
     )
@@ -101,8 +139,11 @@ class Grant(models.Model):
     project_congressional_district = models.CharField(
         max_length=40, blank=True, null=True
     )
+
     date_mailed = models.DateField(blank=True, null=True)
     date_signed = models.DateField(blank=True, null=True)
+    comments = models.TextField(max_length=2000, blank=True, null=True)
+
     extramural_ind = models.CharField(
         "Extramural", choices=BOOL_CHOICES, max_length=1, null=True
     )  # should be a boolean, but appears to be null in some DB instances
@@ -111,9 +152,12 @@ class Grant(models.Model):
     mod_number = models.DecimalField(
         max_digits=3, decimal_places=0, blank=True, null=True
     )
-    orig_fed_id = models.CharField(max_length=120, blank=True, null=True)
-    comments = models.TextField(max_length=2000, blank=True, null=True)
-    master_fed_id = models.CharField(max_length=120, blank=True, null=True)
+    orig_fed_id = models.CharField(
+        "Original Fed ID", max_length=120, blank=True, null=True
+    )
+    master_fed_id = models.CharField(
+        "Master Fed ID", max_length=120, blank=True, null=True
+    )
     aop_ind = models.CharField(
         "AOP", choices=BOOL_CHOICES, max_length=1, null=True
     )  # should be a boolean, but appears to be null in some DB instances
@@ -121,11 +165,15 @@ class Grant(models.Model):
     managing_state_county = models.CharField(max_length=240, blank=True, null=True)
     areas_effected = models.CharField(max_length=200, blank=True, null=True)
     ffin = models.CharField(max_length=40, blank=True, null=True)
+
+    # State fields
     state_identifier = models.CharField(
         max_length=40, blank=True, null=True
     )  # choices? FK?
     state_eo_code = models.CharField(max_length=1, blank=True, null=True)
     state_eo_date = models.DateField(blank=True, null=True)
+
+    # EST Fund fields
     fed_est_fund = models.DecimalField(
         max_digits=12, decimal_places=2, blank=True, null=True
     )
@@ -148,11 +196,12 @@ class Grant(models.Model):
     reroute_date = models.DateField(blank=True, null=True)
     certificaion_date = models.DateField("Certification date", blank=True, null=True)
     ffis_doc_id = models.CharField("FFIS Doc", max_length=11, blank=True, null=True)
-    applicant_name = models.CharField(max_length=200, blank=True, null=True)
+    applicant_name = models.CharField(
+        "Applicant/Cooperator Name", max_length=200, blank=True, null=True
+    )
     international_act_ind = models.CharField(
         "International Act", choices=BOOL_CHOICES, max_length=1, null=True
     )  # Boolean indicator? Appears to be null in some DB instances
-    proj_type = models.CharField(max_length=3, blank=True, null=True)  # Choices? FK?
     advance_allowed_ind = models.CharField(
         "Advance Allowed", choices=BOOL_CHOICES, max_length=1, null=True
     )  # Boolean indicator? Appears to be null in some DB instances
@@ -178,11 +227,11 @@ class Grant(models.Model):
     cooperator_agreement_number = models.CharField(
         max_length=34, blank=True, null=True
     )  # Is this used to key to a cooperator agreement?
-    gid = models.CharField(max_length=16, blank=True, null=True, editable=False)
+    gid = models.CharField(
+        "Agreement ID", max_length=16, blank=True, null=True, editable=False
+    )
     admin_open = models.CharField(max_length=1, blank=True, null=True)
-    last_update = (
-        models.DateField()
-    )  # last update for what? The grant? Should this be user-editable?
+    last_update = models.DateField(auto_now=True)
 
     class Meta:
         db_table = "ii_grants"
@@ -192,11 +241,38 @@ class Grant(models.Model):
     def __str__(self):
         return self.proj_title
 
+    def pretty_name(self):
+        return ("%s" % self.proj_title).title()
+
+    pretty_name.short_description = "Project Title"
+
+    def significant_dates(self):
+        """
+        Convenience method to display multiple dates in a single admin changelist column.
+        """
+        datelist_string = """<ul>
+            <li>Submitted: %s</li>
+            <li>Received: %s</li>
+            <li>Proposed start: %s</li>
+            <li>Last updated: %s</li>
+            </ul""" % (
+            self.app_submit_date,
+            self.app_received_date,
+            self.proposed_start_date,
+            self.last_update,
+        )
+        return mark_safe(datelist_string)
+
+    significant_dates.allow_tags = True
+
     # TO-DO: Write save to write GID from Application ID
 
 
 class GrantAuthority(models.Model):
-    grant_cn = models.CharField(max_length=34, primary_key=True)
+    # grant_cn = models.CharField(max_length=34, primary_key=True)
+    grant = models.OneToOneField(
+        Grant, primary_key=True, on_delete=models.DO_NOTHING, db_column="grant_cn"
+    )
     authority_cd = models.CharField(max_length=40)
     authority_desc = models.CharField(
         "Authority Description", max_length=120, blank=True, null=True
@@ -206,6 +282,9 @@ class GrantAuthority(models.Model):
     class Meta:
         db_table = "ii_ga_authorities"
         verbose_name_plural = "Grant authorities"
+
+    def __str__(self):
+        return "%s: %s" % (self.authority_cd, self.grant)
 
 
 class Note(models.Model):

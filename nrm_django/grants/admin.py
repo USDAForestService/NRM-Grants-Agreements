@@ -9,41 +9,61 @@ class NoteInline(admin.TabularInline):
     model = Note
 
 
-class NoteAdmin(admin.ModelAdmin):
-    list_display = (
-        "note_date",
-        "comments",
-        "note_by",
-        "grant",
-    )
+class GrantAuthorityInline(admin.TabularInline):
+    model = GrantAuthority
 
 
 class GrantAdmin(admin.ModelAdmin):
-    inlines = [NoteInline]
+    inlines = [GrantAuthorityInline, NoteInline]
     list_display = (
-        "proj_title",
-        "application_id",
+        "pretty_name",
         "application_type",
         "status",
-        "app_submit_date",
-        "app_received_date",
-        "proposed_start_date",
+        "significant_dates",
     )
-    list_filter = ("status",)
+    list_filter = ("status", "application_type")
     readonly_fields = [
         "created_date",
         "created_in_instance",
         "modified_date",
         "status_date",
     ]
-    search_fields = ["proj_title", "proj_desc", "application_id"]
-    # list_editable = ['status',]
+    search_fields = [
+        "proj_title",
+        "proj_desc",
+        "gid",
+        "application_id",
+        "applicant_name",
+    ]
+    list_editable = ["status"]
     fieldsets = (
         (
-            "Project info",
+            "Required",
             {
                 "fields": (
                     "proj_title",
+                    ("application_id", "application_type", "app_submission_type"),
+                    ("app_submit_date", "app_received_date"),
+                    ("proposed_start_date", "proposed_end_date"),
+                    ("status", "status_date"),
+                    (
+                        "locked_ind",
+                        "hhs_payment_ind",
+                        "extramural_ind",
+                    ),
+                    (
+                        "international_act_ind",
+                        "advance_allowed_ind",
+                        "aop_ind",
+                    ),
+                )
+            },
+        ),
+        (
+            "Project info",
+            {
+                "classes": ("collapse",),
+                "fields": (
                     "proj_status",
                     "proj_desc",
                     (
@@ -53,106 +73,95 @@ class GrantAdmin(admin.ModelAdmin):
                         "proj_obligation_dt",
                     ),
                     ("proj_expiration_dt", "proj_close_dt", "proj_cancellation_dt"),
-                )
-            },
-        ),
-        (
-            "Project info (Advanced)",
-            {
-                "classes": ("collapse",),
-                "fields": (
                     (
+                        "proj_type",
                         "proj_rwu",
                         "proj_cfda_no",
                         "proj_science_cd",
                         "project_congressional_district",
-                    )
-                ),
-            },
-        ),
-        (
-            "Application",
-            {
-                "fields": (
-                    ("application_id", "application_type", "app_submission_type"),
-                    (
-                        "app_submit_date",
-                        "app_received_date",
                     ),
                 ),
             },
         ),
         (
-            "Grant",
+            "Grant/Agreement",
             {
+                "classes": ("collapse",),
                 "fields": (
-                    "proposed_start_date",
-                    "proposed_end_date",
-                    "locked_ind",
-                    ("status", "status_date"),
+                    "comments",
+                    ("date_mailed", "date_signed"),
                     ("created_by", "created_date", "created_in_instance"),
                     ("modified_by", "modified_date", "modified_in_instance"),
                 ),
             },
         ),
         (
-            "Fed ID",
+            "Fed Info",
             {
                 "classes": ("collapse",),
                 "fields": (
                     ("fed_id_fy", "fed_id_type", "fed_id_agency", "fed_id_region"),
                     ("fed_id_unit", "fed_id_subunit", "fed_id_seq"),
+                    ("orig_fed_id", "master_fed_id"),
                 ),
             },
         ),
         (
-            "Other",
+            "State info",
             {
+                "classes": ("collapse",),
                 "fields": (
-                    "hhs_payment_ind",
-                    "date_mailed",
-                    "date_signed",
-                    "extramural_ind",
-                    "research_type",
-                    "journal_ind",
-                    "mod_number",
-                    "orig_fed_id",
-                    "comments",
-                    "master_fed_id",
-                    "aop_ind",
-                    "geo_type",
-                    "managing_state_county",
-                    "areas_effected",
-                    "ffin",
-                    "state_identifier",
-                    "state_eo_code",
-                    "state_eo_date",
+                    ("state_identifier", "state_eo_code", "state_eo_date"),
+                    ("managing_state_county"),
+                ),
+            },
+        ),
+        (
+            "EST Funds",
+            {
+                "classes": ("collapse",),
+                "fields": (
                     "fed_est_fund",
                     "applicant_est_fund",
                     "state_est_fund",
                     "local_est_fund",
                     "pi_est_fund",
                     "oth_est_fund",
+                ),
+            },
+        ),
+        (
+            "WPPP",
+            {
+                "classes": ("collapse",),
+                "fields": ("wppp_status", "wppp_status_date"),
+            },
+        ),
+        (
+            "Other",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "research_type",
+                    "journal_ind",
+                    "mod_number",
+                    "geo_type",
+                    "areas_effected",
+                    "ffin",
                     "reroute_from",
                     "reroute_date",
                     "certificaion_date",
                     "ffis_doc_id",
                     "applicant_name",
-                    "international_act_ind",
-                    "proj_type",
-                    "advance_allowed_ind",
                     "authority_approval",
                     "authority",
                     "format",
                     "other_approval",
                     "master_agreement_ind",
                     "progrm_responsibility_type",
-                    "wppp_status",
-                    "wppp_status_date",
                     "cooperator_agreement_number",
                     "admin_open",
-                    "last_update",
-                )
+                ),
             },
         ),
     )
@@ -165,6 +174,19 @@ class GrantAdmin(admin.ModelAdmin):
             ),
         ]
         return my_urls + urls
+
+
+class GrantAuthorityAdmin(admin.ModelAdmin):
+    list_filter = ("authority_cd",)
+
+
+class NoteAdmin(admin.ModelAdmin):
+    list_display = (
+        "note_date",
+        "comments",
+        "note_by",
+        "grant",
+    )
 
 
 class CustomView(ListView):
@@ -185,5 +207,5 @@ class CustomView(ListView):
 
 
 admin.site.register(Grant, GrantAdmin)
-admin.site.register(GrantAuthority)
+admin.site.register(GrantAuthority, GrantAuthorityAdmin)
 admin.site.register(Note, NoteAdmin)
