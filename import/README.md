@@ -75,6 +75,9 @@ and then import the data with
 \copy ii_ga_notes FROM 'notes_no_header.tsv' WITH (FORMAT TEXT);
 ```
 
+Empty dates require special handling. Try using `(FORMAT TEXT, NULL '')` in
+the above line if the first import doesn't work.
+
 ## DDL files
 
 DDL scripts for some of the tables that we've converted are here in this
