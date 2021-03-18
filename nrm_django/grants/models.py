@@ -227,7 +227,7 @@ class Grant(models.Model):
     cooperator_agreement_number = models.CharField(
         max_length=34, blank=True, null=True
     )  # Is this used to key to a cooperator agreement?
-    gid = models.CharField("Agreement ID", max_length=16, blank=True, null=True)
+    gid = models.CharField("Agreement Number", max_length=16, blank=True, null=True)
     admin_open = models.CharField(max_length=1, blank=True, null=True)
     last_update = models.DateField(auto_now=True)
 
