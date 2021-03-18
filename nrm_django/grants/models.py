@@ -210,7 +210,7 @@ class Grant(models.Model):
     )  # probably boolean
     authority = models.CharField(
         max_length=1, blank=True, null=True
-    )  # probably boolean. Maybe FK
+    )  # see slide 14 here https://drive.google.com/file/d/17f9Wikf15dJJRc2jjuZ-aQc0XGdGxL0P/view
     format = models.CharField(
         max_length=1, blank=True, null=True
     )  # we'll need to safely rename this column
@@ -227,9 +227,7 @@ class Grant(models.Model):
     cooperator_agreement_number = models.CharField(
         max_length=34, blank=True, null=True
     )  # Is this used to key to a cooperator agreement?
-    gid = models.CharField(
-        "Agreement ID", max_length=16, blank=True, null=True, editable=False
-    )
+    gid = models.CharField("Agreement ID", max_length=16, blank=True, null=True)
     admin_open = models.CharField(max_length=1, blank=True, null=True)
     last_update = models.DateField(auto_now=True)
 
@@ -269,10 +267,7 @@ class Grant(models.Model):
 
 
 class GrantAuthority(models.Model):
-    # grant_cn = models.CharField(max_length=34, primary_key=True)
-    grant = models.OneToOneField(
-        Grant, primary_key=True, on_delete=models.DO_NOTHING, db_column="grant_cn"
-    )
+    grant = models.ForeignKey(Grant, on_delete=models.DO_NOTHING, db_column="grant_cn")
     authority_cd = models.CharField(max_length=40)
     authority_desc = models.CharField(
         "Authority Description", max_length=120, blank=True, null=True

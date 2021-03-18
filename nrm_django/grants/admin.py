@@ -17,12 +17,14 @@ class GrantAdmin(admin.ModelAdmin):
     inlines = [GrantAuthorityInline, NoteInline]
     list_display = (
         "pretty_name",
+        "gid",
         "application_type",
         "status",
         "significant_dates",
     )
     list_filter = ("status", "application_type")
     readonly_fields = [
+        "gid",
         "created_date",
         "created_in_instance",
         "modified_date",
