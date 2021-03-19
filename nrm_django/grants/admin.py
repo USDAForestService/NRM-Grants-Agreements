@@ -16,8 +16,8 @@ class GrantAuthorityInline(admin.TabularInline):
 class GrantAdmin(admin.ModelAdmin):
     inlines = [GrantAuthorityInline, NoteInline]
     list_display = (
-        "pretty_name",
         "gid",
+        "pretty_name",
         "application_type",
         "status",
         "significant_dates",
@@ -37,7 +37,6 @@ class GrantAdmin(admin.ModelAdmin):
         "application_id",
         "applicant_name",
     ]
-    list_editable = ["status"]
     fieldsets = (
         (
             "Required",
@@ -169,10 +168,16 @@ class GrantAdmin(admin.ModelAdmin):
     )
 
     def get_urls(self):
+        """
+        Defines custom ADMIN urls.
+        If you're looking for them in some urls.py, they're not there, they're here.
+        """
         urls = super().get_urls()
         my_urls = [
             path(
-                "my_view/<username>", self.admin_site.admin_view(CustomView.as_view())
+                "<username>/items/",
+                self.admin_site.admin_view(UserItemsView.as_view()),
+                name="user_items",
             ),
         ]
         return my_urls + urls
@@ -191,15 +196,13 @@ class NoteAdmin(admin.ModelAdmin):
     )
 
 
-class CustomView(ListView):
+class UserItemsView(ListView):
 
-    template_name = "grants/index.html"
+    template_name = "admin/user_items.html"
 
     def get_queryset(self):
-        return (
-            Grant.objects.filter(created_by=self.kwargs.get("username"))
-            .values("cn", "proj_title", "status")
-            .order_by("-status_date")
+        return Grant.objects.filter(created_by=self.kwargs.get("username")).order_by(
+            "-status_date"
         )
 
     def get_context_data(self, **kwargs):

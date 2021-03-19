@@ -240,7 +240,7 @@ class Grant(models.Model):
         return self.proj_title
 
     def pretty_name(self):
-        return ("%s" % self.proj_title).title()
+        return "%s" % self.proj_title.title()
 
     pretty_name.short_description = "Project Title"
 
@@ -280,6 +280,11 @@ class GrantAuthority(models.Model):
 
     def __str__(self):
         return "%s: %s" % (self.authority_cd, self.grant)
+
+    def pretty_str(self):
+        return "%s: %s" % (self.authority_cd, self.grant.title())
+
+    pretty_str.short_description = "Grant Authority"
 
 
 class Note(models.Model):
