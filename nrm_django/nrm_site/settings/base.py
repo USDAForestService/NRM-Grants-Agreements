@@ -61,7 +61,7 @@ ROOT_URLCONF = "nrm_site.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -113,12 +113,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 STATIC_URL = "/static/"
 
-# For testing purposes, I'm putting static in the app, so per the docs
-# we don't need STATICFILES_DIRS. However, given that the static assets
-# are site-wide, it would make more sense to have them in nrm_site.
-# So I'm leaving this here as a potential TO-DO, knowing that we'll need
-# to figure out the cloud path and resolve that. -- tcb
-# STATICFILES_DIRS = [
-#    BASE_DIR / "static",
-#    '/var/www/static/',
-# ]
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    #    '/var/www/static/',
+]

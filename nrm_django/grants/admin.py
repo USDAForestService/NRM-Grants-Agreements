@@ -1,9 +1,25 @@
 from django.contrib import admin
+from django.urls import path
+from django.views.generic.list import ListView
 
 from .models import Grant, GrantAuthority, Note
 
 
+class NoteInline(admin.TabularInline):
+    model = Note
+
+
+class NoteAdmin(admin.ModelAdmin):
+    list_display = (
+        "note_date",
+        "comments",
+        "note_by",
+        "grant",
+    )
+
+
 class GrantAdmin(admin.ModelAdmin):
+    inlines = [NoteInline]
     list_display = (
         "proj_title",
         "application_id",
@@ -141,7 +157,33 @@ class GrantAdmin(admin.ModelAdmin):
         ),
     )
 
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path(
+                "my_view/<username>", self.admin_site.admin_view(CustomView.as_view())
+            ),
+        ]
+        return my_urls + urls
+
+
+class CustomView(ListView):
+
+    template_name = "grants/index.html"
+
+    def get_queryset(self):
+        return (
+            Grant.objects.filter(created_by=self.kwargs.get("username"))
+            .values("cn", "proj_title", "status")
+            .order_by("-status_date")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["username"] = self.kwargs.get("username")
+        return context
+
 
 admin.site.register(Grant, GrantAdmin)
 admin.site.register(GrantAuthority)
-admin.site.register(Note)
+admin.site.register(Note, NoteAdmin)
