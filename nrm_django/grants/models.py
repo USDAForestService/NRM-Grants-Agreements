@@ -1,54 +1,15 @@
 from django.db import models
 from django.utils.safestring import mark_safe
 
-# Since the legacy DB didn't treat booleans as booleans,
-# we're trying to clean up. Really, they need to be updated/migrated.
-BOOL_CHOICES = (("Y", "Yes"), ("N", "No"))
-
-STATUS_CHOICES = (
-    ("AGREEMENT-ACTION", "Agreement action"),
-    ("NEW-APPLICATION", "New application"),
-    ("APP-ACCEPTED", "App accepted"),
-    ("APP-APPROVED", "App approved"),
-    ("APP-PGM REJECTED", "App PGM rejected"),
-    ("APP-RECEIVED", "App received"),
-    ("APP-REJECTED", "App rejected"),
-    ("GA-CANCELLED", "GA closed"),
-    ("GA-EXECUTED", "GA executed"),
-    ("GA-PENDING", "GA pending"),
-    ("GA-TERMINATED", "GA terminated"),
-)
-
-APPLICATION_TYPE_CHOICES = (
-    ("Initial", "Initial"),
-    ("CONTINUATION", "Continuation"),
-    ("NEW", "New"),
-    ("OTHER", "Other"),
-    ("REVISION A-INCREASE AWARD", "Revision A - Increase Award"),
-    ("REVISION C-INCREASE AWARD", "Revision C - Increase Duration"),
-)
-
-APP_SUBMISSION_TYPE_CHOICES = (
-    ("NEW", "New"),
-    ("Application", "Application"),
-    ("Preapplication", "Pre-application"),
-    ("NON-CONSTRUCTION PRE-APPLICATION", "Non-construction Pre-application"),
-    ("NON-CONSTRUCTION APPLICATION", "Non-construction Application"),
-    # ('Non-construction', "Non-Construction"), # In the DB, but probably needs to be normalized with the above.
-    # ('NON-Construction', "Non-Construction"), # In the DB, but probably needs to be normalized with the above.
-    ("CONSTRUCTION PRE-APPLICATION", "Construction Pre-application"),
-    ("CONSTRUCTION APPLICATION", "Construction Application"),
-    ("MOU", "Mou"),
-    ("OTHER", "Other"),
-    (
-        "8/1/2004NON-CONSTRUCTION APPLICATION",
-        "8/1/2004NON-CONSTRUCTION APPLICATION",
-    ),  # In the database, but probably not valid
-    (
-        "5/1/2005NON-CONSTRUCTION APPLICATION",
-        "5/1/2005NON-CONSTRUCTION APPLICATION",
-    ),  # In the database, but probably not valid
-    # ("%", "%") # In the database, but probably not valid
+from .choices import (
+    AB_CHOICES,
+    BOOL_CHOICES,
+    FED_ID_REGION_CHOICES,
+    FED_ID_TYPE_CHOICES,
+    STATUS_CHOICES,
+    APPLICATION_TYPE_CHOICES,
+    APP_SUBMISSION_TYPE_CHOICES,
+    YEAR_CHOICES,
 )
 
 
@@ -62,9 +23,11 @@ class Grant(models.Model):
     cn = models.CharField(max_length=34, primary_key=True, editable=False)
     proj_title = models.CharField("Project title", max_length=200)
     proj_status = models.CharField(
-        "Project status", max_length=15, blank=True, null=True
-    )  # choices????
-    application_id = models.CharField(max_length=34)
+        "Project status", max_length=15, blank=True, null=True, choices=AB_CHOICES
+    )
+    # Sys-generated, once initial proposal saved. Control number.
+    # Older field, not user viewable. Only used for historical records.
+    application_id = models.CharField(max_length=34, editable=False)
     application_type = models.CharField(max_length=30, choices=APPLICATION_TYPE_CHOICES)
     app_submission_type = models.CharField(
         "Application submission type",
@@ -73,34 +36,47 @@ class Grant(models.Model):
     )
     app_submit_date = models.DateField("Application submitted")
     app_received_date = models.DateField("Application received")
-    hhs_payment_ind = models.CharField(
-        "HHS payment", choices=BOOL_CHOICES, max_length=1
-    )
-    # grant status and significant dates (I think)
+    # No longer utilized, not in the application.
+    hhs_payment_ind = models.CharField(max_length=1, default="N", editable=False)
+
     proposed_start_date = models.DateField()
     proposed_end_date = models.DateField()
-    locked_ind = models.CharField("Locked", choices=BOOL_CHOICES, max_length=1)
+    # this was never implemented in the front end but the desire is that sys admins
+    # and help desk should be able to lock a record so it cannot be edited
+    # (unless they unlock it). For now, marking it as not-editable.
+    locked_ind = models.CharField(
+        choices=BOOL_CHOICES, max_length=1, default="N", editable=False
+    )
     status = models.CharField(max_length=40, choices=STATUS_CHOICES)
     status_date = models.DateField()
-    created_by = models.CharField(max_length=30)  # FK?
-    created_date = models.DateField()
+    # Should record current user on save()
+    created_by = models.CharField(max_length=30, editable=False)  # FK?
+    created_date = models.DateField(auto_now_add=True)
+    # Sys generated field. Comes from RACA, says what instance of the application it is.
+    # We need to determine how to generate it.
     created_in_instance = models.DecimalField(
-        max_digits=6, decimal_places=0
-    )  # Hmmm. What is instance here (and elsewhere)?
-    modified_by = models.CharField(max_length=30, blank=True, null=True)  # FK?
-    modified_date = models.DateField(
-        blank=True, null=True
-    )  # First modified? Last modified?
-    modified_in_instance = models.DecimalField(
-        max_digits=6, decimal_places=0, blank=True, null=True
+        max_digits=6, decimal_places=0, editable=False
     )
-    # Fields for Fed ID. What's that?
+    # There may be a subset of fields that should trigger this but it will be the current
+    # user that did the modification
+    modified_by = models.CharField(max_length=30, blank=True, null=True)  # FK?
+    modified_date = models.DateField(blank=True, null=True, auto_now=True)
+    # Same as created_in_instance, we need to determine how to generate this.
+    modified_in_instance = models.DecimalField(
+        max_digits=6, decimal_places=0, blank=True, null=True, editable=False
+    )
+    # These are the fields agreement numbers are derived from.
+    # Few people interact with them directly though.
     fed_id_fy = models.CharField(
-        max_length=4, blank=True, null=True
-    )  # what's fed_id? what's fy?
-    fed_id_type = models.CharField(max_length=2, blank=True, null=True)
+        max_length=4, blank=True, null=True, choices=YEAR_CHOICES
+    )
+    fed_id_type = models.CharField(
+        max_length=2, blank=True, null=True, choices=FED_ID_TYPE_CHOICES
+    )
     fed_id_agency = models.CharField(max_length=2, blank=True, null=True)
-    fed_id_region = models.CharField(max_length=2, blank=True, null=True)
+    fed_id_region = models.CharField(
+        max_length=2, blank=True, null=True, choices=FED_ID_REGION_CHOICES
+    )
     fed_id_unit = models.CharField(max_length=2, blank=True, null=True)
     fed_id_subunit = models.CharField(max_length=2, blank=True, null=True)
     fed_id_seq = models.DecimalField(
@@ -109,8 +85,8 @@ class Grant(models.Model):
 
     # Fields describing project(s) and significant dates.
     proj_type = models.CharField(
-        "Project Type", max_length=3, blank=True, null=True
-    )  # Choices? FK?
+        "Project Type", max_length=3, blank=True, null=True, choices=AB_CHOICES
+    )
     proj_desc = models.TextField(
         "Project description", max_length=2000, blank=True, null=True
     )
@@ -118,13 +94,11 @@ class Grant(models.Model):
     proj_execution_dt = models.DateField(
         "Project execution date", blank=True, null=True
     )
-    proj_start_dt = models.DateField("Project start date", blank=True, null=True)
+    proj_start_dt = models.DateField("Start date", blank=True, null=True)
     proj_obligation_dt = models.DateField(
         "Project obligation date", blank=True, null=True
     )
-    proj_expiration_dt = models.DateField(
-        "Project expiration date", blank=True, null=True
-    )
+    proj_expiration_dt = models.DateField("Expires", blank=True, null=True)
     proj_close_dt = models.DateField("Project close date", blank=True, null=True)
     proj_cancellation_dt = models.DateField(
         "Project cancellation date", blank=True, null=True
@@ -200,21 +174,23 @@ class Grant(models.Model):
         "Applicant/Cooperator Name", max_length=200, blank=True, null=True
     )
     international_act_ind = models.CharField(
-        "International Act", choices=BOOL_CHOICES, max_length=1, null=True
-    )  # Boolean indicator? Appears to be null in some DB instances
+        "International Act", choices=BOOL_CHOICES, max_length=1, null=True, default="N"
+    )
     advance_allowed_ind = models.CharField(
-        "Advance Allowed", choices=BOOL_CHOICES, max_length=1, null=True
-    )  # Boolean indicator? Appears to be null in some DB instances
+        "Advance Allowed", choices=BOOL_CHOICES, max_length=1, null=True, default="N"
+    )
     authority_approval = models.CharField(
-        max_length=1, blank=True, null=True
-    )  # probably boolean
+        max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
+    )
     authority = models.CharField(
-        max_length=1, blank=True, null=True
-    )  # see slide 14 here https://drive.google.com/file/d/17f9Wikf15dJJRc2jjuZ-aQc0XGdGxL0P/view
+        max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
+    )
     format = models.CharField(
-        max_length=1, blank=True, null=True
-    )  # we'll need to safely rename this column
-    other_approval = models.CharField(max_length=1, blank=True, null=True)
+        max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
+    )  # we may need to safely rename this column
+    other_approval = models.CharField(
+        max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
+    )
     master_agreement_ind = models.CharField(
         max_length=1, blank=True, null=True
     )  # boolean indicator
@@ -240,30 +216,41 @@ class Grant(models.Model):
         return self.proj_title
 
     def pretty_name(self):
-        return ("%s" % self.proj_title).title()
+        return "%s" % self.proj_title.title()
 
     pretty_name.short_description = "Project Title"
+
+    def pretty_cooperator_name(self):
+        """
+        Prettifies the applicant/cooperator name.
+        If the name is all uppercase, it transforms it to title case.
+        If the name is not uppercase, it assumes the name was input as intended and does nothing.
+        If the name does not exist, it returns an empty string (no change).
+        """
+        if self.applicant_name:
+            if self.applicant_name.isupper():
+                return "%s" % self.applicant_name.title()
+            return self.applicant_name
+        return ""
+
+    pretty_cooperator_name.short_description = "Cooperator name"
 
     def significant_dates(self):
         """
         Convenience method to display multiple dates in a single admin changelist column.
         """
         datelist_string = """<ul>
-            <li>Submitted: %s</li>
-            <li>Received: %s</li>
-            <li>Proposed start: %s</li>
-            <li>Last updated: %s</li>
-            </ul""" % (
-            self.app_submit_date,
-            self.app_received_date,
-            self.proposed_start_date,
-            self.last_update,
+            <li>Start date: %s</li>
+            <li>Expires: %s</li>
+            </ul>""" % (
+            self.proj_start_dt or "",
+            self.proj_expiration_dt or "",
         )
         return mark_safe(datelist_string)
 
     significant_dates.allow_tags = True
 
-    # TO-DO: Write save to write GID from Application ID
+    # TO-DO: Write save to write GID
 
 
 class GrantAuthority(models.Model):
@@ -280,6 +267,11 @@ class GrantAuthority(models.Model):
 
     def __str__(self):
         return "%s: %s" % (self.authority_cd, self.grant)
+
+    def pretty_str(self):
+        return "%s: %s" % (self.authority_cd, self.grant.title())
+
+    pretty_str.short_description = "Grant Authority"
 
 
 class Note(models.Model):

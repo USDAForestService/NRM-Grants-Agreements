@@ -18,9 +18,9 @@ class GrantAdmin(admin.ModelAdmin):
     list_display = (
         "pretty_name",
         "gid",
-        "application_type",
-        "status",
-        "significant_dates",
+        "pretty_cooperator_name",
+        "proj_start_dt",
+        "proj_expiration_dt",
     )
     list_filter = ("status", "application_type")
     readonly_fields = [
@@ -37,22 +37,16 @@ class GrantAdmin(admin.ModelAdmin):
         "application_id",
         "applicant_name",
     ]
-    list_editable = ["status"]
     fieldsets = (
         (
             "Required",
             {
                 "fields": (
                     "proj_title",
-                    ("application_id", "application_type", "app_submission_type"),
+                    ("application_type", "app_submission_type"),
                     ("app_submit_date", "app_received_date"),
                     ("proposed_start_date", "proposed_end_date"),
                     ("status", "status_date"),
-                    (
-                        "locked_ind",
-                        "hhs_payment_ind",
-                        "extramural_ind",
-                    ),
                     (
                         "international_act_ind",
                         "advance_allowed_ind",
@@ -77,9 +71,7 @@ class GrantAdmin(admin.ModelAdmin):
                     ("proj_expiration_dt", "proj_close_dt", "proj_cancellation_dt"),
                     (
                         "proj_type",
-                        "proj_rwu",
                         "proj_cfda_no",
-                        "proj_science_cd",
                         "project_congressional_district",
                     ),
                 ),
@@ -92,8 +84,6 @@ class GrantAdmin(admin.ModelAdmin):
                 "fields": (
                     "comments",
                     ("date_mailed", "date_signed"),
-                    ("created_by", "created_date", "created_in_instance"),
-                    ("modified_by", "modified_date", "modified_in_instance"),
                 ),
             },
         ),
@@ -140,12 +130,23 @@ class GrantAdmin(admin.ModelAdmin):
             },
         ),
         (
+            "RWU",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "proj_rwu",
+                    "research_type",
+                    "extramural_ind",
+                    "proj_science_cd",
+                    "journal_ind",
+                ),
+            },
+        ),
+        (
             "Other",
             {
                 "classes": ("collapse",),
                 "fields": (
-                    "research_type",
-                    "journal_ind",
                     "mod_number",
                     "geo_type",
                     "areas_effected",
@@ -169,10 +170,16 @@ class GrantAdmin(admin.ModelAdmin):
     )
 
     def get_urls(self):
+        """
+        Defines custom ADMIN urls.
+        If you're looking for them in some urls.py, they're not there, they're here.
+        """
         urls = super().get_urls()
         my_urls = [
             path(
-                "my_view/<username>", self.admin_site.admin_view(CustomView.as_view())
+                "<username>/items/",
+                self.admin_site.admin_view(UserItemsView.as_view()),
+                name="user_items",
             ),
         ]
         return my_urls + urls
@@ -191,15 +198,13 @@ class NoteAdmin(admin.ModelAdmin):
     )
 
 
-class CustomView(ListView):
+class UserItemsView(ListView):
 
-    template_name = "grants/index.html"
+    template_name = "admin/user_items.html"
 
     def get_queryset(self):
-        return (
-            Grant.objects.filter(created_by=self.kwargs.get("username"))
-            .values("cn", "proj_title", "status")
-            .order_by("-status_date")
+        return Grant.objects.filter(created_by=self.kwargs.get("username")).order_by(
+            "-status_date"
         )
 
     def get_context_data(self, **kwargs):
