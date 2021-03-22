@@ -16,11 +16,11 @@ class GrantAuthorityInline(admin.TabularInline):
 class GrantAdmin(admin.ModelAdmin):
     inlines = [GrantAuthorityInline, NoteInline]
     list_display = (
-        "gid",
         "pretty_name",
-        "application_type",
-        "status",
-        "significant_dates",
+        "gid",
+        "pretty_cooperator_name",
+        "proj_start_dt",
+        "proj_expiration_dt",
     )
     list_filter = ("status", "application_type")
     readonly_fields = [
@@ -43,15 +43,10 @@ class GrantAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "proj_title",
-                    ("application_id", "application_type", "app_submission_type"),
+                    ("application_type", "app_submission_type"),
                     ("app_submit_date", "app_received_date"),
                     ("proposed_start_date", "proposed_end_date"),
                     ("status", "status_date"),
-                    (
-                        "locked_ind",
-                        "hhs_payment_ind",
-                        "extramural_ind",
-                    ),
                     (
                         "international_act_ind",
                         "advance_allowed_ind",
@@ -76,9 +71,7 @@ class GrantAdmin(admin.ModelAdmin):
                     ("proj_expiration_dt", "proj_close_dt", "proj_cancellation_dt"),
                     (
                         "proj_type",
-                        "proj_rwu",
                         "proj_cfda_no",
-                        "proj_science_cd",
                         "project_congressional_district",
                     ),
                 ),
@@ -91,8 +84,6 @@ class GrantAdmin(admin.ModelAdmin):
                 "fields": (
                     "comments",
                     ("date_mailed", "date_signed"),
-                    ("created_by", "created_date", "created_in_instance"),
-                    ("modified_by", "modified_date", "modified_in_instance"),
                 ),
             },
         ),
@@ -139,12 +130,23 @@ class GrantAdmin(admin.ModelAdmin):
             },
         ),
         (
+            "RWU",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "proj_rwu",
+                    "research_type",
+                    "extramural_ind",
+                    "proj_science_cd",
+                    "journal_ind",
+                ),
+            },
+        ),
+        (
             "Other",
             {
                 "classes": ("collapse",),
                 "fields": (
-                    "research_type",
-                    "journal_ind",
                     "mod_number",
                     "geo_type",
                     "areas_effected",
