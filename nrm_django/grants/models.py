@@ -20,8 +20,10 @@ class Grant(models.Model):
     Has a lot of related info in here, too.
     """
 
-    cn = models.CharField(max_length=34, primary_key=True, editable=False)
-    proj_title = models.CharField("Project title", max_length=200)
+    cn = models.CharField(
+        max_length=34, primary_key=True, editable=False, db_index=True
+    )
+    proj_title = models.CharField("Project title", max_length=200, db_index=True)
     proj_status = models.CharField(
         "Project status", max_length=15, blank=True, null=True, choices=AB_CHOICES
     )
@@ -254,6 +256,12 @@ class Grant(models.Model):
 
 
 class GrantAuthority(models.Model):
+    """
+    Defines the authority a given Grant can use.
+
+    Note this is one of the few models with a Django-generated PK.
+    """
+
     grant = models.ForeignKey(Grant, on_delete=models.DO_NOTHING, db_column="grant_cn")
     authority_cd = models.CharField(max_length=40)
     authority_desc = models.CharField(
@@ -275,7 +283,7 @@ class GrantAuthority(models.Model):
 
 
 class Note(models.Model):
-    cn = models.CharField(primary_key=True, max_length=34)
+    cn = models.CharField(primary_key=True, max_length=34, db_index=True)
     grant = models.ForeignKey(Grant, on_delete=models.DO_NOTHING, db_column="grant_cn")
     note_by = models.CharField(max_length=30)
     note_date = models.DateField()
