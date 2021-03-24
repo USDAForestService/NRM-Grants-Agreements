@@ -506,8 +506,7 @@ class GrantAuthority(models.Model):
 
 class Note(models.Model):
     """
-    Defines a note object. As of 3/23 it's unclear whether these are primarily inline on grants or
-    are a component of the Notes tab (as outlined in the user guide)
+    Defines a note object, which describes a grant.
     """
 
     cn = models.CharField(
