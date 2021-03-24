@@ -160,7 +160,6 @@ class GrantAdmin(admin.ModelAdmin):
                     "authority",
                     "format",
                     "other_approval",
-                    "master_agreement_ind",
                     "progrm_responsibility_type",
                     "cooperator_agreement_number",
                     "admin_open",

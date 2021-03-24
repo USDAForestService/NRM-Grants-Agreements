@@ -285,8 +285,7 @@ class Grant(models.Model):
         null=True,
         default="N",
         help_text="""
-            Select Yes from the choice list if the instrument requires an Annual Operating Plan (AOP);
-            select Yes if the instrument requires an AOP.
+            Select Yes from the choice list if the instrument requires an Annual Operating Plan (AOP).
         """,
     )
     geo_type = models.CharField(max_length=2, blank=True, null=True)
