@@ -59,7 +59,7 @@ class Grant(models.Model):
         max_length=30,
         choices=APPLICATION_TYPE_CHOICES,
         help_text="""
-            Applies to instruments with Federal Financial Assistance (FFA). 
+            Applies to instruments with Federal Financial Assistance (FFA).
             Select OTHER if not FFA.
         """,
     )
@@ -68,7 +68,7 @@ class Grant(models.Model):
         max_length=100,
         choices=APP_SUBMISSION_TYPE_CHOICES,
         help_text="""
-            Applies to instruments with Federal Financial Assistance (FFA). 
+            Applies to instruments with Federal Financial Assistance (FFA).
             Select OTHER if not FFA.
         """,
     )
@@ -203,8 +203,8 @@ class Grant(models.Model):
         null=True,
         help_text="""
             The date the instrument is closed.
-            Denotes the grant or agreement has been executed and has been officially closed. 
-            Required when closing the instrument
+            Denotes the grant or agreement has been executed and has been officially closed.
+            Required when closing the instrument.
         """,
     )
     proj_cancellation_dt = models.DateField(
@@ -227,8 +227,8 @@ class Grant(models.Model):
         null=True,
         choices=CFDA_CHOICES,
         help_text="""
-            The Catalog of Federal Domestic Assistance (CFDA) Number. 
-            Required if the instrument was issued under a federal financial assistance authority 
+            The Catalog of Federal Domestic Assistance (CFDA) Number.
+            Required if the instrument was issued under a federal financial assistance authority
             (instrument type DG and CA only). REQUIRED FOR APPROVAL""",
     )
     proj_science_cd = models.CharField(
@@ -268,10 +268,10 @@ class Grant(models.Model):
         blank=True,
         null=True,
         help_text="""
-            If there was a previous agreement, (prior to FY2000 numbering scheme), 
-            enter the original Forest Service identification number here to supply 
+            If there was a previous agreement, (prior to FY2000 numbering scheme),
+            enter the original Forest Service identification number here to supply
             a cross-reference to the new agreement number.
-            Note: Do not enter other agency agreement numbers in this field. 
+            Note: Do not enter other agency agreement numbers in this field.
             They can be entered in the Comments field.
         """,
     )
@@ -285,7 +285,7 @@ class Grant(models.Model):
         null=True,
         default="N",
         help_text="""
-            Select Yes from the choice list if the instrument requires an Annual Operating Plan (AOP); 
+            Select Yes from the choice list if the instrument requires an Annual Operating Plan (AOP);
             select Yes if the instrument requires an AOP.
         """,
     )
@@ -328,7 +328,7 @@ class Grant(models.Model):
         blank=True,
         null=True,
         help_text="""
-            Executive Order 12372 review date. 
+            Executive Order 12372 review date.
             You must select a data if you selected Yes for Subject to State E.O.""",
     )
 
@@ -402,8 +402,8 @@ class Grant(models.Model):
         blank=True,
         null=True,
         help_text="""
-            Indicates the specific responsibilities notification type 
-            (Incoming Funding, Outgoing Funding, or Non-Cash ie no exchange of funding) 
+            Indicates the specific responsibilities notification type
+            (Incoming Funding, Outgoing Funding, or Non-Cash ie no exchange of funding)
             that is send to the Program Manager when the agreement is executed.
         """,
     )  # choices?
@@ -483,7 +483,7 @@ class GrantAuthority(models.Model):
         "Code",
         max_length=40,
         help_text="""
-            The legislative authority code under which the instrument was authorized. 
+            The legislative authority code under which the instrument was authorized.
             The full list is in the GA User Guide""",
     )
     authority_desc = models.CharField(
