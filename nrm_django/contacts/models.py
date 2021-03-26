@@ -92,7 +92,7 @@ class AccinstContLink(models.Model):
         blank=True,
         null=True,
         help_text="""
-            The institution code for State Controlled Institution of Higher Learning only. 
+            The institution code for State Controlled Institution of Higher Learning only.
             Required if FFATA reported.
         """,
     )
@@ -148,7 +148,7 @@ class Contact(models.Model):
         max_length=30,
         editable=False,
         help_text="""
-            For new Contacts, this field is a system generated number. 
+            For new Contacts, this field is a system generated number.
             For older contacts it will be a shortened version of the contact's full name or organization title.
         """,
     )
