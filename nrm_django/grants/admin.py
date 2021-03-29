@@ -16,9 +16,9 @@ class GrantAuthorityInline(admin.TabularInline):
 class GrantAdmin(admin.ModelAdmin):
     inlines = [GrantAuthorityInline, NoteInline]
     list_display = (
-        "pretty_name",
         "gid",
         "pretty_cooperator_name",
+        "pretty_name",
         "proj_start_dt",
         "proj_expiration_dt",
     )

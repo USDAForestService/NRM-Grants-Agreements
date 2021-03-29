@@ -152,10 +152,11 @@ class Contact(models.Model):
             For older contacts it will be a shortened version of the contact's full name or organization title.
         """,
     )
-    obj_tech = models.CharField(max_length=30)
-    obj_name = models.CharField(max_length=30)
-    obj_class = models.CharField(max_length=30)
+    obj_tech = models.CharField(max_length=30, editable=False, default="ORACLE")
+    obj_name = models.CharField(max_length=30, editable=False, default="ORGANIZATION")
+    obj_class = models.CharField(max_length=30, editable=False, default="CONTACT")
 
+    # TO-DO: Capture request.user on save()
     created_by = models.CharField(
         max_length=30, editable=False, help_text="Should capture username."
     )
@@ -164,7 +165,7 @@ class Contact(models.Model):
     created_in_instance = models.DecimalField(
         max_digits=6, decimal_places=0, editable=False
     )
-    trans_id = models.CharField(max_length=34, blank=True, null=True)
+    trans_id = models.CharField("Trans ID", max_length=34, blank=True, null=True)
     # User guide says this is display only. Unclear how new values are created.
     # TO-DO: Find out how
     name = models.CharField(
@@ -194,9 +195,9 @@ class Contact(models.Model):
     modified_in_instance = models.DecimalField(
         max_digits=6, decimal_places=0, blank=True, null=True, editable=False
     )
-    security_id = models.CharField(max_length=30, blank=True, null=True)
+    security_id = models.CharField(max_length=30, blank=True, null=True, editable=False)
     agency_code = models.CharField(max_length=4)
-    admin_org_ind = models.CharField(max_length=1)
+    admin_org_ind = models.CharField("Admin Org", max_length=1, choices=BOOL_CHOICES)
     # ein and duns are noted as display only in the User Guide
     # TO-DO: determine how new entries can be created
     ein = models.CharField(
@@ -219,8 +220,10 @@ class Contact(models.Model):
             Call 1-866-705-5711 or visit the DUNS Number Request Form to request and register for a DUNS number.
         """,
     )
-    faads_cn = models.CharField(max_length=34, blank=True, null=True)
-    ffis_vendor_status = models.CharField(max_length=40, blank=True, null=True)
+    faads_cn = models.CharField(max_length=34, blank=True, null=True, editable=False)
+    ffis_vendor_status = models.CharField(
+        "FFIS vendor status", max_length=40, blank=True, null=True
+    )
     alc_code = models.CharField(
         "ALC",
         max_length=40,
@@ -255,3 +258,6 @@ class Contact(models.Model):
         managed = False
         db_table = "ii_contacts"
         unique_together = (("obj_tech", "obj_name", "obj_class", "id", "trans_id"),)
+
+    def __str__(self):
+        return self.name
