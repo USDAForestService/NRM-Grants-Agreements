@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "nrm_app",
     "grants",
+    "contacts",
 ]
 
 MIDDLEWARE = [
