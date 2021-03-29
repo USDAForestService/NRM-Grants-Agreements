@@ -160,7 +160,6 @@ class GrantAdmin(admin.ModelAdmin):
                     "authority",
                     "format",
                     "other_approval",
-                    "master_agreement_ind",
                     "progrm_responsibility_type",
                     "cooperator_agreement_number",
                     "admin_open",
@@ -196,6 +195,10 @@ class NoteAdmin(admin.ModelAdmin):
         "note_by",
         "grant",
     )
+    # Grants is too big to be in a selectbox.
+    # As long as Notes aren't stricly inlines, we're gonna need to do something.
+    # This is one possible something.
+    raw_id_fields = ("grant",)
 
 
 class UserItemsView(ListView):
