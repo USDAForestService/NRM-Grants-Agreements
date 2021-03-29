@@ -16,14 +16,25 @@ install-python-dev-dependencies: &install-python-dev-dependencies
     command: |
       pipenv install --dev
 
+# Snippet for installing CloudFoundry CLI version 7
+install-cf7: &install-cf7
+  run:
+    name: Install CF7
+    command: |
+      curl -L -o cf7.deb 'https://packages.cloudfoundry.org/stable?release=debian64&version=v7&source=github'
+      sudo dpkg -i cf7.deb
+      rm cf7.deb
+      cf7 api https://api.fr.cloud.gov
+
 version: 2
 jobs:
+
   build-and-test: # runs not using Workflows must have a `build` job as entry point
     docker:
       - image: cimg/python:3.9.1
     environment: # environment variables for primary container
       PIPENV_VENV_IN_PROJECT: true
-      DATABASE_URL: 
+      DATABASE_URL:
     steps:
       - checkout
       - *install-python-dependencies
@@ -55,8 +66,32 @@ jobs:
             pipenv run black --check --diff .
 
 
+  deploy:  # deploy to cloud.gov, conditional for which branch is in the workflow
+    docker:
+      - image: cimg/python:3.9.1
+    environment: # environment variables for primary container
+      PIPENV_VENV_IN_PROJECT: true
+      DATABASE_URL:
+    steps:
+      - checkout
+      - *install-cf7
+      - run:
+          name: Login to cloud.gov
+          command: cf7 login -u ${CLOUD_USERNAME} -p ${CLOUD_PASSWORD} -o usda-sandbox -s neil.martinsen-burrell
+      - run:
+          name: Deploy fs-nrm-app
+          working_directory: ~/project/nrm_django
+          command: cf7 push fs-nrm-app --strategy rolling
+
 workflows:
   version: 2
   build_test:
     jobs:
       - build-and-test
+
+      - deploy:
+          requires:
+            - build_test
+          filters:
+            branches:
+              only: main
