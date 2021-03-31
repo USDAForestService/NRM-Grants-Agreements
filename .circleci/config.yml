@@ -77,7 +77,7 @@ jobs:
       - *install-cf7
       - run:
           name: Login to cloud.gov
-          command: cf7 login -u ${CLOUD_USERNAME} -p ${CLOUD_PASSWORD} -o usda-sandbox -s neil.martinsen-burrell
+          command: cf7 login -u ${CLOUD_USERNAME} -p ${CLOUD_PASSWORD} -o sandbox-usda -s neil.martinsen-burrell
       - run:
           name: Deploy fs-nrm-app
           working_directory: ~/project/nrm_django
