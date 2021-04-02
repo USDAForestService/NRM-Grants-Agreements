@@ -79,9 +79,9 @@ jobs:
           name: Login to cloud.gov
           command: cf7 login -u ${CLOUD_USERNAME} -p ${CLOUD_PASSWORD} -o sandbox-usda -s neil.martinsen-burrell
       - run:
-          name: Deploy fs-nrm-app
+          name: Deploy fs-nrm app
           working_directory: ~/project/nrm_django
-          command: cf7 push fs-nrm-app --strategy rolling
+          command: cf7 push fs-nrm --strategy rolling
 
 workflows:
   version: 2
