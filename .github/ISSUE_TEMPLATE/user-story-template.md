@@ -7,19 +7,17 @@ assignees: ''
 
 ---
 
-##Notes
+**Notes**
 
 
-##We'll know we're done when...
+**We'll know we're done when...**
 - [ ]
 
-##Supporting documentation
+**Supporting documentation**
 - [ ] 
 
-##Open questions
+**Open questions**
 - [ ] 
 
-##Tasks
-- [ ] 
-
-
+**Tasks**
+- [ ]
