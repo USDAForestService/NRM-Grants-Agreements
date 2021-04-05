@@ -9,6 +9,10 @@ assignees: ''
 
 ##Notes
 
+
+##We'll know we're done when...
+- [ ]
+
 ##Supporting documentation
 - [ ] 
 
@@ -18,5 +22,4 @@ assignees: ''
 ##Tasks
 - [ ] 
 
-##We'll know we're done when...
-- [ ]
+
