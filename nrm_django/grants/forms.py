@@ -4,7 +4,6 @@ import uuid
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .choices import BOOL_CHOICES
 from .models import Grant
 
 
