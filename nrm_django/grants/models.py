@@ -28,6 +28,8 @@ class Grant(models.Model):
 
     # CN may need to be viewable at some times, per the User Guide.
     # Unclear what the use case might be, though.
+    # Per Jamie, it is a random number, but the first part is based on FY generated and org...
+    # so 2109**** would be from region 09
     cn = models.CharField(
         "Proposal ID",
         max_length=34,
@@ -74,7 +76,7 @@ class Grant(models.Model):
     )
     app_submit_date = models.DateField(
         "Application submitted",
-        help_text="The date the proposal was submitted to the agreements specialist for review or processing.",
+        help_text="The date the proposal was submitted for review or processing.",
     )
     app_received_date = models.DateField(
         "Application received",
@@ -105,8 +107,13 @@ class Grant(models.Model):
     locked_ind = models.CharField(
         choices=BOOL_CHOICES, max_length=1, default="N", editable=False
     )
-    status = models.CharField("Agreement Status", max_length=40, choices=STATUS_CHOICES)
-    status_date = models.DateField()
+    status = models.CharField(
+        "Agreement Status",
+        max_length=40,
+        choices=STATUS_CHOICES,
+        default="NEW-APPLICATION",
+    )
+    status_date = models.DateField(auto_now_add=True)
     # TO-DO: created_by should record current user on save()
     created_by = models.CharField(max_length=30, editable=False)  # FK?
     created_date = models.DateField(auto_now_add=True)
@@ -328,7 +335,7 @@ class Grant(models.Model):
         null=True,
         help_text="""
             Executive Order 12372 review date.
-            You must select a data if you selected Yes for Subject to State E.O.""",
+            You must select a date if 'Subject to State E.O.' is Yes.""",
     )
 
     # EST Fund fields
@@ -414,7 +421,7 @@ class Grant(models.Model):
         max_length=34,
         blank=True,
         null=True,
-        help_text="Cooperators agreement number, if different then the Forest Service Agreement Number",
+        help_text="Cooperator's agreement number, if different then the Forest Service Agreement Number",
     )  # Is this used to key to a cooperator agreement?
     gid = models.CharField("Agreement Number", max_length=16, blank=True, null=True)
     admin_open = models.CharField(max_length=1, blank=True, null=True)
@@ -424,6 +431,7 @@ class Grant(models.Model):
         db_table = "ii_grants"
         verbose_name = "Grant/Agreement"
         verbose_name_plural = "Grants and Agreements"
+        ordering = ["-created_date"]
 
     def __str__(self):
         return self.proj_title
