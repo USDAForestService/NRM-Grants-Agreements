@@ -421,7 +421,7 @@ class Grant(models.Model):
         max_length=34,
         blank=True,
         null=True,
-        help_text="Cooperator's agreement number, if different then the Forest Service Agreement Number",
+        help_text="Cooperator's agreement number, if different than the Forest Service Agreement Number",
     )  # Is this used to key to a cooperator agreement?
     gid = models.CharField("Agreement Number", max_length=16, blank=True, null=True)
     admin_open = models.CharField(max_length=1, blank=True, null=True)

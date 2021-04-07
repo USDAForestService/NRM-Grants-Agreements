@@ -50,6 +50,8 @@ class GrantForm(forms.ModelForm):
         # TO-DO: figure out a better way to know the correct region. Maybe from contacts table?
         year_char = datetime.date.today().strftime("%y")[1:]
         short_uuid = str(uuid.uuid4())[:8]
+        # Assuming we end up keeping instance_ids as a useful thing we'll have to learn how to
+        # capture them correctly rather than just using a hard-coded value as we are here.
         instance_id = "10602"
         instance.cn = "%s%s%s0%s" % (year_char, "6", short_uuid, instance_id)
 
