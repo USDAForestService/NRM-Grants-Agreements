@@ -18,8 +18,10 @@ class GrantForm(forms.ModelForm):
         }
 
     def clean_state_eo_date(self):
+        """
+        Ensures that if State EO Code is Yes, then a date must be entered.
+        """
         cleaned_data = super().clean()
-        # if eo_code is Y then we must have a date
         eo_code = cleaned_data.get("state_eo_code")
         eo_date = cleaned_data.get("state_eo_date")
 
@@ -29,6 +31,16 @@ class GrantForm(forms.ModelForm):
             )
 
     def save(self, commit=True):
+        """
+        Ensures on save we generate and save several values:
+        * A new CN/PK
+        * Updated `status_date` if new or status has chanaged.
+        * `created_in_instance` and `modified_in_instance`
+
+        Note that the instance ID is currently hard-coded.
+        It may have no value beyond mimicking the legacy system,
+        but if it is needed we will still need to learn how to capture it.
+        """
         instance = super().save(commit=False)
         # first, we're gonna have to create our cn/pk
         # * First character: Year
@@ -50,7 +62,7 @@ class GrantForm(forms.ModelForm):
         # stubbing out foo_in_instance rather than making defaults
         # since we don't know yet how to populate them correctly or what the values mean.
         # eventually we'll have some sort of check or logic here.
-        instance.created_in_instance = instance.modified_in_instance = "10602"
+        instance.created_in_instance = instance.modified_in_instance = instance_id
         if commit:
             instance.save()
         return instance
