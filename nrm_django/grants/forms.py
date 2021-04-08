@@ -21,7 +21,6 @@ class GrantForm(forms.ModelForm):
         """A quick init to add some classes on some fields, since we don't need to override the widget."""
         super(GrantForm, self).__init__(*args, **kwargs)
         self.fields["proj_title"].widget.attrs["class"] += " text-wide"
-        self.fields["applicant_name"].widget.attrs["data-modified"] = "true"
 
     def clean_state_eo_date(self):
         """
