@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic.list import ListView
 
+from .forms import GrantForm
 from .models import Grant, GrantAuthority, Note
 
 
@@ -14,7 +15,7 @@ class GrantAuthorityInline(admin.TabularInline):
 
 
 class GrantAdmin(admin.ModelAdmin):
-    inlines = [GrantAuthorityInline, NoteInline]
+    # list options
     list_display = (
         "gid",
         "pretty_cooperator_name",
@@ -23,13 +24,6 @@ class GrantAdmin(admin.ModelAdmin):
         "proj_expiration_dt",
     )
     list_filter = ("status", "application_type")
-    readonly_fields = [
-        "gid",
-        "created_date",
-        "created_in_instance",
-        "modified_date",
-        "status_date",
-    ]
     search_fields = [
         "proj_title",
         "proj_desc",
@@ -37,16 +31,38 @@ class GrantAdmin(admin.ModelAdmin):
         "application_id",
         "applicant_name",
     ]
+    # detail options
+    form = GrantForm
+    inlines = [GrantAuthorityInline, NoteInline]
+    readonly_fields = [
+        "created_date",
+        "created_in_instance",
+        "modified_date",
+        "status",
+    ]
     fieldsets = (
         (
             "Required",
             {
                 "fields": (
-                    "proj_title",
+                    ("applicant_name", "proj_cfda_no"),
                     ("application_type", "app_submission_type"),
                     ("app_submit_date", "app_received_date"),
                     ("proposed_start_date", "proposed_end_date"),
-                    ("status", "status_date"),
+                    ("proj_title", "status"),
+                    "progrm_responsibility_type",
+                )
+            },
+        ),
+        (
+            "Details",
+            {
+                "fields": (
+                    ("gid",),
+                    ("proj_desc", "areas_effected"),
+                    ("state_eo_code", "state_eo_date"),
+                    ("cooperator_agreement_number", "extramural_ind"),
+                    ("comments",),
                     (
                         "international_act_ind",
                         "advance_allowed_ind",
@@ -56,24 +72,25 @@ class GrantAdmin(admin.ModelAdmin):
             },
         ),
         (
+            "RWU",
+            {
+                "classes": ("collapse",),
+                "fields": (
+                    "proj_rwu",
+                    ("research_type", "journal_ind"),
+                ),
+            },
+        ),
+        (
             "Project info",
             {
                 "classes": ("collapse",),
                 "fields": (
-                    "proj_status",
-                    "proj_desc",
-                    (
-                        "proj_received_dt",
-                        "proj_execution_dt",
-                        "proj_start_dt",
-                        "proj_obligation_dt",
-                    ),
+                    ("proj_type", "proj_status"),
+                    ("proj_science_cd", "project_congressional_district"),
+                    ("proj_received_dt", "proj_execution_dt"),
+                    ("proj_start_dt", "proj_obligation_dt"),
                     ("proj_expiration_dt", "proj_close_dt", "proj_cancellation_dt"),
-                    (
-                        "proj_type",
-                        "proj_cfda_no",
-                        "project_congressional_district",
-                    ),
                 ),
             },
         ),
@@ -81,10 +98,7 @@ class GrantAdmin(admin.ModelAdmin):
             "Grant/Agreement",
             {
                 "classes": ("collapse",),
-                "fields": (
-                    "comments",
-                    ("date_mailed", "date_signed"),
-                ),
+                "fields": (("date_mailed", "date_signed"),),
             },
         ),
         (
@@ -103,7 +117,7 @@ class GrantAdmin(admin.ModelAdmin):
             {
                 "classes": ("collapse",),
                 "fields": (
-                    ("state_identifier", "state_eo_code", "state_eo_date"),
+                    ("state_identifier",),
                     ("managing_state_county"),
                 ),
             },
@@ -130,38 +144,21 @@ class GrantAdmin(admin.ModelAdmin):
             },
         ),
         (
-            "RWU",
-            {
-                "classes": ("collapse",),
-                "fields": (
-                    "proj_rwu",
-                    "research_type",
-                    "extramural_ind",
-                    "proj_science_cd",
-                    "journal_ind",
-                ),
-            },
-        ),
-        (
             "Other",
             {
                 "classes": ("collapse",),
                 "fields": (
                     "mod_number",
                     "geo_type",
-                    "areas_effected",
                     "ffin",
                     "reroute_from",
                     "reroute_date",
                     "certificaion_date",
                     "ffis_doc_id",
-                    "applicant_name",
                     "authority_approval",
                     "authority",
                     "format",
                     "other_approval",
-                    "progrm_responsibility_type",
-                    "cooperator_agreement_number",
                     "admin_open",
                 ),
             },

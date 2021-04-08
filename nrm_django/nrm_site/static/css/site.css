@@ -35,6 +35,33 @@
 .module h2, .module caption, .inline-group h2 { /* Django overrides */
     background-color: var(--fs-green-lighter);
 }
+
+.admin .form-row {
+  display: flex;
+  align-items: top;
+}
+.admin .form-row .fieldBox {
+    flex: 50%;
+}
+.admin .form-row .fieldBox label {
+    float: none;
+    width: auto
+}
+
+.admin .form-row .fieldBox .help {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.admin .form-row .fieldBox textarea {
+    width: 100%;
+}
+
+.admin .help {
+    font-size: 12px;
+    color: #666
+}
+
 .usa-breadcrumb {
     padding-left: 2em;
     border-bottom: 1px solid #ccc;
