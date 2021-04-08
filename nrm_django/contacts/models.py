@@ -7,12 +7,14 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
+from grants.models import Grant
 from grants.choices import BOOL_CHOICES
 
 
 class AccomplishmentInstrument(models.Model):
     cn = models.CharField(primary_key=True, max_length=34)
-    id = models.CharField(max_length=40)
+    grant = models.OneToOneField(Grant, to_field="gid",
+            on_delete=models.CASCADE, db_column="id")
     name = models.CharField(max_length=200, blank=True, null=True)
     obj_tech = models.CharField(max_length=30)
     obj_name = models.CharField(max_length=30)
@@ -62,79 +64,6 @@ class AdminUnit(models.Model):
     class Meta:
         managed = False
         db_table = "admin_units"
-
-
-class AccinstContLink(models.Model):
-    accinst_cn = models.ForeignKey(
-        AccomplishmentInstrument, models.DO_NOTHING, db_column="accinst_cn"
-    )
-    cont_cn = models.CharField(max_length=34)
-    link_type_name = models.CharField(max_length=40)
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
-    remarks = models.CharField(max_length=255, blank=True, null=True)
-    leading_ind = models.CharField(max_length=1, blank=True, null=True)
-    department = models.CharField(max_length=40, blank=True, null=True)
-    division = models.CharField(max_length=40, blank=True, null=True)
-    # Choices
-    ffis_vendor_id_pre_fmmi = models.CharField(
-        "FMMI Vendor ID",
-        max_length=11,
-        blank=True,
-        null=True,
-        help_text="The cooperator/recipient's VEND number as assigned by FMMI.",
-    )
-    # TO-DO: Find out what this field is for
-    faads_addr_cn = models.CharField(max_length=34, blank=True, null=True)
-    # CHOICES
-    institution_code = models.CharField(
-        max_length=40,
-        blank=True,
-        null=True,
-        help_text="""
-            The institution code for State Controlled Institution of Higher Learning only.
-            Required if FFATA reported.
-        """,
-    )
-    fed_debt_delnqnt_ind = models.CharField(
-        "Delinquent on Fed. Debt",
-        max_length=1,
-        default="N",
-        choices=BOOL_CHOICES,
-        blank=True,
-        null=True,
-        help_text="""
-            Check this box to indicate if the applicant is delinquent on any federal debt.
-        """,
-    )
-    payee_ind = models.CharField(
-        "Payee", max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
-    )
-    applicant_ind = models.CharField(max_length=1, blank=True, null=True)
-    link_sub_type = models.CharField(
-        "Sub Type",
-        max_length=40,
-        blank=True,
-        null=True,
-        help_text="""
-            Indicates the type of contact, for example, FS Signatory Official (SO) or Reviewer (RW),
-            depending on the responsibility/role the contact has with the instrument.
-        """,
-    )
-    cn = models.CharField(primary_key=True, max_length=34)
-    ffis_can_number_status = models.CharField(max_length=40, blank=True, null=True)
-    payer_ind = models.CharField(max_length=1, blank=True, null=True)
-    fmmi_customer_number = models.CharField(max_length=10, blank=True, null=True)
-    ffis_vendor_id = models.CharField(max_length=10, blank=True, null=True)
-    fmmi_customer_number_status = models.CharField(max_length=40, blank=True, null=True)
-    sam_expiration_date = models.DateField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = "ii_accinst_cont_links"
-        unique_together = (
-            ("accinst_cn", "cont_cn", "link_type_name", "link_sub_type"),
-        )
 
 
 class Contact(models.Model):
@@ -261,3 +190,78 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class AccinstContLink(models.Model):
+    accinst = models.ForeignKey(
+        AccomplishmentInstrument, models.DO_NOTHING, db_column="accinst_cn"
+    )
+    contact = models.ForeignKey(
+        Contact, models.DO_NOTHING, db_column="cont_cn"
+    )
+    link_type_name = models.CharField(max_length=40)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+    leading_ind = models.CharField(max_length=1, blank=True, null=True)
+    department = models.CharField(max_length=40, blank=True, null=True)
+    division = models.CharField(max_length=40, blank=True, null=True)
+    # Choices
+    ffis_vendor_id_pre_fmmi = models.CharField(
+        "FMMI Vendor ID",
+        max_length=11,
+        blank=True,
+        null=True,
+        help_text="The cooperator/recipient's VEND number as assigned by FMMI.",
+    )
+    # TO-DO: Find out what this field is for
+    faads_addr_cn = models.CharField(max_length=34, blank=True, null=True)
+    # CHOICES
+    institution_code = models.CharField(
+        max_length=40,
+        blank=True,
+        null=True,
+        help_text="""
+            The institution code for State Controlled Institution of Higher Learning only.
+            Required if FFATA reported.
+        """,
+    )
+    fed_debt_delnqnt_ind = models.CharField(
+        "Delinquent on Fed. Debt",
+        max_length=1,
+        default="N",
+        choices=BOOL_CHOICES,
+        blank=True,
+        null=True,
+        help_text="""
+            Check this box to indicate if the applicant is delinquent on any federal debt.
+        """,
+    )
+    payee_ind = models.CharField(
+        "Payee", max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
+    )
+    applicant_ind = models.CharField(max_length=1, blank=True, null=True)
+    link_sub_type = models.CharField(
+        "Sub Type",
+        max_length=40,
+        blank=True,
+        null=True,
+        help_text="""
+            Indicates the type of contact, for example, FS Signatory Official (SO) or Reviewer (RW),
+            depending on the responsibility/role the contact has with the instrument.
+        """,
+    )
+    cn = models.CharField(primary_key=True, max_length=34)
+    ffis_can_number_status = models.CharField(max_length=40, blank=True, null=True)
+    payer_ind = models.CharField(max_length=1, blank=True, null=True)
+    fmmi_customer_number = models.CharField(max_length=10, blank=True, null=True)
+    ffis_vendor_id = models.CharField(max_length=10, blank=True, null=True)
+    fmmi_customer_number_status = models.CharField(max_length=40, blank=True, null=True)
+    sam_expiration_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = "ii_accinst_cont_links"
+        unique_together = (
+            ("accinst_cn", "cont_cn", "link_type_name", "link_sub_type"),
+        )
