@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.safestring import mark_safe
+from django.utils.functional import cached_property 
 
 from .choices import (
     AB_CHOICES,
@@ -17,6 +18,7 @@ from .choices import (
     WPAP_STATUS_CHOICES,
     YEAR_CHOICES,
 )
+from contacts.models import AccomplishmentInstrument
 
 
 class Grant(models.Model):
@@ -432,6 +434,9 @@ class Grant(models.Model):
         verbose_name = "Grant/Agreement"
         verbose_name_plural = "Grants and Agreements"
         ordering = ["-created_date"]
+        constraints = [
+            models.UniqueConstraint(fields=["gid"], name="unique_gid")
+        ]
 
     def __str__(self):
         return self.proj_title
@@ -472,6 +477,19 @@ class Grant(models.Model):
     significant_dates.allow_tags = True
 
     # TO-DO: Write save to write GID
+    @cached_property
+    def contacts(self):
+        """Follow the contact links and return a list of all the associated contacts."""
+        try:
+            instrument = self.accomplishmentinstrument
+        except AccomplishmentInstrument.DoesNotExist:
+            return []
+        links = instrument.accinstcontlink_set.all()
+        return [{"type": link.link_type_name,
+                 "sub_type": link.link_sub_type,
+                 "contact": link.contact} for link in links]
+
+
 
 
 class GrantAuthority(models.Model):

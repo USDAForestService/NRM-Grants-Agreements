@@ -7,13 +7,12 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-from grants.models import Grant
 from grants.choices import BOOL_CHOICES
 
 
 class AccomplishmentInstrument(models.Model):
     cn = models.CharField(primary_key=True, max_length=34)
-    grant = models.OneToOneField(Grant, to_field="gid",
+    grant = models.OneToOneField("grants.Grant", to_field="gid",
             on_delete=models.CASCADE, db_column="id")
     name = models.CharField(max_length=200, blank=True, null=True)
     obj_tech = models.CharField(max_length=30)
@@ -50,7 +49,7 @@ class AccomplishmentInstrument(models.Model):
     class Meta:
         managed = False
         db_table = "accplishment_instruments"
-        unique_together = (("obj_name", "id", "security_id", "trans_id"),)
+        unique_together = (("obj_name", "grant", "security_id", "trans_id"),)
 
 
 class AdminUnit(models.Model):
@@ -263,5 +262,5 @@ class AccinstContLink(models.Model):
         managed = False
         db_table = "ii_accinst_cont_links"
         unique_together = (
-            ("accinst_cn", "cont_cn", "link_type_name", "link_sub_type"),
+            ("accinst", "contact", "link_type_name", "link_sub_type"),
         )
