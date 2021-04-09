@@ -65,7 +65,7 @@ class GrantAdmin(admin.ModelAdmin):
 
     def add_view(self, request, form_url="", extra_context=None):
         """
-        Allows us to pass extra context to the grant change form.
+        Allows us to pass extra context to the grant creation form.
         Note we're overriding the django-created default "title" and "subtitle" context used by admin/base.html.
         Alternately, we could have overridden the change form template for this one modelAdmin. And we still might, later.
         """
@@ -82,9 +82,8 @@ class GrantAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, extra_context=None):
         """
-        In a change view, we'll want a lot more fields and fieldsets,
+        In a change/update view, we'll want a lot more fields and fieldsets,
         so we'll append to the base list of required fields.
-        We also need to update title and subtitle
         """
         self.fieldsets += [
             (
