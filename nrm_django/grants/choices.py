@@ -140,6 +140,12 @@ NOTE_TYPE_CHOICES = (
     ("OTHER", "Other"),  # Other notes or comments about the instrument.
 )
 
+PROGRAM_RESPONSIBILITY_TYPE_CHOICES = (
+    ("INCOMING FUNDING AGREEMENT", "Incoming funding agreement"),
+    ("NON-CASH AGREEMENT", "Non-cash agreement"),
+    ("OUTGOING FUNDING AGREEMENT", "Outgoing funding agreement"),
+)
+
 RESEARCH_TYPE_CHOICES = (
     ("A", "Applied"),
     ("B", "Basic"),

@@ -10,59 +10,66 @@
 }
 
 /* Admin */
+
+/* Override Django admin link handling */
+.admin a { color: var(--fs-green); }
+.admin a:hover, .admin a:visited { color:var(--fs-green-lighter); }
+
 .admin .usa-nav-container { /* USWDS overrides */
     max-width: 100%;
-    background-color: var(--fs-green); 
-    color: #fff
+    color: var(--fs-green); 
+    border-bottom: 1px solid;
 }
-/* Override Django admin link handling */
-.admin a { color: var(--fs-green-lighter); }
-.admin a:hover { color:var(--fs-green); }
-
-.admin .usa-nav-container a { color: #fff; } /* USWDS override to account for bg color ^ */
 .admin .usa-nav-container a.usa-nav__link:hover {
-    color: var(--fs-yellow);
+    color: var(--fs-green-lighter);
 }
 .admin .usa-nav-container a.usa-nav__link:hover::after {
-    background-color: var(--fs-yellow);
+    background-color: var(--fs-green-lighter);
 }
 .admin .usa-logo { margin-top: 0; }
 .admin .usa-logo__text { white-space: nowrap; } /* USWDS override */
 .admin .usa-nav__primary { margin-bottom: 0; } /* Django override */
 .admin .usa-nav__primary li { list-style-type: none; } /* Django override */
 .admin .usa-nav__primary .usa-nav__text { padding: 1rem; } /* Make welcome text match nav links */
-.admin #content { padding-top: 0 }
+
 .module h2, .module caption, .inline-group h2 { /* Django overrides */
     background-color: var(--fs-green-lighter);
 }
 
+fieldset{ /* USWDS override */
+    padding: 0;
+  }
 .admin .form-row {
   display: flex;
   align-items: top;
+  padding: 10px 0 20px;
 }
 .admin .form-row .fieldBox {
     flex: 50%;
 }
-.admin .form-row .fieldBox label {
+.admin .aligned label {
     float: none;
-    width: auto
+    width: auto;
+    font-size: 1.25em;
+    color: #222
 }
 
-.admin .form-row .fieldBox .help {
+.admin .aligned .help {
     margin-left: 0;
     padding-left: 0;
 }
 
-.admin .form-row .fieldBox textarea {
+.admin .form-row .fieldBox textarea,
+.admin .aligned [type=text].text-wide {
     width: 100%;
-}
-
-.admin .help {
-    font-size: 12px;
-    color: #666
 }
 
 .usa-breadcrumb {
     padding-left: 2em;
     border-bottom: 1px solid #ccc;
 }
+
+
+/* inexplicably, these classes are present in USWDS docs pages, but do not appear in the USWDS css, so we're replicating them here. */
+.site-page-title {font-size: 2.5rem;}
+.site-text-intro {font-size: 1.25rem;}
