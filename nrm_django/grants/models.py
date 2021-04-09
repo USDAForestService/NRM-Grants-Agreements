@@ -477,6 +477,7 @@ class Grant(models.Model):
     significant_dates.allow_tags = True
 
     # TO-DO: Write save to write GID
+
     @cached_property
     def contacts(self):
         """Follow the contact links and return a list of all the associated contacts."""
@@ -489,7 +490,14 @@ class Grant(models.Model):
                  "sub_type": link.link_sub_type,
                  "contact": link.contact} for link in links]
 
-
+    @cached_property
+    def org(self):
+        """Shorthad accessor for the Organization code."""
+        try:
+            instrument = self.accomplishmentinstrument
+        except AccomplishmentInstrument.DoesNotExist:
+            return None
+        return instrument.managing_contact.id
 
 
 class GrantAuthority(models.Model):
