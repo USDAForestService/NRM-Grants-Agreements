@@ -582,7 +582,7 @@ class Category(models.Model):
     grant = models.ForeignKey(Grant, models.DO_NOTHING, db_column="grant_cn")
     category_cd = models.CharField(max_length=2)
     category_desc = models.CharField(max_length=120, blank=True, null=True)
-    last_update = models.DateField()
+    last_update = models.DateField(auto_now=True)
 
     class Meta:
         managed = False
