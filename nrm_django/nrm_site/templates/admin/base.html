@@ -5,13 +5,14 @@
 
 <head>
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}">
+    {# We've pulled in our own copy of the django admin css so we can cut out parts of it we don't need due to USWDS #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admin_base.css' %}">
     {% if not is_popup and is_nav_sidebar_enabled %}
     <link rel="stylesheet" type="text/css" href="{% static 'admin/css/nav_sidebar.css' %}">
     <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
     {% endif %}
     <link href="{% static 'vendor/uswds-2.10.1/css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'css/site.css' %}?v=8" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/site.css' %}?v=2" rel="stylesheet" type="text/css" />
 
     {% block extrastyle %}{% endblock %}
     {% block extrahead %}{% endblock %}
@@ -69,8 +70,8 @@
                 <!-- Content -->
                 <div id="content" class="{% block coltype %}colM{% endblock %}">
                     {% block pretitle %}{% endblock %}
-                    {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
-                    {% block content_subtitle %}{% if subtitle %}<h2>{{ subtitle }}</h2>{% endif %}{% endblock %}
+                    {% block content_title %}{% if title %}<h1 class="site-page-title">{{ title }}</h1>{% endif %}{% endblock %}
+                    {% block content_subtitle %}{% if subtitle %}<p class="site-text-intro">{{ subtitle }}</p>{% endif %}{% endblock %}
                     {% block content %}
                     {% block object-tools %}{% endblock %}
                     {{ content }}

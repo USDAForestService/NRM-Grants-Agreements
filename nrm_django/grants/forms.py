@@ -17,6 +17,11 @@ class GrantForm(forms.ModelForm):
             "areas_effected": forms.Textarea(attrs={"cols": 80, "rows": 10}),
         }
 
+    def __init__(self, *args, **kwargs):
+        """A quick init to add some classes on some fields, since we don't need to override the widget."""
+        super(GrantForm, self).__init__(*args, **kwargs)
+        self.fields["proj_title"].widget.attrs["class"] += " text-wide"
+
     def clean_state_eo_date(self):
         """
         Ensures that if State EO Code is Yes, then a date must be entered.
@@ -60,6 +65,9 @@ class GrantForm(forms.ModelForm):
         # but we only need to do this check on existing record saves, when we need to update the defaults
         if instance.cn and "status" in self.changed_data:
             instance.status_date = datetime.datetime.now()
+
+        if instance.cn and "wppp_status" in self.changed_data:
+            instance.wppp_status_date = datetime.datetime.now()
 
         # stubbing out foo_in_instance rather than making defaults
         # since we don't know yet how to populate them correctly or what the values mean.

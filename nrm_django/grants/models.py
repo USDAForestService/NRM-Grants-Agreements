@@ -11,6 +11,7 @@ from .choices import (
     FED_ID_REGION_CHOICES,
     FED_ID_TYPE_CHOICES,
     NOTE_TYPE_CHOICES,
+    PROGRAM_RESPONSIBILITY_TYPE_CHOICES,
     RESEARCH_TYPE_CHOICES,
     RWU_CHOICES,
     SCIENCE_CODE_CHOICES,
@@ -44,7 +45,7 @@ class Grant(models.Model):
         "Project title",
         max_length=200,
         db_index=True,
-        help_text="The short and concise name of the project.",
+        help_text="The short and concise name of the project. Do not include any acronyms, unit codes, or funding codes.",
     )
     # Q: Per the user guide, proj_status should be display-only, so how/when would it be updated?
     proj_status = models.CharField(
@@ -362,9 +363,7 @@ class Grant(models.Model):
     reroute_from = models.CharField(max_length=10, blank=True, null=True)
     reroute_date = models.DateField(blank=True, null=True)
     certificaion_date = models.DateField("Certification date", blank=True, null=True)
-    applicant_name = models.CharField(
-        "Applicant/Cooperator Name", max_length=200, blank=True, null=True
-    )
+    applicant_name = models.CharField("Applicant/Cooperator Name", max_length=200)
     international_act_ind = models.CharField(
         "International Activities",
         choices=BOOL_CHOICES,
@@ -407,18 +406,19 @@ class Grant(models.Model):
     progrm_responsibility_type = models.CharField(
         "Program Responsibility Type",
         max_length=30,
-        blank=True,
-        null=True,
+        choices=PROGRAM_RESPONSIBILITY_TYPE_CHOICES,
         help_text="""
             Indicates the specific responsibilities notification type
             (Incoming Funding, Outgoing Funding, or Non-Cash ie no exchange of funding)
             that is send to the Program Manager when the agreement is executed.
         """,
-    )  # choices?
+    )
     wppp_status = models.CharField(
         "WPAP Status", max_length=40, blank=True, null=True, choices=WPAP_STATUS_CHOICES
     )
-    wppp_status_date = models.DateField(blank=True, null=True)
+    wppp_status_date = models.DateField(
+        "WPAP status date", blank=True, null=True, editable=False
+    )
     cooperator_agreement_number = models.CharField(
         max_length=34,
         blank=True,
@@ -601,3 +601,15 @@ class Note(models.Model):
 
     # TO-DO: custom save?
     # * Create CN
+
+
+class Category(models.Model):
+    cn = models.CharField(primary_key=True, max_length=34)
+    grant = models.ForeignKey(Grant, models.DO_NOTHING, db_column="grant_cn")
+    category_cd = models.CharField(max_length=2)
+    category_desc = models.CharField(max_length=120, blank=True, null=True)
+    last_update = models.DateField(auto_now=True)
+
+    class Meta:
+        managed = False
+        db_table = "ii_ga_ip_categories"
