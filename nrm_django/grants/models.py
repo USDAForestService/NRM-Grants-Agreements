@@ -575,3 +575,15 @@ class Note(models.Model):
 
     # TO-DO: custom save?
     # * Create CN
+
+
+class Category(models.Model):
+    cn = models.CharField(primary_key=True, max_length=34)
+    grant = models.ForeignKey(Grant, models.DO_NOTHING, db_column="grant_cn")
+    category_cd = models.CharField(max_length=2)
+    category_desc = models.CharField(max_length=120, blank=True, null=True)
+    last_update = models.DateField(auto_now=True)
+
+    class Meta:
+        managed = False
+        db_table = "ii_ga_ip_categories"
