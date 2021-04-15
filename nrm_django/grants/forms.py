@@ -35,9 +35,16 @@ class GrantForm(forms.ModelForm):
 
         # If we're modifying an existing instance in a changeform we'll need to set the initial value
         # for project_category, because we don't have a proper FK from Grant
+        # Also, because we used distinct() to toss out duplicate Cats, we have to find one that
+        # matches whatever one was set on the current Grant so it looks right.
         if self.instance:
-            cat_init_cn = Category.objects.get(grant=self.instance).cn
-            self.fields["project_category"].initial = cat_init_cn
+            this_cat = Category.objects.get(grant=self.instance)
+            match = self.fields["project_category"].queryset.get(
+                category_desc=this_cat.category_desc
+            )
+
+            print(match.cn)
+        self.fields["project_category"].initial = match.cn
 
     def clean_state_eo_date(self):
         """
