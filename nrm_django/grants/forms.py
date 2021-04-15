@@ -4,10 +4,18 @@ import uuid
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Grant
+from .models import Category, Grant
 
 
 class GrantForm(forms.ModelForm):
+    # We're using modelChoiceField here, but as the DB is currently configured passing choices to a ChoiceField
+    # would work just as well (maybe better)
+    # TO-DO: Ideally we would migrate to Categories being just a list of cats,
+    # with Grant having an FK to that table, so we could avoid these sorts of shenanigans.
+    project_category = forms.ModelChoiceField(
+        queryset=Category.objects.order_by("category_desc").distinct("category_desc"),
+    )
+
     class Meta:
         model = Grant
         exclude = [
@@ -18,9 +26,18 @@ class GrantForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        """A quick init to add some classes on some fields, since we don't need to override the widget."""
+        """
+        A quick init to add some classes on some fields, since we don't need to override the widget,
+        and add a custom field or two.
+        """
         super(GrantForm, self).__init__(*args, **kwargs)
         self.fields["proj_title"].widget.attrs["class"] += " text-wide"
+
+        # If we're modifying an existing instance in a changeform we'll need to set the initial value
+        # for project_category, because we don't have a proper FK from Grant
+        if self.instance:
+            cat_init_cn = Category.objects.get(grant=self.instance).cn
+            self.fields["project_category"].initial = cat_init_cn
 
     def clean_state_eo_date(self):
         """
