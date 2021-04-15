@@ -10,11 +10,10 @@ from .models import Category, Grant
 class GrantForm(forms.ModelForm):
     # We're using modelChoiceField here, but as the DB is currently configured passing choices to a ChoiceField
     # would work just as well (maybe better)
+    # Note that we're setting queryset down below in init
     # TO-DO: Ideally we would migrate to Categories being just a list of cats,
     # with Grant having an FK to that table, so we could avoid these sorts of shenanigans.
-    project_category = forms.ModelChoiceField(
-        queryset=Category.objects.order_by("category_desc").distinct("category_desc"),
-    )
+    project_category = forms.ModelChoiceField(queryset=None)
 
     class Meta:
         model = Grant
@@ -33,18 +32,19 @@ class GrantForm(forms.ModelForm):
         super(GrantForm, self).__init__(*args, **kwargs)
         self.fields["proj_title"].widget.attrs["class"] += " text-wide"
 
+        cat_set = Category.objects.order_by("category_desc").distinct("category_desc")
+        self.fields["project_category"].queryset = cat_set
+
         # If we're modifying an existing instance in a changeform we'll need to set the initial value
         # for project_category, because we don't have a proper FK from Grant
         # Also, because we used distinct() to toss out duplicate Cats, we have to find one that
         # matches whatever one was set on the current Grant so it looks right.
         if self.instance:
             this_cat = Category.objects.get(grant=self.instance)
-            match = self.fields["project_category"].queryset.get(
-                category_desc=this_cat.category_desc
-            )
-
-            print(match.cn)
-        self.fields["project_category"].initial = match.cn
+            # For reasons I can't explain, get() on the queryset doesn't work, but iterating does.
+            for cat in cat_set:
+                if cat.category_desc == this_cat.category_desc:
+                    self.fields["project_category"].initial = cat.cn
 
     def clean_state_eo_date(self):
         """
