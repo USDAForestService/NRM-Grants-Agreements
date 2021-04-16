@@ -2,7 +2,7 @@ import datetime
 import uuid
 
 from django import forms
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from .models import Category, Grant
 
@@ -39,7 +39,7 @@ class GrantForm(forms.ModelForm):
         # for project_category, because we don't have a proper FK from Grant
         # Also, because we used distinct() to toss out duplicate Cats, we have to find one that
         # matches whatever one was set on the current Grant so it looks right.
-        if self.instance:
+        if self.instance.cn:
             this_cat = Category.objects.get(grant=self.instance)
             # For reasons I can't explain, get() on the queryset doesn't work, but iterating does.
             for cat in cat_set:
@@ -86,17 +86,32 @@ class GrantForm(forms.ModelForm):
 
         # if some undetermined sequence of events happens, we will need to update `status`
         # if that happens, we would need to update status_date, too.
-        # but we only need to do this check on existing record saves, when we need to update the defaults
-        if instance.cn and "status" in self.changed_data:
+        if "status" in self.changed_data:
             instance.status_date = datetime.datetime.now()
 
-        if instance.cn and "wppp_status" in self.changed_data:
+        if "wppp_status" in self.changed_data:
             instance.wppp_status_date = datetime.datetime.now()
 
         # stubbing out foo_in_instance rather than making defaults
         # since we don't know yet how to populate them correctly or what the values mean.
         # eventually we'll have some sort of check or logic here.
         instance.created_in_instance = instance.modified_in_instance = instance_id
-        if commit:
-            instance.save()
+
+        instance.save()
+
+        # We need to create a new category if one does not already exist for this grant.
+        # It might make sense do make this a signal or some other post_save() mechanism,
+        # since it's dependent on the grant being in the DB.
+        # TO-DO: when we migrate to a proper FK, remove al of this
+        if "project_category" in self.changed_data:
+            # temp_cat is the category the user selected from the
+            # limited set of cats defined in cat_set above.
+            # We want the raw value, so we're not using cleaned_data
+            temp_cat = Category.objects.get(cn=self.data.get("project_category"))
+            new_cat = Category.objects.get_or_create(
+                grant=instance,
+                category_cd=temp_cat.category_cd,
+                category_desc=temp_cat.category_desc,
+            )
+
         return instance
