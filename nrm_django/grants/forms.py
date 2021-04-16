@@ -2,7 +2,7 @@ import datetime
 import uuid
 
 from django import forms
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 
 from .models import Category, Grant
 
@@ -108,7 +108,8 @@ class GrantForm(forms.ModelForm):
             # limited set of cats defined in cat_set above.
             # We want the raw value, so we're not using cleaned_data
             temp_cat = Category.objects.get(cn=self.data.get("project_category"))
-            new_cat = Category.objects.get_or_create(
+            Category.objects.get_or_create(
+                cn=str(uuid.uuid4().hex),
                 grant=instance,
                 category_cd=temp_cat.category_cd,
                 category_desc=temp_cat.category_desc,

@@ -329,7 +329,7 @@ class Grant(models.Model):
         default="N",
         help_text="Is this instrument subject to Executive Order 12372 review?",
     )
-    # TO-DO: Validate on save that a date was entered if state_eo_code is Y
+    # We validate on save that a date was entered if state_eo_code is Y
     state_eo_date = models.DateField(
         "EO Date",
         blank=True,
