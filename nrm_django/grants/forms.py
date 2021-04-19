@@ -4,10 +4,17 @@ import uuid
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import Grant
+from .models import Category, Grant
 
 
 class GrantForm(forms.ModelForm):
+    # We're using modelChoiceField here, but as the DB is currently configured passing choices to a ChoiceField
+    # would work just as well (maybe better)
+    # Note that we're setting queryset down below in init
+    # TO-DO: Ideally we would migrate to Categories being just a list of cats,
+    # with Grant having an FK to that table, so we could avoid these sorts of shenanigans.
+    project_category = forms.ModelChoiceField(queryset=None)
+
     class Meta:
         model = Grant
         exclude = [
@@ -18,9 +25,26 @@ class GrantForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        """A quick init to add some classes on some fields, since we don't need to override the widget."""
+        """
+        A quick init to add some classes on some fields, since we don't need to override the widget,
+        and add a custom field or two.
+        """
         super(GrantForm, self).__init__(*args, **kwargs)
         self.fields["proj_title"].widget.attrs["class"] += " text-wide"
+
+        cat_set = Category.objects.order_by("category_desc").distinct("category_desc")
+        self.fields["project_category"].queryset = cat_set
+
+        # If we're modifying an existing instance in a changeform we'll need to set the initial value
+        # for project_category, because we don't have a proper FK from Grant
+        # Also, because we used distinct() to toss out duplicate Cats, we have to find one that
+        # matches whatever one was set on the current Grant so it looks right.
+        if self.instance.cn:
+            this_cat = Category.objects.get(grant=self.instance)
+            # For reasons I can't explain, get() on the queryset doesn't work, but iterating does.
+            for cat in cat_set:
+                if cat.category_desc == this_cat.category_desc:
+                    self.fields["project_category"].initial = cat.cn
 
     def clean_state_eo_date(self):
         """
@@ -62,17 +86,33 @@ class GrantForm(forms.ModelForm):
 
         # if some undetermined sequence of events happens, we will need to update `status`
         # if that happens, we would need to update status_date, too.
-        # but we only need to do this check on existing record saves, when we need to update the defaults
-        if instance.cn and "status" in self.changed_data:
+        if "status" in self.changed_data:
             instance.status_date = datetime.datetime.now()
 
-        if instance.cn and "wppp_status" in self.changed_data:
+        if "wppp_status" in self.changed_data:
             instance.wppp_status_date = datetime.datetime.now()
 
         # stubbing out foo_in_instance rather than making defaults
         # since we don't know yet how to populate them correctly or what the values mean.
         # eventually we'll have some sort of check or logic here.
         instance.created_in_instance = instance.modified_in_instance = instance_id
-        if commit:
-            instance.save()
+
+        instance.save()
+
+        # We need to create a new category if one does not already exist for this grant.
+        # It might make sense do make this a signal or some other post_save() mechanism,
+        # since it's dependent on the grant being in the DB.
+        # TO-DO: when we migrate to a proper FK, remove al of this
+        if "project_category" in self.changed_data:
+            # temp_cat is the category the user selected from the
+            # limited set of cats defined in cat_set above.
+            # We want the raw value, so we're not using cleaned_data
+            temp_cat = Category.objects.get(cn=self.data.get("project_category"))
+            Category.objects.get_or_create(
+                cn=str(uuid.uuid4().hex),
+                grant=instance,
+                category_cd=temp_cat.category_cd,
+                category_desc=temp_cat.category_desc,
+            )
+
         return instance

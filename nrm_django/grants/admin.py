@@ -48,16 +48,16 @@ class GrantAdmin(admin.ModelAdmin):
                 "fields": (
                     "proj_title",
                     ("proposed_start_date", "proposed_end_date"),
-                    ("applicant_name",),
+                    "applicant_name",
                     # Org goes here
-                    ("progrm_responsibility_type",),
-                    # program categories
+                    "progrm_responsibility_type",
+                    "project_category",
                     ("app_submit_date", "app_received_date"),
                     # Financial assistance
                     ("application_type", "app_submission_type"),
                     ("proj_cfda_no", "status"),
                     ("state_eo_code", "state_eo_date"),
-                    ("wppp_status"),
+                    "wppp_status",
                 )
             },
         ),
