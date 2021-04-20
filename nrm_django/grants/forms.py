@@ -5,6 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import Grant
+from contacts.models import AccomplishmentInstrument, Contact
 
 
 class GrantForm(forms.ModelForm):
@@ -17,10 +18,19 @@ class GrantForm(forms.ModelForm):
             "areas_effected": forms.Textarea(attrs={"cols": 80, "rows": 10}),
         }
 
+    org_select = forms.ModelChoiceField(label="Org",
+            queryset=Contact.objects.filter(cn__in=AccomplishmentInstrument.objects.values("managing_contact")).distinct())
+
     def __init__(self, *args, **kwargs):
         """A quick init to add some classes on some fields, since we don't need to override the widget."""
         super(GrantForm, self).__init__(*args, **kwargs)
         self.fields["proj_title"].widget.attrs["class"] += " text-wide"
+
+        # If we're modifying an existing instance in a changeform we'll need
+        # to set the initial value for org, because we don't have an FK
+        # directly on Grant
+        if self.instance:
+                self.fields["org_select"].initial = self.instance.org
 
     def clean_state_eo_date(self):
         """
@@ -68,6 +78,11 @@ class GrantForm(forms.ModelForm):
 
         if instance.cn and "wppp_status" in self.changed_data:
             instance.wppp_status_date = datetime.datetime.now()
+
+        # org is actually a property of the accomplishment instrument. Make
+        # any changes to that here.
+        if instance.cn and "org_select" in self.changed_data:
+            instance.accomplishmentinstrument.managing_contact = self.cleaned_data["org_select"]
 
         # stubbing out foo_in_instance rather than making defaults
         # since we don't know yet how to populate them correctly or what the values mean.

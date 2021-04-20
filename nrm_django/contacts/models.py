@@ -146,6 +146,8 @@ class Contact(models.Model):
         unique_together = (("obj_tech", "obj_name", "obj_class", "id", "trans_id"),)
 
     def __str__(self):
+        if self.obj_name == "ORGANIZATION":
+            return "{} - {}".format(self.id, self.name)
         return self.name
 
 

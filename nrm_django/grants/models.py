@@ -492,12 +492,12 @@ class Grant(models.Model):
 
     @cached_property
     def org(self):
-        """Shorthad accessor for the Organization code."""
+        """Shorthad accessor for the Organization code and name."""
         try:
             instrument = self.accomplishmentinstrument
         except AccomplishmentInstrument.DoesNotExist:
             return None
-        return instrument.managing_contact.id
+        return instrument.managing_contact
 
 
 class GrantAuthority(models.Model):

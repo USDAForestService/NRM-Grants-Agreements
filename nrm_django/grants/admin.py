@@ -49,7 +49,7 @@ class GrantAdmin(admin.ModelAdmin):
                     "proj_title",
                     ("proposed_start_date", "proposed_end_date"),
                     ("applicant_name",),
-                    # Org goes here
+                    ("org_select",),
                     ("progrm_responsibility_type",),
                     # program categories
                     ("app_submit_date", "app_received_date"),
