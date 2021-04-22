@@ -153,14 +153,16 @@ class Contact(models.Model):
 
 class AccomplishmentInstrument(models.Model):
     cn = models.CharField(primary_key=True, max_length=34)
-    grant = models.OneToOneField("grants.Grant", to_field="gid",
-            on_delete=models.CASCADE, db_column="id")
+    grant = models.OneToOneField(
+        "grants.Grant", to_field="gid", on_delete=models.CASCADE, db_column="id"
+    )
     name = models.CharField(max_length=200, blank=True, null=True)
     obj_tech = models.CharField(max_length=30)
     obj_name = models.CharField(max_length=30)
     obj_class = models.CharField(max_length=30)
-    managing_contact = models.ForeignKey(Contact, on_delete=models.CASCADE,
-            db_column="managing_cont_cn")
+    managing_contact = models.ForeignKey(
+        Contact, on_delete=models.CASCADE, db_column="managing_cont_cn"
+    )
     replaced_by_ai_cn = models.CharField(max_length=34, blank=True, null=True)
     description = models.CharField(max_length=4000, blank=True, null=True)
     exp_expiration_date = models.DateField(blank=True, null=True)
@@ -198,9 +200,7 @@ class AccinstContLink(models.Model):
     accinst = models.ForeignKey(
         AccomplishmentInstrument, models.DO_NOTHING, db_column="accinst_cn"
     )
-    contact = models.ForeignKey(
-        Contact, models.DO_NOTHING, db_column="cont_cn"
-    )
+    contact = models.ForeignKey(Contact, models.DO_NOTHING, db_column="cont_cn")
     link_type_name = models.CharField(max_length=40)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
@@ -264,6 +264,4 @@ class AccinstContLink(models.Model):
     class Meta:
         managed = False
         db_table = "ii_accinst_cont_links"
-        unique_together = (
-            ("accinst", "contact", "link_type_name", "link_sub_type"),
-        )
+        unique_together = (("accinst", "contact", "link_type_name", "link_sub_type"),)
