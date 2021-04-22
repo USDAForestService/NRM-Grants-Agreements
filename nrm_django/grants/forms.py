@@ -8,7 +8,6 @@ from .models import Category, Grant
 from contacts.models import AccomplishmentInstrument, Contact
 
 
-
 class GrantForm(forms.ModelForm):
     # We're using modelChoiceField here, but as the DB is currently configured passing choices to a ChoiceField
     # would work just as well (maybe better)
