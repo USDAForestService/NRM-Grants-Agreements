@@ -18,8 +18,12 @@ class GrantForm(forms.ModelForm):
             "areas_effected": forms.Textarea(attrs={"cols": 80, "rows": 10}),
         }
 
-    org_select = forms.ModelChoiceField(label="Org",
-            queryset=Contact.objects.filter(cn__in=AccomplishmentInstrument.objects.values("managing_contact")).distinct())
+    org_select = forms.ModelChoiceField(
+        label="Organization",
+        queryset=Contact.objects.filter(
+            cn__in=AccomplishmentInstrument.objects.values("managing_contact")
+        ).distinct(),
+    )
 
     def __init__(self, *args, **kwargs):
         """A quick init to add some classes on some fields, since we don't need to override the widget."""
@@ -30,7 +34,7 @@ class GrantForm(forms.ModelForm):
         # to set the initial value for org, because we don't have an FK
         # directly on Grant
         if self.instance:
-                self.fields["org_select"].initial = self.instance.org
+            self.fields["org_select"].initial = self.instance.org
 
     def clean_state_eo_date(self):
         """
@@ -79,15 +83,27 @@ class GrantForm(forms.ModelForm):
         if instance.cn and "wppp_status" in self.changed_data:
             instance.wppp_status_date = datetime.datetime.now()
 
-        # org is actually a property of the accomplishment instrument. Make
-        # any changes to that here.
-        if instance.cn and "org_select" in self.changed_data:
-            instance.accomplishmentinstrument.managing_contact = self.cleaned_data["org_select"]
-
         # stubbing out foo_in_instance rather than making defaults
         # since we don't know yet how to populate them correctly or what the values mean.
         # eventually we'll have some sort of check or logic here.
         instance.created_in_instance = instance.modified_in_instance = instance_id
         if commit:
             instance.save()
+
+            # org is actually a property of the accomplishment instrument.
+            # When it changes, we need to change the change the value over there.
+            # To-Do: in the future, this should probably be migrated into grant itself
+            # since it's a 1:1 anyway.
+            # print("initial value: ", self.initial["org_select"])
+            if instance.cn and "org_select" in self.changed_data:
+                # first, is there an existing ai? Note that the 1:1 relationship is untrustworthy.
+                # Because we don't trust it and we're using first(), we won't use get_or_create() either.
+                ai = AccomplishmentInstrument.objects.filter(grant=instance).first()
+                if not ai:
+                    ai = AccomplishmentInstrument(grant_id=instance.cn)
+                ai.managing_contact = Contact.objects.get(
+                    cn=self.data.get("org_select")
+                )
+                ai.save()
+
         return instance
