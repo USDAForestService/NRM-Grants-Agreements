@@ -51,13 +51,13 @@ class GrantAdmin(admin.ModelAdmin):
                     ("applicant_name",),
                     ("org_select",),
                     ("progrm_responsibility_type",),
-                    # program categories
+                    "project_category",
                     ("app_submit_date", "app_received_date"),
                     # Financial assistance
                     ("application_type", "app_submission_type"),
                     ("proj_cfda_no", "status"),
                     ("state_eo_code", "state_eo_date"),
-                    ("wppp_status"),
+                    "wppp_status",
                 )
             },
         ),

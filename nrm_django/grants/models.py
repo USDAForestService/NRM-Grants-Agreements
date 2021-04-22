@@ -331,7 +331,7 @@ class Grant(models.Model):
         default="N",
         help_text="Is this instrument subject to Executive Order 12372 review?",
     )
-    # TO-DO: Validate on save that a date was entered if state_eo_code is Y
+    # We validate on save that a date was entered if state_eo_code is Y
     state_eo_date = models.DateField(
         "EO Date",
         blank=True,
@@ -615,10 +615,15 @@ class Note(models.Model):
 class Category(models.Model):
     cn = models.CharField(primary_key=True, max_length=34)
     grant = models.ForeignKey(Grant, models.DO_NOTHING, db_column="grant_cn")
-    category_cd = models.CharField(max_length=2)
-    category_desc = models.CharField(max_length=120, blank=True, null=True)
+    category_cd = models.CharField("Code", max_length=2)
+    category_desc = models.CharField(
+        "Description", max_length=120, blank=True, null=True
+    )
     last_update = models.DateField(auto_now=True)
 
     class Meta:
         managed = False
         db_table = "ii_ga_ip_categories"
+
+    def __str__(self):
+        return self.category_desc
