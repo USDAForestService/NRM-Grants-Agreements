@@ -5,6 +5,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import Category, Grant
+from contacts.models import AccomplishmentInstrument, Contact
 
 
 class GrantForm(forms.ModelForm):
@@ -24,6 +25,13 @@ class GrantForm(forms.ModelForm):
             "areas_effected": forms.Textarea(attrs={"cols": 80, "rows": 10}),
         }
 
+    org_select = forms.ModelChoiceField(
+        label="Organization",
+        queryset=Contact.objects.filter(
+            cn__in=AccomplishmentInstrument.objects.values("managing_contact")
+        ).distinct(),
+    )
+
     def __init__(self, *args, **kwargs):
         """
         A quick init to add some classes on some fields, since we don't need to override the widget,
@@ -31,6 +39,12 @@ class GrantForm(forms.ModelForm):
         """
         super(GrantForm, self).__init__(*args, **kwargs)
         self.fields["proj_title"].widget.attrs["class"] += " text-wide"
+
+        # If we're modifying an existing instance in a changeform we'll need
+        # to set the initial value for org, because we don't have an FK
+        # directly on Grant
+        if self.instance:
+            self.fields["org_select"].initial = self.instance.org
 
         cat_set = Category.objects.order_by("category_desc").distinct("category_desc")
         self.fields["project_category"].queryset = cat_set
@@ -97,7 +111,24 @@ class GrantForm(forms.ModelForm):
         # eventually we'll have some sort of check or logic here.
         instance.created_in_instance = instance.modified_in_instance = instance_id
 
-        instance.save()
+        if commit:
+            instance.save()
+
+            # org is actually a property of the accomplishment instrument.
+            # When it changes, we need to change the change the value over there.
+            # To-Do: in the future, this should probably be migrated into grant itself
+            # since it's a 1:1 anyway.
+            # print("initial value: ", self.initial["org_select"])
+            if instance.cn and "org_select" in self.changed_data:
+                # first, is there an existing ai? Note that the 1:1 relationship is untrustworthy.
+                # Because we don't trust it and we're using first(), we won't use get_or_create() either.
+                ai = AccomplishmentInstrument.objects.filter(grant=instance).first()
+                if not ai:
+                    ai = AccomplishmentInstrument(grant_id=instance.cn)
+                ai.managing_contact = Contact.objects.get(
+                    cn=self.data.get("org_select")
+                )
+                ai.save()
 
         # We need to create a new category if one does not already exist for this grant.
         # It might make sense do make this a signal or some other post_save() mechanism,

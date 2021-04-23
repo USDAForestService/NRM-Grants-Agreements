@@ -48,9 +48,9 @@ class GrantAdmin(admin.ModelAdmin):
                 "fields": (
                     "proj_title",
                     ("proposed_start_date", "proposed_end_date"),
-                    "applicant_name",
-                    # Org goes here
-                    "progrm_responsibility_type",
+                    ("applicant_name",),
+                    ("org_select",),
+                    ("progrm_responsibility_type",),
                     "project_category",
                     ("app_submit_date", "app_received_date"),
                     # Financial assistance
