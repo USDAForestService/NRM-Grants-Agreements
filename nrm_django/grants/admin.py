@@ -40,6 +40,7 @@ class GrantAdmin(admin.ModelAdmin):
         "modified_date",
         "status",
         "wppp_status",
+        "contacts",
     ]
     fieldsets = [
         (
@@ -50,6 +51,7 @@ class GrantAdmin(admin.ModelAdmin):
                     ("proposed_start_date", "proposed_end_date"),
                     ("applicant_name",),
                     ("org_select",),
+                    ("contacts"),
                     ("progrm_responsibility_type",),
                     "project_category",
                     ("app_submit_date", "app_received_date"),
