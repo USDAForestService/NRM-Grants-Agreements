@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "nrm_app",
     "grants",
     "contacts",
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [

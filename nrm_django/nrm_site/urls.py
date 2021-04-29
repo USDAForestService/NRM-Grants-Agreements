@@ -14,11 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 
 from nrm_app.views import HomePageView
+from grants.views import GrantCreateView
 
 urlpatterns = [
+    # because these URLs will resolve first, they effectively override the admin URLs
+    re_path(
+        "admin/(?P<app_label>grants)/grant/add/$",
+        GrantCreateView.as_view(),
+        name="add-grant",
+    ),
+    # Now we can have the regular admin URLs
     path("admin/", admin.site.urls),
     path("", HomePageView.as_view(), name="home"),
 ]

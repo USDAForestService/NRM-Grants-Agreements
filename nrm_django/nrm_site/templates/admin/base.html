@@ -6,13 +6,15 @@
 <head>
     <title>{% block title %}{% endblock %}</title>
     {# We've pulled in our own copy of the django admin css so we can cut out parts of it we don't need due to USWDS #}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/admin_base.css' %}?v=2">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admin_base.css' %}?v=3å">
     {% if not is_popup and is_nav_sidebar_enabled %}
     <link rel="stylesheet" type="text/css" href="{% static 'admin/css/nav_sidebar.css' %}">
     <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
     {% endif %}
-    <link href="{% static 'vendor/uswds-2.10.1/css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'css/site.css' %}?v=2" rel="stylesheet" type="text/css" />
+    <link href="{% static 'vendor/uswds-2.11.2/css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% static 'vendor/uswds-2.11.2/js/uswds.min.js' %}" defer></script>
+
+    <link href="{% static 'css/site.css' %}?v=3" rel="stylesheet" type="text/css" />
 
     {% block extrastyle %}{% endblock %}
     {% block extrahead %}{% endblock %}

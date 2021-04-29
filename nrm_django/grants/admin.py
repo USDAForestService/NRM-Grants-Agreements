@@ -32,55 +32,9 @@ class GrantAdmin(admin.ModelAdmin):
         "applicant_name",
     ]
     # detail options
-    form = GrantForm
     inlines = [GrantAuthorityInline, NoteInline]
-    readonly_fields = [
-        "created_date",
-        "created_in_instance",
-        "modified_date",
-        "status",
-        "wppp_status",
-        "contacts",
-    ]
-    fieldsets = [
-        (
-            "",
-            {
-                "fields": (
-                    "proj_title",
-                    ("proposed_start_date", "proposed_end_date"),
-                    ("applicant_name",),
-                    ("org_select",),
-                    ("contacts"),
-                    ("progrm_responsibility_type",),
-                    "project_category",
-                    ("app_submit_date", "app_received_date"),
-                    # Financial assistance
-                    ("application_type", "app_submission_type"),
-                    ("proj_cfda_no", "status"),
-                    ("state_eo_code", "state_eo_date"),
-                    "wppp_status",
-                )
-            },
-        ),
-    ]
 
-    def add_view(self, request, form_url="", extra_context=None):
-        """
-        Allows us to pass extra context to the grant creation form.
-        Note we're overriding the django-created default "title" and "subtitle" context used by admin/base.html.
-        Alternately, we could have overridden the change form template for this one modelAdmin. And we still might, later.
-        """
-        extra_context = extra_context or {}
-        extra_context["title"] = "Create a proposal"
-        extra_context[
-            "subtitle"
-        ] = """Use this form to create a new proposal and start the agreement approval process."""
-        return super().add_view(
-            request,
-            form_url,
-            extra_context=extra_context,
-        )
+    fieldsets = []
 
     def change_view(self, request, object_id, extra_context=None):
         """

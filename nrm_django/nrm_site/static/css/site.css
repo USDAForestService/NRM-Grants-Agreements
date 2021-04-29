@@ -73,3 +73,11 @@ fieldset{ /* USWDS override */
 /* inexplicably, these classes are present in USWDS docs pages, but do not appear in the USWDS css, so we're replicating them here. */
 .site-page-title {font-size: 2.5rem;}
 .site-text-intro {font-size: 1.25rem;}
+
+/* Our custom admin pages */
+.admin.app-grants input[type=text] {
+    width: 30em
+}
+.admin.app-grants .dateinput input[type=text] {
+    width: 10em
+}

@@ -47,7 +47,6 @@ class Grant(models.Model):
         db_index=True,
         help_text="The short and concise name of the project. Do not include any acronyms, unit codes, or funding codes.",
     )
-    # Q: Per the user guide, proj_status should be display-only, so how/when would it be updated?
     proj_status = models.CharField(
         "Project status",
         max_length=15,
@@ -115,6 +114,7 @@ class Grant(models.Model):
         max_length=40,
         choices=STATUS_CHOICES,
         default="NEW-APPLICATION",
+        editable=False,
     )
     status_date = models.DateField(auto_now_add=True)
     # TO-DO: created_by should record current user on save()
@@ -414,7 +414,12 @@ class Grant(models.Model):
         """,
     )
     wppp_status = models.CharField(
-        "WPAP Status", max_length=40, blank=True, null=True, choices=WPAP_STATUS_CHOICES
+        "WPAP Status",
+        max_length=40,
+        blank=True,
+        null=True,
+        choices=WPAP_STATUS_CHOICES,
+        editable=False,
     )
     wppp_status_date = models.DateField(
         "WPAP status date", blank=True, null=True, editable=False

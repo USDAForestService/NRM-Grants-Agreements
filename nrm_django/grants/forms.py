@@ -18,12 +18,24 @@ class GrantForm(forms.ModelForm):
 
     class Meta:
         model = Grant
-        exclude = [
-            "application_id",
-        ]
-        widgets = {
-            "areas_effected": forms.Textarea(attrs={"cols": 80, "rows": 10}),
-        }
+        # These are the minimum fields needed for proposal creation
+        fields = (
+            "proj_title",
+            "proposed_start_date",
+            "proposed_end_date",
+            "applicant_name",
+            # "contacts", # TO-DO: FIGURE OUT HOW TO ADD THIS BACK IN
+            "org_select",
+            "progrm_responsibility_type",
+            "project_category",
+            "app_submit_date",
+            "app_received_date",
+            "application_type",
+            "app_submission_type",
+            "proj_cfda_no",
+            "state_eo_code",
+            "state_eo_date",
+        )
 
     org_select = forms.ModelChoiceField(
         label="Organization",
@@ -38,7 +50,7 @@ class GrantForm(forms.ModelForm):
         and add a custom field or two.
         """
         super(GrantForm, self).__init__(*args, **kwargs)
-        self.fields["proj_title"].widget.attrs["class"] += " text-wide"
+        # self.fields["proj_title"].widget.attrs["class"] += " text-wide"
 
         # If we're modifying an existing instance in a changeform we'll need
         # to set the initial value for org, because we don't have an FK
