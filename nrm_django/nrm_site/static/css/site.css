@@ -5,8 +5,9 @@
   --fs-yellow: #f5ea53;
 }
 
+/* we have to hardcode this one since we can't use our template tag here */
 .usa-hero{
-    background-image:url("/static/vendor/uswds-2.10.1/img/hero.png");
+    background-image:url("/static/vendor/uswds-2.11.2/img/hero.png");
 }
 
 /* Admin */
