@@ -54,11 +54,14 @@ class GrantForm(forms.ModelForm):
         # Also, because we used distinct() to toss out duplicate Cats, we have to find one that
         # matches whatever one was set on the current Grant so it looks right.
         if self.instance.cn:
-            this_cat = Category.objects.get(grant=self.instance)
-            # For reasons I can't explain, get() on the queryset doesn't work, but iterating does.
-            for cat in cat_set:
-                if cat.category_desc == this_cat.category_desc:
-                    self.fields["project_category"].initial = cat.cn
+            try:
+                this_cat = Category.objects.get(grant=self.instance)
+                # For reasons I can't explain, get() on the queryset doesn't work, but iterating does.
+                for cat in cat_set:
+                    if cat.category_desc == this_cat.category_desc:
+                        self.fields["project_category"].initial = cat.cn
+            except Category.DoesNotExist:
+                pass
 
     def clean_state_eo_date(self):
         """
@@ -72,6 +75,15 @@ class GrantForm(forms.ModelForm):
             raise ValidationError(
                 "If this agreement is subject to state EO, you must enter an EO date."
             )
+
+    def clean(self):
+        """Validate this form based on business requirements."""
+        # There must be at least one category if international_agreement_ind
+        # is True.
+        cleaned_data = super().clean()
+        if cleaned_data.get("international_act_ind", "").lower().startswith("y"):  # boolean strings
+            if cleaned_data.get("project_category") is None:
+                raise ValidationError("International agreements must have a program category")
 
     def save(self, commit=True):
         """
