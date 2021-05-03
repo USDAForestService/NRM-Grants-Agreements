@@ -81,9 +81,13 @@ class GrantForm(forms.ModelForm):
         # There must be at least one category if international_agreement_ind
         # is True.
         cleaned_data = super().clean()
-        if cleaned_data.get("international_act_ind", "").lower().startswith("y"):  # boolean strings
+        if (
+            cleaned_data.get("international_act_ind", "").lower().startswith("y")
+        ):  # boolean strings
             if cleaned_data.get("project_category") is None:
-                raise ValidationError("International agreements must have a program category")
+                raise ValidationError(
+                    "International agreements must have a program category"
+                )
 
     def save(self, commit=True):
         """
