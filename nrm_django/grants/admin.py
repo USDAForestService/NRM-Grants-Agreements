@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic.list import ListView
 
-from .forms import GrantForm
+from .forms import MinGrantForm
 from .models import Grant, GrantAuthority, Note
 
 
@@ -33,118 +33,6 @@ class GrantAdmin(admin.ModelAdmin):
     ]
     # detail options
     inlines = [GrantAuthorityInline, NoteInline]
-
-    fieldsets = []
-
-    def change_view(self, request, object_id, extra_context=None):
-        """
-        In a change/update view, we'll want a lot more fields and fieldsets,
-        so we'll append to the base list of required fields.
-        """
-        self.fieldsets += [
-            (
-                "Details",
-                {
-                    "fields": (
-                        ("gid",),
-                        ("proj_desc", "areas_effected"),
-                        ("cooperator_agreement_number", "extramural_ind"),
-                        ("comments",),
-                        (
-                            "international_act_ind",
-                            "advance_allowed_ind",
-                            "aop_ind",
-                        ),
-                    )
-                },
-            ),
-            (
-                "RWU",
-                {
-                    "classes": ("collapse",),
-                    "fields": (
-                        "proj_rwu",
-                        ("research_type", "journal_ind"),
-                    ),
-                },
-            ),
-            (
-                "Project info",
-                {
-                    "classes": ("collapse",),
-                    "fields": (
-                        ("proj_type", "proj_status"),
-                        ("proj_science_cd", "project_congressional_district"),
-                        ("proj_received_dt", "proj_execution_dt"),
-                        ("proj_start_dt", "proj_obligation_dt"),
-                        ("proj_expiration_dt", "proj_close_dt", "proj_cancellation_dt"),
-                    ),
-                },
-            ),
-            (
-                "Grant/Agreement",
-                {
-                    "classes": ("collapse",),
-                    "fields": (("date_mailed", "date_signed"),),
-                },
-            ),
-            (
-                "Fed Info",
-                {
-                    "classes": ("collapse",),
-                    "fields": (
-                        ("fed_id_fy", "fed_id_type", "fed_id_agency", "fed_id_region"),
-                        ("fed_id_unit", "fed_id_subunit", "fed_id_seq"),
-                        ("orig_fed_id", "master_fed_id"),
-                    ),
-                },
-            ),
-            (
-                "State info",
-                {
-                    "classes": ("collapse",),
-                    "fields": (
-                        ("state_identifier",),
-                        ("managing_state_county"),
-                    ),
-                },
-            ),
-            (
-                "EST Funds",
-                {
-                    "classes": ("collapse",),
-                    "fields": (
-                        "fed_est_fund",
-                        "applicant_est_fund",
-                        "state_est_fund",
-                        "local_est_fund",
-                        "pi_est_fund",
-                        "oth_est_fund",
-                    ),
-                },
-            ),
-            (
-                "Other",
-                {
-                    "classes": ("collapse",),
-                    "fields": (
-                        "mod_number",
-                        "geo_type",
-                        "ffin",
-                        "reroute_from",
-                        "reroute_date",
-                        "certificaion_date",
-                        "ffis_doc_id",
-                        "authority_approval",
-                        "authority",
-                        "format",
-                        "other_approval",
-                        "admin_open",
-                    ),
-                },
-            ),
-        ]
-        return super(GrantAdmin, self).change_view(request, object_id)
 
     def get_urls(self):
         """

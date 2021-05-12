@@ -73,20 +73,9 @@
             </p>
             {{ form.non_field_errors }}
             {% endif %}
-
-            {% include "includes/field.html" with field=form.proj_title %}
-            {% include "includes/field.html" with field=form.proposed_start_date parent_class="usa-date-picker" %}
-            {% include "includes/field.html" with field=form.proposed_end_date parent_class="usa-date-picker" %}
-            {% include "includes/field.html" with field=form.applicant_name %}
-            {% include "includes/field.html" with field=form.org_select %}
-            {% include "includes/field.html" with field=form.progrm_responsibility_type %}
-            {% include "includes/field.html" with field=form.project_category %}
-            {% include "includes/field.html" with field=form.app_submit_date parent_class="usa-date-picker" %}
-            {% include "includes/field.html" with field=form.app_received_date parent_class="usa-date-picker" %}
-            {% include "includes/field.html" with field=form.application_type %}
-            {% include "includes/field.html" with field=form.app_submission_type %}
+            <h2>Project overview</h2>
             
-
+            {% include "includes/min_form.html" %}
 
             {% block inline_field_sets %}
             {% for inline_admin_formset in inline_admin_formsets %}

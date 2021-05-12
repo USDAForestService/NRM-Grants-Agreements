@@ -1,0 +1,218 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_modify widget_tweaks %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script src="{% url 'admin:jsi18n' %}"></script>
+  {{ media }}
+{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}">
+{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-form{% endblock %}
+
+  {% block breadcrumbs %}
+    <nav class="usa-breadcrumb" aria-label="Breadcrumbs">
+        <ol class="usa-breadcrumb__list">
+            <li class="usa-breadcrumb__list-item">
+                <a href="{% url 'admin:index' %}" class="usa-breadcrumb__link">
+                    <span>{% translate 'Home' %}</span>
+                </a>
+            </li>
+            <li class="usa-breadcrumb__list-item">
+                <a href="{% url 'admin:app_list' app_label=opts.app_label %}" class="usa-breadcrumb__link">
+                    <span>{{ opts.app_config.verbose_name }}</span>
+                </a>
+            </li>
+            <li class="usa-breadcrumb__list-item">
+                {% if has_view_permission %}
+                <a href="{% url opts|admin_urlname:'changelist' %}" class="usa-breadcrumb__link">
+                    <span>{{ opts.verbose_name_plural|capfirst }}</span>
+                </a>
+                {% else %}
+                  {{ opts.verbose_name_plural|capfirst }}
+                {% endif %}
+            </li>
+            <li class="usa-breadcrumb__list-item usa-current" aria-current="page">
+                <span>{% if add %}{% blocktranslate with name=opts.verbose_name %}Add {{ name }}{% endblocktranslate %}
+                    {% else %}{{ original|truncatewords:"18" }}{% endif %}</span>
+            </li>
+        </ol>
+    </nav>
+  {% endblock breadcrumbs %}
+
+  {% block content %}
+  <div id="content-main">
+    <h1>Update a proposal or agreement</h1>
+    <p class="site-text-intro">Use this form to update a proposal or agreement.</p>
+    
+    {% block object-tools %}
+      {% if change %}
+        <ul class="object-tools">
+            {% block object-tools-items %}
+            {% change_form_object_tools %}
+            {% endblock %}
+        </ul>
+      {% endif %}
+    {% endblock object-tools %}
+    <form {% if form_url %} action="{{ form_url }}" {% endif %} method="post" id="{{ opts.model_name }}_form" 
+        {% if has_file_field %}enctype="multipart/form-data" {% endif %} novalidate class="aligned">
+        {% csrf_token %}{% block form_top %}{% endblock %}
+        <div>
+            {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}">{% endif %}
+            {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+            {% if errors %}
+            <p class="errornote">
+                {% if errors|length == 1 %}{% translate "Please correct the error below." %}{% else %}
+                {% translate "Please correct the errors below." %}{% endif %}
+            </p>
+            {{ form.non_field_errors }}
+            {% endif %}
+
+            <div class="usa-accordion usa-accordion--bordered">
+              <fieldset>
+                  <legend class="usa-accordion__heading">
+                      <button class="usa-accordion__button" type="button" aria-expanded="false" aria-controls="overview">
+                          Project overview
+                      </button>
+                  </legend>
+                  <div id="overview" class="usa-accordion__content usa-prose">
+                    {% include "includes/min_form.html" %}
+                  </div>
+              </fieldset>
+              <fieldset>
+                <legend class="usa-accordion__heading">
+                    <button class="usa-accordion__button" type="button" aria-expanded="true" aria-controls="partner">
+                        Partnership details
+                    </button>
+                </legend>
+                <div id="partner" class="usa-accordion__content usa-prose">
+                  {% include "includes/field.html" with field=form.org_select %}
+                  {% include "includes/field.html" with field=form.fed_id_agency %}
+                  {% include "includes/field.html" with field=form.fed_id_region %}
+                  {% include "includes/field.html" with field=form.fed_id_unit %}
+                  {% include "includes/field.html" with field=form.fed_id_subunit %}
+                  {% include "includes/field.html" with field=form.cooperator_agreement_number %}
+                  {% include "includes/field.html" with field=form.applicant_name %}
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend class="usa-accordion__heading">
+                    <button class="usa-accordion__button" type="button" aria-expanded="false" aria-controls="agreement-number">
+                        Agreement number details
+                    </button>
+                </legend>
+                <div id="agreement-number" class="usa-accordion__content usa-prose">
+                  {% include "includes/field.html" with field=form.fed_id_type %}
+                  {% include "includes/field.html" with field=form.fed_id_seq %}
+                  {% include "includes/field.html" with field=form.fed_id_fy %}
+                  {% include "includes/field.html" with field=form.gid %}
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend class="usa-accordion__heading">
+                    <button class="usa-accordion__button" type="button" aria-expanded="false" aria-controls="project-details">
+                        Project details
+                    </button>
+                </legend>
+                <div id="project-details" class="usa-accordion__content usa-prose">
+                  {% include "includes/field.html" with field=form.proj_type %}
+                  {% include "includes/field.html" with field=form.proj_received_dt parent_class="usa-date-picker" %}
+                  {% include "includes/field.html" with field=form.proj_obligation_dt parent_class="usa-date-picker" %}
+                  {% include "includes/field.html" with field=form.proj_close_dt parent_class="usa-date-picker" %}
+                  {% include "includes/field.html" with field=form.proj_cancellation_dt parent_class="usa-date-picker" %}
+                  {% include "includes/field.html" with field=form.proj_execution_dt parent_class="usa-date-picker" %}
+                  {% include "includes/field.html" with field=form.proj_start_dt parent_class="usa-date-picker" %}
+                  {% include "includes/field.html" with field=form.proj_expiration_dt parent_class="usa-date-picker" %}
+                  {% include "includes/field.html" with field=form.proj_cfda_no %}
+                  {% include "includes/field.html" with field=form.proj_status %}
+                  {% include "includes/field.html" with field=form.project_congressional_district %}
+                  {% include "includes/field.html" with field=form.project_category %}
+                  {% include "includes/field.html" with field=form.international_act_ind %}
+                  {% include "includes/field.html" with field=form.extramural_ind %}
+                  {% include "includes/field.html" with field=form.aop_ind %}
+                  {% include "includes/field.html" with field=form.areas_effected %}
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend class="usa-accordion__heading">
+                    <button class="usa-accordion__button" type="button" aria-expanded="false" aria-controls="state-local">
+                        State/Local
+                    </button>
+                </legend>
+                <div id="state-local" class="usa-accordion__content usa-prose">
+                  {% include "includes/field.html" with field=form.managing_state_county %}
+                  {% include "includes/field.html" with field=form.state_identifier %}
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend class="usa-accordion__heading">
+                    <button class="usa-accordion__button" type="button" aria-expanded="false" aria-controls="funding">
+                        Funding
+                    </button>
+                </legend>
+                <div id="funding" class="usa-accordion__content usa-prose">
+                  {% include "includes/field.html" with field=form.ffin %}
+                  {% include "includes/field.html" with field=form.ffis_doc_id %}
+                  {% include "includes/field.html" with field=form.applicant_est_fund %}
+                  {% include "includes/field.html" with field=form.pi_est_fund %}
+                  {% include "includes/field.html" with field=form.fed_est_fund %}
+                  {% include "includes/field.html" with field=form.state_est_fund %}
+                  {% include "includes/field.html" with field=form.local_est_fund %}
+                  {% include "includes/field.html" with field=form.applicant_est_fund %}
+                  {% include "includes/field.html" with field=form.oth_est_fund %}
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend class="usa-accordion__heading">
+                    <button class="usa-accordion__button" type="button" aria-expanded="false" aria-controls="auth">
+                        Authority
+                    </button>
+                </legend>
+                <div id="auth" class="usa-accordion__content usa-prose">
+                  {% include "includes/field.html" with field=form.authority_approval %}
+                  {% include "includes/field.html" with field=form.authority %}
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend class="usa-accordion__heading">
+                    <button class="usa-accordion__button" type="button" aria-expanded="false" aria-controls="other">
+                        Other
+                    </button>
+                </legend>
+                <div id="other" class="usa-accordion__content usa-prose">
+                  {% include "includes/field.html" with field=form.master_agreement_ind %}
+                  {% include "includes/field.html" with field=form.date_mailed parent_class="usa-date-picker" %}
+                  {% include "includes/field.html" with field=form.date_signed parent_class="usa-date-picker" %}
+                  {% include "includes/field.html" with field=form.comments %}
+                  {% include "includes/field.html" with field=form.mod_number %}
+                  {% include "includes/field.html" with field=form.geo_type %}
+                  {% include "includes/field.html" with field=form.reroute_from %}
+                  {% include "includes/field.html" with field=form.reroute_date %}
+                  {% include "includes/field.html" with field=form.certificaion_date %}
+                  {% include "includes/field.html" with field=form.format %}
+                  {% include "includes/field.html" with field=form.other_approval %}
+                  {% include "includes/field.html" with field=form.admin_open %}
+                </div>
+              </fieldset>
+
+
+            {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+
+            {% block admin_change_form_document_ready %}
+              <script id="django-admin-form-add-constants" src="{% static 'admin/js/change_form.js' %}"
+                {% if adminform and add %} data-model-name="{{ opts.model_name }}" {% endif %} async></script>
+            {% endblock %}
+
+        </div>
+    </form>
+  </div>
+{% endblock %}

@@ -7,70 +7,70 @@ from django.core.exceptions import ValidationError
 from .models import Category, Grant
 from contacts.models import AccomplishmentInstrument, Contact
 
+cat_set = Category.objects.order_by("category_desc").distinct("category_desc")
 
-class GrantForm(forms.ModelForm):
-    # We're using modelChoiceField here, but as the DB is currently configured passing choices to a ChoiceField
-    # would work just as well (maybe better)
-    # Note that we're setting queryset down below in init
-    # TO-DO: Ideally we would migrate to Categories being just a list of cats,
-    # with Grant having an FK to that table, so we could avoid these sorts of shenanigans.
-    project_category = forms.ModelChoiceField(queryset=None)
+
+class MinGrantForm(forms.ModelForm):
+    """
+    Defines the minimum viable Grant/proposal creation form.
+    """
 
     class Meta:
         model = Grant
-        # These are the minimum fields needed for proposal creation
-        fields = (
+        fields = [
             "proj_title",
-            "proposed_start_date",
-            "proposed_end_date",
-            "applicant_name",
-            # "contacts", # TO-DO: FIGURE OUT HOW TO ADD THIS BACK IN
-            "org_select",
-            "progrm_responsibility_type",
-            "project_category",
+            "proj_desc",
             "app_submit_date",
             "app_received_date",
+            "proposed_start_date",
+            "proposed_end_date",
+            "progrm_responsibility_type",
+            "advance_allowed_ind",
+            "master_fed_id",
+            "state_eo_date",
+            "state_eo_code",
             "application_type",
             "app_submission_type",
-            "proj_cfda_no",
-            "state_eo_code",
-            "state_eo_date",
-        )
+            "proj_rwu",
+            "journal_ind",
+            "proj_science_cd",
+            "research_type",
+        ]
 
-    org_select = forms.ModelChoiceField(
-        label="Organization",
-        queryset=Contact.objects.filter(
-            cn__in=AccomplishmentInstrument.objects.values("managing_contact")
-        ).distinct(),
-    )
-
-    def __init__(self, *args, **kwargs):
+    def save(self, commit=True):
         """
-        A quick init to add some classes on some fields, since we don't need to override the widget,
-        and add a custom field or two.
+        On initial save we generate several values:
+        * A new CN/PK
+        * `created_in_instance`
+        * `modified_in_instance`
+
+        Note that the instance ID is currently hard-coded.
+        It may have no value beyond mimicking the legacy system,
+        but if it is needed we will still need to learn how to capture it.
         """
-        super(GrantForm, self).__init__(*args, **kwargs)
-        # self.fields["proj_title"].widget.attrs["class"] += " text-wide"
+        instance = super().save(commit=False)
+        # first, we're gonna have to create our cn/pk
+        # * First character: Year
+        # * Second character: Region
+        # * Trailing characters: The instance created in
+        # * Middle characters: some unique ID
+        # TO-DO: figure out a better way to know the correct region.
+        # Maybe from contacts table?
+        # Assuming we end up keeping instance_ids as a useful thing we'll have to learn how to
+        # capture them correctly rather than just using a hard-coded value as we are here.
+        year_char = datetime.date.today().strftime("%y")[1:]
+        short_uuid = str(uuid.uuid4())[:8]
+        instance_id = "10602"
+        instance.cn = "%s%s%s0%s" % (year_char, "6", short_uuid, instance_id)
 
-        # If we're modifying an existing instance in a changeform we'll need
-        # to set the initial value for org, because we don't have an FK
-        # directly on Grant
-        if self.instance:
-            self.fields["org_select"].initial = self.instance.org
+        # stubbing out foo_in_instance rather than making defaults
+        # since we don't know yet how to populate them correctly or what the values mean.
+        # eventually we'll have some sort of check or logic here.
+        instance.created_in_instance = instance.modified_in_instance = instance_id
 
-        cat_set = Category.objects.order_by("category_desc").distinct("category_desc")
-        self.fields["project_category"].queryset = cat_set
-
-        # If we're modifying an existing instance in a changeform we'll need to set the initial value
-        # for project_category, because we don't have a proper FK from Grant
-        # Also, because we used distinct() to toss out duplicate Cats, we have to find one that
-        # matches whatever one was set on the current Grant so it looks right.
-        if self.instance.cn:
-            this_cat = Category.objects.get(grant=self.instance)
-            # For reasons I can't explain, get() on the queryset doesn't work, but iterating does.
-            for cat in cat_set:
-                if cat.category_desc == this_cat.category_desc:
-                    self.fields["project_category"].initial = cat.cn
+        if commit:
+            instance.save()
+        return instance
 
     def clean_state_eo_date(self):
         """
@@ -84,36 +84,74 @@ class GrantForm(forms.ModelForm):
             raise ValidationError(
                 "If this agreement is subject to state EO, you must enter an EO date."
             )
+        return cleaned_data
+
+
+class GrantUpdateForm(forms.ModelForm):
+    """
+    On update, we'll make all fields editable.
+    """
+
+    # First we need to sort out project category.
+    # We're using modelChoiceField, but it may make more sense to use a ChoiceField.
+    # The actual queryset gets set down below in `init`
+    # TO-DO: Ideally we would migrate to Categories being just a list of cats,
+    # with Grant having an FK to that table, so we could avoid these sorts of shenanigans.
+    project_category = forms.ModelChoiceField(
+        label="Project category",
+        queryset=cat_set,
+        required=False,
+        help_text="If 'International Activities' is 'Yes', you must choose a category.",
+    )
+    org_select = forms.ModelChoiceField(
+        label="Organization",
+        queryset=Contact.objects.filter(
+            cn__in=AccomplishmentInstrument.objects.values("managing_contact")
+        ).distinct(),
+    )
+
+    class Meta:
+        model = Grant
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(GrantUpdateForm, self).__init__(*args, **kwargs)
+
+        # If we're modifying an existing instance we'll need to manually
+        # set the initial value for org, because we don't have an FK on Grant
+        if self.instance:
+            self.fields["org_select"].initial = self.instance.org
+
+        # We'll also need to set the initial project_category.
+        # Because we used distinct() to toss out duplicate Cats, we have to find one
+        # that matches whatever one was set on the current Grant so it looks right.
+        if self.instance.cn:
+            try:
+                this_cat = Category.objects.get(grant=self.instance)
+                # For reasons I can't explain, get() on the queryset doesn't work, but iterating does.
+                for cat in cat_set:
+                    if cat.category_desc == this_cat.category_desc:
+                        self.fields["project_category"].initial = cat.cn
+            except Category.DoesNotExist:
+                pass
+
+    def clean_project_category(self):
+        """
+        Ensures at least one category is set if international_agreement_ind is true
+        """
+        cleaned_data = super().clean()
+        intl_act = cleaned_data.get("international_act_ind")
+        if intl_act and intl_act.lower().startswith("y"):
+            if not cleaned_data.get("project_category"):
+                raise ValidationError(
+                    "International agreements must have a program category."
+                )
+        return cleaned_data
 
     def save(self, commit=True):
-        """
-        Ensures on save we generate and save several values:
-        * A new CN/PK
-        * Updated `status_date` if new or status has chanaged.
-        * `created_in_instance` and `modified_in_instance`
-
-        Note that the instance ID is currently hard-coded.
-        It may have no value beyond mimicking the legacy system,
-        but if it is needed we will still need to learn how to capture it.
-        """
         instance = super().save(commit=False)
-        # first, we're gonna have to create our cn/pk
-        # * First character: Year
-        # * Second character: Region
-        # * Trailing characters: The instance created in
-        # * Middle characters: some unique ID
-        # TO-DO: figure out a better way to know the correct region. Maybe from contacts table?
-        year_char = datetime.date.today().strftime("%y")[1:]
-        short_uuid = str(uuid.uuid4())[:8]
-        # Assuming we end up keeping instance_ids as a useful thing we'll have to learn how to
-        # capture them correctly rather than just using a hard-coded value as we are here.
-        instance_id = "10602"
-        instance.cn = "%s%s%s0%s" % (year_char, "6", short_uuid, instance_id)
-
         # if some undetermined sequence of events happens, we will need to update `status`
         # if that happens, we would need to update status_date, too.
-        if "status" in self.changed_data:
-            instance.status_date = datetime.datetime.now()
 
         if "wppp_status" in self.changed_data:
             instance.wppp_status_date = datetime.datetime.now()
@@ -130,7 +168,6 @@ class GrantForm(forms.ModelForm):
             # When it changes, we need to change the change the value over there.
             # To-Do: in the future, this should probably be migrated into grant itself
             # since it's a 1:1 anyway.
-            # print("initial value: ", self.initial["org_select"])
             if instance.cn and "org_select" in self.changed_data:
                 # first, is there an existing ai? Note that the 1:1 relationship is untrustworthy.
                 # Because we don't trust it and we're using first(), we won't use get_or_create() either.
@@ -145,7 +182,7 @@ class GrantForm(forms.ModelForm):
         # We need to create a new category if one does not already exist for this grant.
         # It might make sense do make this a signal or some other post_save() mechanism,
         # since it's dependent on the grant being in the DB.
-        # TO-DO: when we migrate to a proper FK, remove al of this
+        # TO-DO: when we migrate to a proper FK, remove all of this
         if "project_category" in self.changed_data:
             # temp_cat is the category the user selected from the
             # limited set of cats defined in cat_set above.

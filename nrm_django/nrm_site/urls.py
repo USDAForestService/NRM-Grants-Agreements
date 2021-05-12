@@ -17,14 +17,24 @@ from django.contrib import admin
 from django.urls import path, re_path
 
 from nrm_app.views import HomePageView
-from grants.views import GrantCreateView
+from grants.views import GrantCreateView, GrantUpdateView, GrantDetailView
 
 urlpatterns = [
     # because these URLs will resolve first, they effectively override the admin URLs
     re_path(
         "admin/(?P<app_label>grants)/grant/add/$",
         GrantCreateView.as_view(),
-        name="add-grant",
+        name="add_grant",
+    ),
+    re_path(
+        "admin/(?P<app_label>grants)/grant/(?P<pk>[0-9A-Fa-f-]+)/change/$",
+        GrantUpdateView.as_view(),
+        name="change_grant",
+    ),
+    re_path(
+        "admin/(?P<app_label>grants)/grant/(?P<pk>[0-9A-Fa-f-]+)/details/$",
+        GrantDetailView.as_view(),
+        name="grant_details",
     ),
     # Now we can have the regular admin URLs
     path("admin/", admin.site.urls),
