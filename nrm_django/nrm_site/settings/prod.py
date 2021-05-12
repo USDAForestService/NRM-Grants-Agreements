@@ -9,4 +9,4 @@ from .base import *  # noqa
 database_url = os.getenv("DATABASE_URL")
 
 DATABASES = {"default": dj_database_url.parse(database_url)}
-ALLOWED_HOSTS = ["fs-nrm.app.cloud.gov"]
+ALLOWED_HOSTS = ["fs-nrm.app.cloud.gov", "development.eba-ny2imkrt.us-east-2.elasticbeanstalk.com"]
