@@ -1,8 +1,7 @@
 import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView
 
 from .forms import MinGrantForm, GrantUpdateForm
 from .models import Grant
@@ -12,7 +11,7 @@ def run_save_checks(form, request):
     """
     Every time a Grant object is saved, regardless of which form is submitted,
     there are several things that we need to check and determine if they're revised or not.
-    We'll capture them here, then call this when we save()
+    We'll capture them here, then call this in form_valid()
     """
     new_status = None
     # Do stuff here to determine if status should change, and if so, change it.
@@ -97,3 +96,17 @@ class GrantUpdateView(LoginRequiredMixin, UpdateView):
 
 class GrantDetailView(LoginRequiredMixin, DetailView):
     model = Grant
+
+
+class UserItemsView(LoginRequiredMixin, ListView):
+    template_name = "admin/user_items.html"
+
+    def get_queryset(self):
+        return Grant.objects.filter(created_by=self.kwargs.get("username")).order_by(
+            "-status_date"
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["username"] = self.kwargs.get("username")
+        return context

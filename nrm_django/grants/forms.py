@@ -8,6 +8,7 @@ from .models import Category, Grant
 from contacts.models import AccomplishmentInstrument, Contact
 
 cat_set = Category.objects.order_by("category_desc").distinct("category_desc")
+instance_id = "10602"
 
 
 class MinGrantForm(forms.ModelForm):
@@ -60,7 +61,6 @@ class MinGrantForm(forms.ModelForm):
         # capture them correctly rather than just using a hard-coded value as we are here.
         year_char = datetime.date.today().strftime("%y")[1:]
         short_uuid = str(uuid.uuid4())[:8]
-        instance_id = "10602"
         instance.cn = "%s%s%s0%s" % (year_char, "6", short_uuid, instance_id)
 
         # stubbing out foo_in_instance rather than making defaults
