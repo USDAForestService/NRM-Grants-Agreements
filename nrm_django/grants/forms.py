@@ -72,19 +72,18 @@ class MinGrantForm(forms.ModelForm):
             instance.save()
         return instance
 
-    def clean_state_eo_date(self):
+    def clean_state_eo_code(self):
         """
         Ensures that if State EO Code is Yes, then a date must be entered.
         """
-        cleaned_data = super().clean()
-        eo_code = cleaned_data.get("state_eo_code")
-        eo_date = cleaned_data.get("state_eo_date")
+        eo_code = self.cleaned_data["state_eo_code"]
 
-        if eo_code == "Y" and not eo_date:
-            raise ValidationError(
-                "If this agreement is subject to state EO, you must enter an EO date."
-            )
-        return cleaned_data
+        if eo_code and eo_code.lower() == "y":
+            if not self.cleaned_data["state_eo_date"]:
+                raise ValidationError(
+                    "If this agreement is subject to state EO, you must enter an EO date."
+                )
+        return eo_code
 
 
 class GrantUpdateForm(forms.ModelForm):
@@ -128,10 +127,10 @@ class GrantUpdateForm(forms.ModelForm):
         if self.instance.cn:
             try:
                 this_cat = Category.objects.get(grant=self.instance)
-                # For reasons I can't explain, get() on the queryset doesn't work, but iterating does.
-                for cat in cat_set:
-                    if cat.category_desc == this_cat.category_desc:
-                        self.fields["project_category"].initial = cat.cn
+                # if we dropped this cat becuase of the distinct() on cat_set, we need to add it back in:
+                if this_cat not in cat_set:
+                    cat_set.append(this_cat)
+                self.fields["project_category"].initial = this_cat.cn
             except Category.DoesNotExist:
                 pass
 
@@ -177,7 +176,7 @@ class GrantUpdateForm(forms.ModelForm):
                 ai.managing_contact = Contact.objects.get(
                     cn=self.data.get("org_select")
                 )
-                ai.save()
+                # ai.save() TO-DO: Uncomment this when we've fixed AIs in #222
 
         # We need to create a new category if one does not already exist for this grant.
         # It might make sense do make this a signal or some other post_save() mechanism,

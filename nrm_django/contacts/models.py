@@ -9,6 +9,9 @@ from django.db import models
 
 from grants.choices import BOOL_CHOICES
 
+# TO-DO: either figure out this whole in_instance thing or remove it.
+FAKE_INSTANCE = "10602"
+
 
 class AdminUnit(models.Model):
     admin_unit_cn = models.CharField(max_length=40, primary_key=True)
@@ -49,7 +52,7 @@ class Contact(models.Model):
     created_date = models.DateField(auto_now_add=True)
     # Need to capture the instance, when we have one.
     created_in_instance = models.DecimalField(
-        max_digits=6, decimal_places=0, editable=False
+        max_digits=6, decimal_places=0, editable=False, default=FAKE_INSTANCE
     )
     trans_id = models.CharField("Trans ID", max_length=34, blank=True, null=True)
     # User guide says this is display only. Unclear how new values are created.
@@ -79,7 +82,12 @@ class Contact(models.Model):
     )
     modified_date = models.DateField(blank=True, null=True, auto_now=True)
     modified_in_instance = models.DecimalField(
-        max_digits=6, decimal_places=0, blank=True, null=True, editable=False
+        max_digits=6,
+        decimal_places=0,
+        blank=True,
+        null=True,
+        editable=False,
+        default=FAKE_INSTANCE,
     )
     security_id = models.CharField(max_length=30, blank=True, null=True, editable=False)
     agency_code = models.CharField(max_length=4)
@@ -175,13 +183,17 @@ class AccomplishmentInstrument(models.Model):
         max_digits=10, decimal_places=0, blank=True, null=True
     )
     trans_id = models.CharField(max_length=34, blank=True, null=True)
-    created_by = models.CharField(max_length=30)
-    created_date = models.DateField()
-    created_in_instance = models.DecimalField(max_digits=6, decimal_places=0)
-    modified_by = models.CharField(max_length=30, blank=True, null=True)
-    modified_date = models.DateField(blank=True, null=True)
+    created_by = models.CharField(max_length=30)  # TO-DO: set this
+    created_date = models.DateField(auto_now_add=True)
+    created_in_instance = models.DecimalField(
+        max_digits=6, decimal_places=0, default=FAKE_INSTANCE
+    )
+    modified_by = models.CharField(
+        max_length=30, blank=True, null=True
+    )  # TO-DO: set this
+    modified_date = models.DateField(blank=True, null=True, auto_now=True)
     modified_in_instance = models.DecimalField(
-        max_digits=6, decimal_places=0, blank=True, null=True
+        max_digits=6, decimal_places=0, blank=True, null=True, default=FAKE_INSTANCE
     )
     master_site = models.DecimalField(
         max_digits=6, decimal_places=0, blank=True, null=True

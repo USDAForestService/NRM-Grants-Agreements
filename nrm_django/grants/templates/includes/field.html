@@ -8,7 +8,8 @@
   {% else %}
     {{ field.label_tag }}
   {% endif %}
-  <div class="{{ field|widget_type }} {{ parent_class }}">
+  {# data-default-value is just used by the date picker but is harmless for other inputs #}
+  <div class="{{ field|widget_type }} {{ parent_class }}" data-default-value="{{ field.value|date:'Y-m-d' }}">
     {{ field }}
   </div>
   {{ field.errors }}

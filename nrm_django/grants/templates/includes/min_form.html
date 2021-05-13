@@ -16,8 +16,8 @@
             </button>
         </legend>
         <div id="ffa" class="usa-accordion__content usa-prose">
-    {% include "includes/field.html" with field=form.state_eo_date %}
     {% include "includes/field.html" with field=form.state_eo_code %}
+    {% include "includes/field.html" with field=form.state_eo_date parent_class="usa-date-picker" %}
     {% include "includes/field.html" with field=form.application_type %}
     {% include "includes/field.html" with field=form.app_submission_type %}
         </div>
