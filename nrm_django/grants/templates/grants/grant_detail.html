@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <div id="content-main">
+    <h1>Success!</h1>
+    <p>Would you like to...</p>
+    <ul>
+        <li><a href="{% url 'admin:grants_grant_changelist' %}">View the list of grants and proposals</a></li>
+        <li><a href="{% url 'add_grant' 'grants' %}">Create a new proposal</a></li>
+        <li><a href="{% url 'change_grant' app_label='grants' pk=object.cn %}">Edit this proposal/agreement</a></li>
+    </ul>
+    {% endblock content %}

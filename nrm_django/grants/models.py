@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.functional import cached_property
 
@@ -47,7 +48,6 @@ class Grant(models.Model):
         db_index=True,
         help_text="The short and concise name of the project. Do not include any acronyms, unit codes, or funding codes.",
     )
-    # Q: Per the user guide, proj_status should be display-only, so how/when would it be updated?
     proj_status = models.CharField(
         "Project status",
         max_length=15,
@@ -63,6 +63,7 @@ class Grant(models.Model):
         "Type of application",
         max_length=30,
         choices=APPLICATION_TYPE_CHOICES,
+        default="Other",
         help_text="""
             Applies to instruments with Federal Financial Assistance (FFA).
             Select OTHER if not FFA.
@@ -72,6 +73,7 @@ class Grant(models.Model):
         "Type of Submission",
         max_length=100,
         choices=APP_SUBMISSION_TYPE_CHOICES,
+        default="Other",
         help_text="""
             Applies to instruments with Federal Financial Assistance (FFA).
             Select OTHER if not FFA.
@@ -92,7 +94,6 @@ class Grant(models.Model):
         editable=False,
         help_text="Was only used by NRS (Northern Research Station) and NA Northeastern Area (S&PF).",
     )
-
     proposed_start_date = models.DateField(
         help_text="""
             The date the project is expected to start as negotiated in the agreement.
@@ -107,6 +108,7 @@ class Grant(models.Model):
     # The desire is that sys admins and help desk should be able to lock a record
     # so it cannot be edited (unless they unlock it).
     # For now, marking it as not-editable.
+    # TO-DO: Implement this
     locked_ind = models.CharField(
         choices=BOOL_CHOICES, max_length=1, default="N", editable=False
     )
@@ -115,6 +117,7 @@ class Grant(models.Model):
         max_length=40,
         choices=STATUS_CHOICES,
         default="NEW-APPLICATION",
+        editable=False,
     )
     status_date = models.DateField(auto_now_add=True)
     # TO-DO: created_by should record current user on save()
@@ -206,7 +209,6 @@ class Grant(models.Model):
         "Project obligation date", blank=True, null=True
     )
     proj_expiration_dt = models.DateField("Expires", blank=True, null=True)
-
     proj_close_dt = models.DateField(
         "Close date",
         blank=True,
@@ -251,12 +253,11 @@ class Grant(models.Model):
     project_congressional_district = models.CharField(
         max_length=40, blank=True, null=True
     )
-
     date_mailed = models.DateField(blank=True, null=True)
     date_signed = models.DateField(blank=True, null=True)
     comments = models.TextField(max_length=2000, blank=True, null=True)
     # Per user guide extramural_ind should be represented as a boolean
-    # TO-DO: present it as a boolean (may require migrationi)
+    # TO-DO: present it as a boolean (may require migration)
     extramural_ind = models.CharField(
         "Extramural",
         choices=BOOL_CHOICES,
@@ -317,7 +318,6 @@ class Grant(models.Model):
         null=True,
         help_text="The agreement number assigned to the instrument in FMMI.",
     )
-
     # State fields
     state_identifier = models.CharField(
         max_length=40, blank=True, null=True
@@ -340,7 +340,6 @@ class Grant(models.Model):
             Executive Order 12372 review date.
             You must select a date if 'Subject to State E.O.' is Yes.""",
     )
-
     # EST Fund fields
     fed_est_fund = models.DecimalField(
         max_digits=12, decimal_places=2, blank=True, null=True
@@ -363,7 +362,9 @@ class Grant(models.Model):
     reroute_from = models.CharField(max_length=10, blank=True, null=True)
     reroute_date = models.DateField(blank=True, null=True)
     certificaion_date = models.DateField("Certification date", blank=True, null=True)
-    applicant_name = models.CharField("Applicant/Cooperator Name", max_length=200)
+    applicant_name = models.CharField(
+        "Applicant/Cooperator Name", max_length=200, blank=True, null=True
+    )
     international_act_ind = models.CharField(
         "International Activities",
         choices=BOOL_CHOICES,
@@ -414,7 +415,12 @@ class Grant(models.Model):
         """,
     )
     wppp_status = models.CharField(
-        "WPAP Status", max_length=40, blank=True, null=True, choices=WPAP_STATUS_CHOICES
+        "WPAP Status",
+        max_length=40,
+        blank=True,
+        null=True,
+        choices=WPAP_STATUS_CHOICES,
+        editable=False,
     )
     wppp_status_date = models.DateField(
         "WPAP status date", blank=True, null=True, editable=False
@@ -438,6 +444,12 @@ class Grant(models.Model):
 
     def __str__(self):
         return self.proj_title
+
+    def get_absolute_url(self):
+        reversed_url = reverse(
+            "grant_details", kwargs={"app_label": "grants", "pk": self.cn}
+        )
+        return reversed_url
 
     def pretty_name(self):
         return "%s" % self.proj_title.title()
@@ -473,8 +485,6 @@ class Grant(models.Model):
         return mark_safe(datelist_string)
 
     significant_dates.allow_tags = True
-
-    # TO-DO: Write save to write GID
 
     @cached_property
     def contacts(self):

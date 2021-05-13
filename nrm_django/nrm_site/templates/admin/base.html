@@ -11,8 +11,10 @@
     <link rel="stylesheet" type="text/css" href="{% static 'admin/css/nav_sidebar.css' %}">
     <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
     {% endif %}
+
     <link href="{% uswds_static 'css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'css/site.css' %}?v=2" rel="stylesheet" type="text/css" />
+    <script src="{% uswds_static 'js/uswds.min.js' %}" defer></script>
+    <link href="{% static 'css/site.css' %}?v=7" rel="stylesheet" type="text/css" />
 
     {% block extrastyle %}{% endblock %}
     {% block extrahead %}{% endblock %}
