@@ -42,7 +42,7 @@ urlpatterns = [
         name="grant_details",
     ),
     path(
-        "admin/<username>/items/$",
+        "admin/<username>/items/",
         UserItemsView.as_view(),
         name="user_items",
     ),
