@@ -4,13 +4,10 @@ import os
 from .base import *  # noqa
 
 
-print("In prod settings")
 # Cloud.gov DB connection
 # See: https://pypi.org/project/dj-database-url/
 database_url = os.getenv("DATABASE_URL")
 if database_url:
     DATABASES = {"default": dj_database_url.parse(database_url)}
 
-print("DATABASES set to", DATABASES)
-
-ALLOWED_HOSTS = ["fs-nrm.app.cloud.gov", "development.eba-ny2imkrt.us-east-2.elasticbeanstalk.com"]
+ALLOWED_HOSTS = ["fs-nrm.app.cloud.gov"]
