@@ -1,0 +1,19 @@
+{% load widget_tweaks %}
+<div class="usa-form-group">
+  {% if field.field.required %}
+  <label class="usa-label" id="{{ field.name }}-label" for="{{ field.id_for_label }}">
+    <strong>{{ field.field.label }}</strong> 
+    <span class="usa-hint">(required)</span>
+  </label>
+  {% else %}
+    {{ field.label_tag }}
+  {% endif %}
+  {# data-default-value is just used by the date picker but is harmless for other inputs #}
+  <div class="{{ field|widget_type }} {{ parent_class }}" data-default-value="{{ field.value|date:'Y-m-d' }}">
+    {{ field }}
+  </div>
+  {{ field.errors }}
+  {% if field.help_text %}
+    <p class="help usa-hint">{{ field.help_text|safe }}</p>
+  {% endif %}
+</div>
