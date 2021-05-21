@@ -1,6 +1,3 @@
-branch-defaults:
-  default:
-    group_suffix: null
 global:
   application_name: ga
   branch: null
