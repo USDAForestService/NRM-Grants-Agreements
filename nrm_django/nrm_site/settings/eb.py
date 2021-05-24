@@ -16,4 +16,4 @@ def database_dict_from_rds_env():
 
 
 DATABASES = {"default": database_dict_from_rds_env()}
-ALLOWED_HOSTS = ["development.eba-ny2imkrt.us-east-2.elasticbeanstalk.com"]
+ALLOWED_HOSTS = ["development.eba-ny2imkrt.us-east-2.elasticbeanstalk.com","awseb-AWSEB-J9833I1LCEIX-205041881.us-gov-west-1.elb.amazonaws.com"]
