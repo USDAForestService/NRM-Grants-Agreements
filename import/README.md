@@ -124,3 +124,28 @@ Leave the service-connect terminal alone and open a new shell. From that new she
 Note that you will need to pass the correct settings file to the manage.py command, as well as give it the path to the fixture you're trying to load. The `--verbosity=3` argument will provide some useful  progress feedback.
 
 Note also that if you have existing DB rows in the table you may want to jump into a Django shell and run `<model>.objects.all().delete()` to remove them before loading your fixture.
+
+### Backup and restore
+
+Using the previous section, you can set up an SSH connection to the database
+on cloud.gov. This lets us back up the database over that connection. Using
+the username, password, and port from the `cf connect-to-service` command,
+give those as arguments to the `pg_dump` command (you may need to install the
+`postgresql` package of a matching major version to get that utility).
+
+```
+pg_dump -F c -h localhost -U <random_username> -p <random_port> <db_name> > backup.bin
+```
+
+`<db_name>` needs to be looked up separately using the `\l` command in `psql`.
+The `-F c` option specifies the custom binary export format.
+
+Once you have the backup file, you can restore it to any postgres database
+that you have access to using the `pg_restore` utility.
+
+```
+pg_restore -h <new_host> -U <new_user> -p <new_port> -d ebdb backup.bin
+```
+
+where `ebdb` is the name of the database to use on the new host. (`ebdb` is
+the default for Elastic Beanstalk.)

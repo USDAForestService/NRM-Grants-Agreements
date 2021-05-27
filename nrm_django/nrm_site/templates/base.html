@@ -13,7 +13,7 @@
   <meta name="description" content="{% block description %}{% endblock %}">
   <meta property="og:description" content="{% block og_description %}{% endblock %}">
 
-  {% load static %}
+  {% load static uswds_static %}
 
   <!-- Mobile properties -->
   <meta name="HandheldFriendly" content="True">
@@ -24,7 +24,7 @@
 
   {% block extra_meta %}{% endblock extra_meta %}
 
-  <link href="{% static 'vendor/uswds-2.10.1/css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% uswds_static 'css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
   <link href="{% static 'css/site.css' %}" rel="stylesheet" type="text/css" />
 
   {% block canonical %}{% endblock %}
@@ -72,7 +72,7 @@
   {% block init_js %}{% endblock %}{# useful for vars and other initializations #}
 
   {% block site_js %}
-  <script src="{% static 'vendor/uswds-2.10.1/js/uswds.min.js' %}"></script>
+  <script src="{% uswds_static 'js/uswds.min.js' %}"></script>
   {% endblock %}
 
   {% block app_js %}{% endblock %}

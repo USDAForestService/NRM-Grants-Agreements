@@ -17,7 +17,7 @@
                     <strong>{% firstof user.get_short_name user.get_username %}</strong>.
                 </li>
                 <li class="usa-nav__primary-item">
-                    <a href="{% url 'admin:user_items' user.get_username %}" class="usa-nav__link">View your items</a>
+                    <a href="{% url 'user_items' user.get_username %}" class="usa-nav__link">View your items</a>
                 </li>
                 {% endblock %}
                 {% block userlinks %}

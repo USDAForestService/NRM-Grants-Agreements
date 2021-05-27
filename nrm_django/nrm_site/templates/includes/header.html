@@ -1,10 +1,10 @@
-{% load static %}
+{% load static uswds_static %}
 <section class="usa-banner" aria-label="Official government website">
   <div class="usa-accordion">
     <header class="usa-banner__header">
       <div class="usa-banner__inner">
         <div class="grid-col-auto">
-          <img class="usa-banner__header-flag" src="{% static 'vendor/uswds-2.10.1/img/us_flag_small.png' %}"
+          <img class="usa-banner__header-flag" src="{% uswds_static 'img/us_flag_small.png' %}"
             alt="U.S. flag">
         </div>
         <div class="grid-col-fill tablet:grid-col-auto">
@@ -20,7 +20,7 @@
       <div class="grid-row grid-gap-lg">
         <div class="usa-banner__guidance tablet:grid-col-6">
           <img class="usa-banner__icon usa-media-block__img"
-            src="{% static 'vendor/uswds-2.10.1/img/icon-dot-gov.svg' %}" role="img" alt="" aria-hidden="true">
+            src="{% uswds_static 'img/icon-dot-gov.svg' %}" role="img" alt="" aria-hidden="true">
           <div class="usa-media-block__body">
             <p>
               <strong>
@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="usa-banner__guidance tablet:grid-col-6">
-          <img class="usa-banner__icon usa-media-block__img" src="{% static 'vendor/uswds-2.10.1/img/icon-https.svg' %}"
+          <img class="usa-banner__icon usa-media-block__img" src="{% uswds_static 'img/icon-https.svg' %}"
             role="img" alt="" aria-hidden="true">
           <div class="usa-media-block__body">
             <p>
@@ -71,7 +71,7 @@
   </div>
   <nav aria-label="Primary navigation" class="usa-nav">
     <div class="usa-nav__inner"><button class="usa-nav__close"><img
-          src="{% static 'vendor/uswds-2.10.1/img/usa-icons/close.svg' %}" role="img" alt="close"></button>
+          src="{% uswds_static 'img/usa-icons/close.svg' %}" role="img" alt="close"></button>
       <ul class="usa-nav__primary usa-accordion">
         <li class="usa-nav__primary-item">
           <button class="usa-accordion__button usa-nav__link  usa-current" aria-expanded="false"

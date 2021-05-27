@@ -5,8 +5,9 @@
   --fs-yellow: #f5ea53;
 }
 
+/* we have to hardcode this one since we can't use our template tag here */
 .usa-hero{
-    background-image:url("/static/vendor/uswds-2.10.1/img/hero.png");
+    background-image:url("/static/vendor/uswds-2.11.2/img/hero.png");
 }
 
 /* Admin */
@@ -37,8 +38,16 @@
 }
 
 fieldset{ /* USWDS override */
-    padding: 0;
-  }
+    padding: 0 0 0.5em;
+    border: 0;
+}
+fieldset legend {
+    display: block;
+    width: 100%;
+}
+fieldset + * {
+    margin-top: 0.5em
+}
 .admin .form-row {
   display: flex;
   align-items: top;
@@ -50,13 +59,12 @@ fieldset{ /* USWDS override */
 .admin .aligned label {
     float: none;
     width: auto;
-    font-size: 1.25em;
     color: #222
 }
 
 .admin .aligned .help {
-    margin-left: 0;
     padding-left: 0;
+    margin: 0;
 }
 
 .admin .form-row .fieldBox textarea,
@@ -73,3 +81,11 @@ fieldset{ /* USWDS override */
 /* inexplicably, these classes are present in USWDS docs pages, but do not appear in the USWDS css, so we're replicating them here. */
 .site-page-title {font-size: 2.5rem;}
 .site-text-intro {font-size: 1.25rem;}
+
+/* Our custom admin pages */
+.admin.app-grants input[type=text] {
+    width: 30em
+}
+.admin.app-grants .dateinput input[type=text] {
+    width: 10em
+}

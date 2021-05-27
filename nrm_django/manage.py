@@ -6,7 +6,9 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nrm_site.settings")
+    # set here for Elastic Beanstalk, but overrides on the command line and
+    # environment should still work.
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "nrm_site.settings.eb")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static uswds_static %}
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
 <html lang="{{ LANGUAGE_CODE|default:'en-us' }}" dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr,auto' }}">
@@ -11,8 +11,10 @@
     <link rel="stylesheet" type="text/css" href="{% static 'admin/css/nav_sidebar.css' %}">
     <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
     {% endif %}
-    <link href="{% static 'vendor/uswds-2.10.1/css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'css/site.css' %}?v=2" rel="stylesheet" type="text/css" />
+
+    <link href="{% uswds_static 'css/uswds.min.css' %}" rel="stylesheet" type="text/css" />
+    <script src="{% uswds_static 'js/uswds.min.js' %}" defer></script>
+    <link href="{% static 'css/site.css' %}?v=7" rel="stylesheet" type="text/css" />
 
     {% block extrastyle %}{% endblock %}
     {% block extrahead %}{% endblock %}

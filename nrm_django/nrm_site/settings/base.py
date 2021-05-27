@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "nrm_app",
     "grants",
     "contacts",
+    "widget_tweaks",
 ]
 
 MIDDLEWARE = [
@@ -119,3 +120,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
     #    '/var/www/static/',
 ]
+
+# Defines our path to USWDS files.
+# Remember the template tag will append this to STATIC_URL,
+# so don't use a leading / but do use a trailing /.
+USWDS_PATH = "vendor/uswds-2.11.2/"

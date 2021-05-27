@@ -140,14 +140,6 @@ form {
     padding: 0;
 }
 
-fieldset {
-    margin: 0;
-    min-width: 0;
-    padding: 0;
-    border: none;
-    border-top: 1px solid var(--hairline-color);
-}
-
 blockquote {
     font-size: 11px;
     color: #777;
