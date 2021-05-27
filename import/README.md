@@ -1,10 +1,10 @@
 # Importing data from Oracle to Postgres
 
-We would like to use PostgreSQL on cloud.gov for our rapid prototyping work on
-the NRM G&A application. The current production data is in NRM's Oracle
-database, so we need to copy data with the correct structure from Oracle and
-import it into our Postgres database. This is complicated by the Oracle server
-only being accessible on NRM's VPN. Here is what works for us, kind of.
+We would like to use PostgreSQL for our prototyping work on the NRM G&A
+application. The current production data is in NRM's Oracle database, so we
+need to copy data with the correct structure from Oracle and import it into
+our Postgres database. This is complicated by the Oracle server only being
+accessible on NRM's VPN. Here is what works for us, kind of.
 
 ## Export from Oracle as TSV
 
@@ -58,11 +58,8 @@ tail -n +2 notes.tsv > notes_no_header.tsv
 ```
 
 Get the edited DDL script and TSV data file onto a computer that has access to
-cloud.gov and the `connect-to-service` (CloudFoundry
-plugin)[https://github.com/cloud-gov/cf-service-connect]. Run `cf
-connect-to-service fs-nrm fs-nrm-db` to get a `psql` session connected to the
-Postgres database (where `fs-nrm` is the name of the Cloud.gov app and
-`fs-nrm-db` is the name of the database service). Create the table by running
+the Postgres database and get a `psql` session connected to the
+Postgres database. Create the table by running
 the SQL script inside of `psql`:
 
 ```
@@ -110,26 +107,14 @@ See the scrubber.py file for more details.
 
 That will output a new fixture with `_mod.json` at the end, as well as an updated (or new) `requirements.txt` file.
 
-Loading your scrubbed fixture back into Django can be tricky. In theory you could upload it and then use Django's `loaddata` command to import it directly on cloud. However, we have found it more reliable to use the [cf-service-connect plugin](https://github.com/cloud-gov/cf-service-connect) to establish a long-running tunnel to Cloud, as outlined below. 
-
-### Establishing a long-running shell to load data
-1. If you haven't already, log in to cloud: `cf login -a api.fr.cloud.gov --sso`
-2. Be sure you've targeted the correct space: `cf target -o <org name> -s <space name>`. You'll need to know your cloud org and space name.
-3. Now connect: `cf connect-to-service -no-client <app name> <service name>`. If you get an error, you probably don't have the service-connect plugin installed, so back up and do that.
-
-At this point, assuming you have no errors, service-connect will output new database connection parameters. You will need to either temporarily modify django settings or create a new `DATABASE_URL` environment variable to reflect these settings. Whichever route you go, don't make it too permanent: the next time you use service-connect they'll change.
-
-Leave the service-connect terminal alone and open a new shell. From that new shell, with your temp settings in place, you should now be able to push data. Assuming you're in the `pipenv` shell inside `nrm_django`, that command would be `python manage.py loaddata ../import/<fixture>_mod.json --settings=nrm_site.settings.base --verbosity=3`
-
-Note that you will need to pass the correct settings file to the manage.py command, as well as give it the path to the fixture you're trying to load. The `--verbosity=3` argument will provide some useful  progress feedback.
-
-Note also that if you have existing DB rows in the table you may want to jump into a Django shell and run `<model>.objects.all().delete()` to remove them before loading your fixture.
+Loading your scrubbed fixture back into Django can be tricky. In theory you
+could upload it and then use Django's `loaddata` command to import it directly
+into the app. However, we have found it more reliable to use an SSH tunnel to
+the database.
 
 ### Backup and restore
 
-Using the previous section, you can set up an SSH connection to the database
-on cloud.gov. This lets us back up the database over that connection. Using
-the username, password, and port from the `cf connect-to-service` command,
+Using the username, password, hostname and port for the Postgres database,
 give those as arguments to the `pg_dump` command (you may need to install the
 `postgresql` package of a matching major version to get that utility).
 
