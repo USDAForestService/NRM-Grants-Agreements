@@ -8,6 +8,7 @@ django = "*"
 dj-database-url = "*"
 psycopg2-binary = "*"
 django-widget-tweaks = "*"
+requests = "*"
 
 [dev-packages]
 coverage = "*"
