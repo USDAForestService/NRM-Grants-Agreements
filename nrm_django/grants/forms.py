@@ -133,7 +133,13 @@ class GrantUpdateForm(forms.ModelForm):
                     # there is a category in cat_set with this_cat's same
                     # category_desc. Swap that one out for this one.
                     cat_ids = [cat.cn for cat in self.cat_set]
-                    replace_me = Category.objects.filter(cn__in=cat_ids, category_desc=this_cat.category_desc).first().cn
+                    replace_me = (
+                        Category.objects.filter(
+                            cn__in=cat_ids, category_desc=this_cat.category_desc
+                        )
+                        .first()
+                        .cn
+                    )
                     cat_ids[cat_ids.index(replace_me)] = this_cat.cn
                     # reconstruct the queryset
                     self.cat_set = Category.objects.filter(cn__in=cat_ids)
