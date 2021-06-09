@@ -24,7 +24,7 @@ assignees: ''
    - [ ] Give a tour of codebase/design assets/strategy docs/Mural.
    - [ ] Audit meetings - New team members joining gives us a great opportunity to revisit our recurring team meetings and adjust schedules if necessary (to adjust for time zones, etc) - see [example meeting exercise doc](https://docs.google.com/document/d/1MIC1ifST_SfZRxFDU_23Igf_7mYniq1JUBTpZIya9oA/edit?usp=sharing)
 
-Newbie onboarding checklist
+**Newbie onboarding checklist**
 - [ ] Review our project [README](https://docs.google.com/document/d/1VkuVKqsFI9ojixaAPHaX-jrpUq0HP81Hgf53DUM-nRQ/edit#heading=h.my4hgyykpjmd).
 - [ ] Review our [Team Charter](http://gBVWmNcdbzS5pk_l7bWIK3oNyGXc) to see how we work, how we communicate, and our weekly rituals.
 - [ ] Schedule coffees with the team to talk through their work and to get to know each other (both 18F and partner).
