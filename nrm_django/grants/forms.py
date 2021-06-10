@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from .models import Category, Grant
 from contacts.models import AccomplishmentInstrument, Contact
 
-cat_set = Category.objects.order_by("category_desc").distinct("category_desc")
 instance_id = "10602"
 
 
@@ -96,6 +95,8 @@ class GrantUpdateForm(forms.ModelForm):
     # The actual queryset gets set down below in `init`
     # TO-DO: Ideally we would migrate to Categories being just a list of cats,
     # with Grant having an FK to that table, so we could avoid these sorts of shenanigans.
+    cat_set = Category.objects.order_by("category_desc").distinct("category_desc")
+
     project_category = forms.ModelChoiceField(
         label="Project category",
         queryset=cat_set,
@@ -129,8 +130,20 @@ class GrantUpdateForm(forms.ModelForm):
             try:
                 this_cat = Category.objects.get(grant=self.instance)
                 # if we dropped this cat becuase of the distinct() on cat_set, we need to add it back in:
-                if this_cat not in cat_set:
-                    cat_set.append(this_cat)
+                if this_cat not in self.cat_set:
+                    # there is a category in cat_set with this_cat's same
+                    # category_desc. Swap that one out for this one.
+                    cat_ids = [cat.cn for cat in self.cat_set]
+                    replace_me = (
+                        Category.objects.filter(
+                            cn__in=cat_ids, category_desc=this_cat.category_desc
+                        )
+                        .first()
+                        .cn
+                    )
+                    cat_ids[cat_ids.index(replace_me)] = this_cat.cn
+                    # reconstruct the queryset
+                    self.cat_set = Category.objects.filter(cn__in=cat_ids)
                 self.fields["project_category"].initial = this_cat.cn
             except Category.DoesNotExist:
                 pass

@@ -46,14 +46,8 @@ fieldset legend {
     display: block;
     width: 100%;
 }
-
-.admin .form-row {
-  display: flex;
-  align-items: top;
-  padding: 10px 0 20px;
-}
-.admin .form-row .fieldBox {
-    flex: 50%;
+fieldset + * {
+    margin-top: 0.5em
 }
 
 .admin .form-row .fieldBox textarea,
