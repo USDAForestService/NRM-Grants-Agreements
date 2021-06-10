@@ -1,19 +1,27 @@
 {% load widget_tweaks %}
-<div class="usa-form-group">
+<div class="usa-form-group{% if field.errors %} usa-form-group--error{% endif %}" >
   {% if field.field.required %}
-  <label class="usa-label" id="{{ field.name }}-label" for="{{ field.id_for_label }}">
+  <label class="usa-label{% if field.errors %} usa-label--error{% endif %}" id="{{ field.name }}-label" for="{{ field.id_for_label }}">
     <strong>{{ field.field.label }}</strong> 
     <span class="usa-hint">(required)</span>
   </label>
   {% else %}
-    {{ field.label_tag }}
+  <label class="usa-label" id="{{ field.name }}-label" for="{{ field.id_for_label }}">
+    {{ field.field.label }}
+  </label>
+  {% endif %}
+  {% if field.help_text %}
+    <p class="usa-hint">{{ field.help_text|safe }}</p>
   {% endif %}
   {# data-default-value is just used by the date picker but is harmless for other inputs #}
   <div class="{{ field|widget_type }} {{ parent_class }}" data-default-value="{{ field.value|date:'Y-m-d' }}">
-    {{ field }}
+    {% if field.errors %}
+      {{ field|add_class:"usa-input usa-input--error" }}
+    {% else %}
+      {{ field|add_class:"usa-input" }}
+    {% endif %}
   </div>
-  {{ field.errors }}
-  {% if field.help_text %}
-    <p class="help usa-hint">{{ field.help_text|safe }}</p>
+  {% if field.errors %}
+    <span class="usa-error-message">{{ field.errors }}</span>
   {% endif %}
 </div>

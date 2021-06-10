@@ -9,7 +9,6 @@
 
 {% block extrastyle %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}">
 {% endblock %}
 
 {% block coltype %}colM{% endblock %}
@@ -48,7 +47,7 @@
 
   {% block content %}
   <div id="content-main">
-    <h1>Create a proposal</h1>
+    <h2 class="site-page-title">Create a proposal</h2>
     <p class="site-text-intro">Use this form to create a new proposal and start the agreement approval process.</p>
     
     {% block object-tools %}
@@ -73,7 +72,7 @@
             </p>
             {{ form.non_field_errors }}
             {% endif %}
-            <h2>Project overview</h2>
+            <h3>Project overview</h3>
             
             {% include "includes/min_form.html" %}
 

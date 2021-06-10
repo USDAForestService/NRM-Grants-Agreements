@@ -9,7 +9,6 @@
 
 {% block extrastyle %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}">
 {% endblock %}
 
 {% block coltype %}colM{% endblock %}
@@ -48,6 +47,7 @@
   {% endblock breadcrumbs %}
 {% endif %}
 {% block content %}
+  {# remember, grants have their own admin templates #}
   <div id="content-main">
     {% block object-tools %}
       {% if change %}
