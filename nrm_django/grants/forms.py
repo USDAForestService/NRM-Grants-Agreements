@@ -120,7 +120,6 @@ class GrantUpdateForm(forms.ModelForm):
         # If we're modifying an existing instance we'll need to manually
         # set the initial value for org, because we don't have an FK on Grant
         if self.instance:
-            print("self instance org is", self.instance.org)
             self.fields["org_select"].initial = self.instance.org
 
         # We'll also need to set the initial project_category.
