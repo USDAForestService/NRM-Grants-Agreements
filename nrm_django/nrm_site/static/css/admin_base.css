@@ -4,10 +4,7 @@
 
 /* VARIABLE DEFINITIONS */
 :root {
-  --primary: #79aec8;
-  --secondary: #417690;
   --accent: #f5dd5d;
-  --primary-fg: #fff;
 
   --body-fg: #333;
   --body-bg: #fff;
@@ -16,12 +13,9 @@
 
   --header-color: #ffc;
   --header-branding-color: var(--accent);
-  --header-bg: var(--secondary);
-  --header-link-color: var(--primary-fg);
 
   --breadcrumbs-fg: #c4dce8;
   --breadcrumbs-link-fg: var(--body-bg);
-  --breadcrumbs-bg: var(--primary);
 
   --link-fg: #447e9b;
   --link-hover-color: #036;
@@ -41,9 +35,7 @@
   --selected-row: #ffc;
 
   --button-fg: #fff;
-  --button-bg: var(--primary);
   --button-hover-bg: #609ab6;
-  --default-button-bg: var(--secondary);
   --default-button-hover-bg: #205067;
   --close-button-bg: #888; /* Previously #bbb, contrast 1.92 */
   --close-button-hover-bg: #747474;
@@ -185,11 +177,6 @@ hr {
 
 .mini {
     font-size: 10px;
-}
-
-.help, p.help, form p.help, div.help, form div.help, div.help li {
-    font-size: 12px;
-    color: var(--body-quiet-color);
 }
 
 div.help ul {
@@ -388,95 +375,13 @@ table thead th.sorted .sortoptions a.descending:hover {
     background-position: 0 -70px;
 }
 
-/* FORM DEFAULTS */
-
-input, textarea, select, .form-row p, form .button {
-    margin: 2px 0;
-    padding: 2px 3px;
-    vertical-align: middle;
-    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
-    font-weight: normal;
-    font-size: 13px;
-}
-.form-row div.help {
-    padding: 2px 3px;
-}
-
-textarea {
-    vertical-align: top;
-}
-
-input[type=text], input[type=password], input[type=email], input[type=url],
-input[type=number], input[type=tel], textarea, select, .vTextField {
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 5px 6px;
-    margin-top: 0;
-    color: var(--body-fg);
-    background-color: var(--body-bg);
-}
+/* FORM DEFAULTS AND OVERRIDES */
 
 input[type=text]:focus, input[type=password]:focus, input[type=email]:focus,
 input[type=url]:focus, input[type=number]:focus, input[type=tel]:focus,
 textarea:focus, select:focus, .vTextField:focus {
     border-color: var(--body-quiet-color);
 }
-
-select {
-    height: 30px;
-}
-
-select[multiple] {
-    /* Allow HTML size attribute to override the height in the rule above. */
-    height: auto;
-    min-height: 150px;
-}
-
-/* FORM BUTTONS */
-
-.button, input[type=submit], input[type=button], .submit-row input, a.button {
-    background: var(--button-bg);
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    color: var(--button-fg);
-    cursor: pointer;
-    transition: background 0.15s;
-}
-
-a.button {
-    padding: 4px 5px;
-}
-
-.button:active, input[type=submit]:active, input[type=button]:active,
-.button:focus, input[type=submit]:focus, input[type=button]:focus,
-.button:hover, input[type=submit]:hover, input[type=button]:hover {
-    background: var(--button-hover-bg);
-}
-
-.button[disabled], input[type=submit][disabled], input[type=button][disabled] {
-    opacity: 0.4;
-}
-
-.button.default, input[type=submit].default, .submit-row input.default {
-    float: right;
-    border: none;
-    font-weight: 400;
-    background: var(--default-button-bg);
-}
-
-.button.default:active, input[type=submit].default:active,
-.button.default:focus, input[type=submit].default:focus,
-.button.default:hover, input[type=submit].default:hover {
-    background: var(--default-button-hover-bg);
-}
-
-.button[disabled].default,
-input[type=submit][disabled].default,
-input[type=button][disabled].default {
-    opacity: 0.4;
-}
-
 
 /* MODULES */
 
@@ -509,7 +414,6 @@ input[type=button][disabled].default {
     font-weight: 400;
     font-size: 13px;
     text-align: left;
-    background: var(--primary);
     color: var(--header-link-color);
 }
 
@@ -644,11 +548,6 @@ div.breadcrumbs a:focus, div.breadcrumbs a:hover {
     background: url(../img/icon-viewlink.svg) 0 1px no-repeat;
 }
 
-.addlink {
-    padding-left: 16px;
-/*    background: url(../img/icon-addlink.svg) 0 1px no-repeat; */
-}
-
 .changelink, .inlinechangelink {
     padding-left: 16px;
     background: url(../img/icon-changelink.svg) 0 1px no-repeat;
@@ -659,20 +558,9 @@ div.breadcrumbs a:focus, div.breadcrumbs a:hover {
     background: url(../img/icon-deletelink.svg) 0 1px no-repeat;
 }
 
-a.deletelink:link, a.deletelink:visited {
-    color: #CC3434; /* XXX Probably unused? */
-}
-
-a.deletelink:focus, a.deletelink:hover {
-    color: #993333; /* XXX Probably unused? */
-    text-decoration: none;
-}
-
 /* OBJECT TOOLS */
 
 .object-tools {
-    font-size: 10px;
-    font-weight: bold;
     padding-left: 0;
     float: right;
     position: relative;
@@ -685,47 +573,12 @@ a.deletelink:focus, a.deletelink:hover {
     margin-left: 5px;
     height: 16px;
 }
-
-.object-tools a {
-    border-radius: 15px;
-}
-
-.object-tools a:link, .object-tools a:visited {
-    display: block;
-    float: left;
-    padding: 3px 12px;
-    background: var(--object-tools-bg);
-    color: var(--object-tools-fg);
-    font-weight: 400;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.object-tools a:focus, .object-tools a:hover {
-    background-color: var(--object-tools-hover-bg);
-}
-
-.object-tools a:focus{
-    text-decoration: none;
-}
-
-.object-tools a.viewsitelink, .object-tools a.addlink {
-    background-repeat: no-repeat;
-    background-position: right 7px center;
-    padding-right: 26px;
-}
-
-.object-tools a.viewsitelink {
-    background-image: url(../img/tooltag-arrowright.svg);
-}
-
-.object-tools a.addlink {
-    background-image: url(../img/tooltag-add.svg);
+.object-tools a.usa-button:link, 
+.object-tools a.usa-button:visited {
+    color: white;
 }
 
 /* OBJECT HISTORY */
-
 table#change-history {
     width: 100%;
 }
@@ -735,7 +588,6 @@ table#change-history tbody th {
 }
 
 /* PAGE STRUCTURE */
-
 #container {
     position: relative;
     width: 100%;
@@ -876,8 +728,6 @@ table#change-history tbody th {
 
 #user-tools a:focus, #user-tools a:hover {
     text-decoration: none;
-    border-bottom-color: var(--primary);
-    color: var(--primary);
 }
 
 /* SIDEBAR */

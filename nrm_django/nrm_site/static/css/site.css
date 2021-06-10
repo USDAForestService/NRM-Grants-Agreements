@@ -34,7 +34,8 @@
 .admin .usa-nav__primary .usa-nav__text { padding: 1rem; } /* Make welcome text match nav links */
 
 .module h2, .module caption, .inline-group h2 { /* Django overrides */
-    background-color: var(--fs-green-lighter);
+    background-color: var(--fs-green);
+    color: white;
 }
 
 fieldset{ /* USWDS override */
@@ -48,24 +49,6 @@ fieldset legend {
 fieldset + * {
     margin-top: 0.5em
 }
-.admin .form-row {
-  display: flex;
-  align-items: top;
-  padding: 10px 0 20px;
-}
-.admin .form-row .fieldBox {
-    flex: 50%;
-}
-.admin .aligned label {
-    float: none;
-    width: auto;
-    color: #222
-}
-
-.admin .aligned .help {
-    padding-left: 0;
-    margin: 0;
-}
 
 .admin .form-row .fieldBox textarea,
 .admin .aligned [type=text].text-wide {
@@ -77,15 +60,31 @@ fieldset + * {
     border-bottom: 1px solid #ccc;
 }
 
-
-/* inexplicably, these classes are present in USWDS docs pages, but do not appear in the USWDS css, so we're replicating them here. */
+/* These classes are present in USWDS docs pages, 
+   but do not appear in the USWDS css, 
+   so we're replicating them here. */
 .site-page-title {font-size: 2.5rem;}
 .site-text-intro {font-size: 1.25rem;}
 
-/* Our custom admin pages */
-.admin.app-grants input[type=text] {
-    width: 30em
+/* USWDS does not appear to control label + p  */
+label + p.usa-hint {
+    margin:0;
+    font-size: 0.9rem;
+    max-width: 33em; /* constrain to match input */
 }
-.admin.app-grants .dateinput input[type=text] {
-    width: 10em
+/* nor does it seem to control an accordion in a form group */
+.usa-form-group + .usa-accordion {
+    margin-top: 0.5em;
+}
+
+/* we're going to re-implement pagination styles to mimic USWDS/FS styles.
+   Note that we're also overriding chatgelists.css */
+.admin #changelist .paginator a {
+    background-color: var(--fs-green-lighter);
+    border: 1px solid;
+    border-color: var(--fs-green);
+    border-radius: 0.25em;
+}
+.admin #changelist .paginator a:hover {
+    background-color: var(--fs-green);
 }
