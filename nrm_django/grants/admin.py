@@ -6,7 +6,7 @@ from .models import Grant, GrantAuthority, Note
 class GrantAdmin(admin.ModelAdmin):
     # list options
     list_display = (
-        "gid",
+        "resolved_id",
         "pretty_cooperator_name",
         "pretty_name",
         "proj_start_dt",

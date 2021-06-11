@@ -452,7 +452,20 @@ class Grant(models.Model):
         return reversed_url
 
     def pretty_name(self):
+        """
+        Returns a pretty title-case version of the project title
+        for use in the admin.
+        """
         return "%s" % self.proj_title.title()
+
+    def resolved_id(self):
+        """
+        Returns an agreement ID if one exists already, or some helpful text if not,
+        for a more user-friendly admin.
+        """
+        if self.gid:
+            return self.gid
+        return "TBD"
 
     pretty_name.short_description = "Project Title"
 
