@@ -4,6 +4,9 @@ from django.contrib import admin
 
 
 class NRMAdmin(admin.ModelAdmin):
+
+    """Extra context added to the default ModelAdmin."""
+
     def get_search_description(self):
         try:
             desc = self.search_description
