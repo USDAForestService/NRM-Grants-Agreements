@@ -1,9 +1,11 @@
 from django.contrib import admin
 
+from nrm_app.admin import NRMAdmin
+
 from .models import Grant, GrantAuthority, Note
 
 
-class GrantAdmin(admin.ModelAdmin):
+class GrantAdmin(NRMAdmin):
     # list options
     list_display = (
         "resolved_id",
@@ -20,6 +22,7 @@ class GrantAdmin(admin.ModelAdmin):
         "application_id",
         "applicant_name",
     ]
+    search_description = "You can search by project title, description, cooperator name, agreement number or application ID"
 
 
 class GrantAuthorityAdmin(admin.ModelAdmin):

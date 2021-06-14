@@ -1,5 +1,5 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_urls static admin_list %}
+{% load i18n admin_urls static admin_list search_form %}
 
 {% block extrastyle %}
 {{ block.super }}
@@ -68,7 +68,7 @@
     {% endif %}
     <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
         <div class="changelist-form-container">
-            {% block search %}{% search_form cl %}{% endblock %}
+            {% block search %}{% search_form cl search_description %}{% endblock %}
             {% block date_hierarchy %}{% if cl.date_hierarchy %}{% date_hierarchy cl %}{% endif %}{% endblock %}
 
             <form id="changelist-form" method="post" {% if cl.formset and cl.formset.is_multipart %}
