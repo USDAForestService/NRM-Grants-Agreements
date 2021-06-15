@@ -1,7 +1,7 @@
 {% include "includes/field.html" with field=form.proj_title %}
 {% include "includes/field.html" with field=form.proj_desc %}
-{% include "includes/field.html" with field=form.app_submit_date parent_class="usa-date-picker" %}
-{% include "includes/field.html" with field=form.app_received_date parent_class="usa-date-picker" %}
+{% include "includes/field.html" with field=form.app_submit_date parent_class="usa-date-picker" default_now_if_empty=True %}
+{% include "includes/field.html" with field=form.app_received_date parent_class="usa-date-picker" default_now_if_empty=True %}
 {% include "includes/field.html" with field=form.proposed_start_date parent_class="usa-date-picker" %}
 {% include "includes/field.html" with field=form.proposed_end_date parent_class="usa-date-picker" %}
 {% include "includes/field.html" with field=form.progrm_responsibility_type %}

@@ -14,7 +14,16 @@
     <p class="usa-hint">{{ field.help_text|safe }}</p>
   {% endif %}
   {# data-default-value is just used by the date picker but is harmless for other inputs #}
-  <div class="{{ field|widget_type }} {{ parent_class }}" data-default-value="{{ field.value|date:'Y-m-d' }}">
+  {% if field.value %}
+    {# if there is a value given, we'll use it #}
+    <div class="{{ field|widget_type }} {{ parent_class }}" data-default-value="{{ field.value|date:'Y-m-d' }}">
+  {% elif default_now_if_empty %} 
+    {# If we've said we want to default to now, we'll do that #}
+    <div class="{{ field|widget_type }} {{ parent_class }}" data-default-value="{% now 'Y-m-d' %}">
+  {% else %}
+    {# otherwise we want no default, just go #}
+    <div class="{{ field|widget_type }} {{ parent_class }}">
+  {% endif %}
     {% if field.errors %}
       {{ field|add_class:"usa-input usa-input--error" }}
     {% else %}
