@@ -9,7 +9,7 @@ assignees: ''
 
 **Current team to-dos**
 - [ ] Double check this checklist is up-to-date and add any new, relevant tasks.
-- [ ] Confirm [README](https://docs.google.com/document/d/1VkuVKqsFI9ojixaAPHaX-jrpUq0HP81Hgf53DUM-nRQ/edit#heading=h.my4hgyykpjmd) is up-to-date, and add new team member to team list.
+- [ ] Confirm [README](https://docs.google.com/document/d/1Mwx3pe9tYSNWga-gBVWmNcdbzS5pk_l7bWIK3oNyGXc/edit#heading=h.np0y2bjky8h) is up-to-date, and add new team member to team list.
 - [ ] Send invite to Slack channels (#fs-nrm-ga and #usfs-ga-partners).
 - [ ] Send invite to [Github repo](https://github.com/USDAForestService/NRM-Grants-Agreements/settings/access).
 - [ ] [Share access to Google Drive project folder](https://drive.google.com/drive/folders/1QryiLPQ2Z8IXKYaDp9mlRJxkDr5kPHw9).
