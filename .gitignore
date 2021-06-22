@@ -105,6 +105,8 @@ ENV/
 env.bak/
 venv.bak/
 
+# Docker persistence
+data/db/
 
 # mkdocs documentation
 /site
