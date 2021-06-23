@@ -1,0 +1,24 @@
+services:
+
+  postgres:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    # command: pipenv run ./manage.py migrate --settings=nrm_site.settings.dev
+
+  web:
+    build: .
+    volumes:
+      - .:/code
+      - .env:/code/nrm_django/.env # Copy local environment variables
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    command: pipenv run /code/nrm_django/manage.py runserver 0.0.0.0:8000 --settings=nrm_site.settings.dev
+    depends_on:
+      - postgres

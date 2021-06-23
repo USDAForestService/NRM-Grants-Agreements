@@ -1,5 +1,5 @@
 # USFS Grants & Agreements
-The focal point for an 18F/TTS project with the United States Forest Service on their Grants & Agreements program. 
+The focal point for an 18F/TTS project with the United States Forest Service on their Grants & Agreements program.
 
 
 ## Welcome!
@@ -48,3 +48,14 @@ Finally, you can create a local Sqlite database and run the application
 $ pipenv run manage.py migrate --settings=nrm_site.settings.base
 $ pipenv run manage.py runserver --settings=nrm_site.settings.base
 ```
+
+### Local development with Docker
+
+Ensure Docker Desktop is installed.
+
+1. Add a file named `.env` to the project root (directly inside `NRM-Grants-Agreements/`). Define a `SECRET_KEY` environment variable like `SECRET_KEY="something secretive"`.
+1. To build the containers and make sure they're working, run `docker compose up`. Then shut them down with ctrl+C.
+1. Once we know the containers are working, run them in detached mode: `docker compose up -d`.
+1. Create the database. Shell into the postgres container by running `docker compose exec postgres psql -U postgres`. Then, once inside, run `CREATE DATABASE nrm_dev;`. Exit the container.
+1. Migrate the database by running `docker compose run web pipenv run ./manage.py migrate --settings=nrm_site.settings.dev`.
+1. You're all set up—develop away!
