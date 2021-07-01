@@ -53,9 +53,16 @@ $ pipenv run manage.py runserver --settings=nrm_site.settings.base
 
 Ensure Docker Desktop is installed.
 
+#### Basic Setup
 1. Add a file named `.env` to the project root (directly inside `NRM-Grants-Agreements/`). Define a `SECRET_KEY` environment variable like `SECRET_KEY="something secretive"`.
 1. To build the containers and make sure they're working, run `docker compose up`. Then shut them down with ctrl+C.
 1. Once we know the containers are working, run them in detached mode: `docker compose up -d`.
 1. Create the database. Shell into the postgres container by running `docker compose exec postgres psql -U postgres`. Then, once inside, run `CREATE DATABASE nrm_dev;`. Exit the container.
 1. Migrate the database by running `docker compose run web pipenv run ./manage.py migrate --settings=nrm_site.settings.dev`.
-1. You're all set up—develop away!
+
+#### Load Data (Optional)
+1. Request a database backup file from another developer on the project.
+1. Once you have a database backup file, place it somewhere connected to a Docker volume. I chose to put it in `./data/db` temporarily, which connects to `/var/lib/postgresql/data/`.
+1. Restore the database by running the `pg_restore` command within the Docker container: `docker compose exec postgres pg_restore -h localhost -U postgres -p 5432 -d nrm_dev /var/lib/postgresql/data/backup.bin`.
+
+You're all set up—develop away!
