@@ -86,7 +86,7 @@ jobs:
           command: |
             sleep 10
             curl --retry 10 --retry-delay 5 --retry-connrefused --silent --output /dev/null http://127.0.0.1:8000/admin
-            `npm run test:a11y 2>&1` || exit 0
+            ! npm run test:a11y
 
 
   deploy:  # deploy to cloud.gov, conditional for which branch is in the workflow
