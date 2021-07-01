@@ -33,8 +33,8 @@ class GrantUpdateViewTest(TestCase):
 
 	def setUp(self):
 		self.client = Client()
-		self.user = get_user_model().objects.create_user('DELETE_USER', 'george@thebeatles.com', '')
-		self.client.login(username='DELETE_USER', password='')  # nosec
+		self.user = get_user_model().objects.create_user('admin', 'admin@usda.gov', '')
+		self.client.login(username='admin', password='')  # nosec
 
 	def tearDown(self):
 		self.user.delete()
