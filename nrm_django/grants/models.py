@@ -413,7 +413,7 @@ class Grant(models.Model):
             (Incoming Funding, Outgoing Funding, or Non-Cash ie no exchange of funding)
             that is send to the Program Manager when the agreement is executed.
         """,
-        null=True
+        null=True,
     )
     wppp_status = models.CharField(
         "WPAP Status",

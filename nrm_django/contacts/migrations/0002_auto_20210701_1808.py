@@ -6,24 +6,24 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contacts', '0001_initial'),
+        ("contacts", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='accinstcontlink',
-            options={'managed': False},
+            name="accinstcontlink",
+            options={"managed": False},
         ),
         migrations.AlterModelOptions(
-            name='accomplishmentinstrument',
-            options={'managed': False},
+            name="accomplishmentinstrument",
+            options={"managed": False},
         ),
         migrations.AlterModelOptions(
-            name='adminunit',
-            options={'managed': False},
+            name="adminunit",
+            options={"managed": False},
         ),
         migrations.AlterModelOptions(
-            name='contact',
-            options={'managed': False},
+            name="contact",
+            options={"managed": False},
         ),
     ]

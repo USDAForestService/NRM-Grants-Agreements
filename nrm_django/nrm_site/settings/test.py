@@ -1,8 +1,13 @@
+import os
 from .base import *  # noqa
+import dj_database_url
+
 
 SECRET_KEY = "test mode"
 
-if 'database_url' in locals():  # if specified in the environment
+database_url = os.getenv("DATABASE_URL")
+
+if database_url:
     DATABASES = {"default": dj_database_url.parse(database_url)}
 else:
     DATABASES = {

@@ -32,9 +32,14 @@ jobs:
   build-and-test: # runs not using Workflows must have a `build` job as entry point
     docker:
       - image: cimg/python:3.9.1
-    environment: # environment variables for primary container
-      PIPENV_VENV_IN_PROJECT: true
-      DATABASE_URL:
+        environment: # environment variables for primary container
+          PIPENV_VENV_IN_PROJECT: true
+          DATABASE_URL: postgresql://postgres:postgres@localhost/postgres?sslmode=disable
+      - image: postgres:10.1-alpine
+        environment:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
     steps:
       - checkout
       - *install-python-dependencies
@@ -49,7 +54,7 @@ jobs:
           command: |
             pipenv run coverage run --source='nrm_app' manage.py test --settings=nrm_site.settings.test nrm_app
             pipenv run coverage report --fail-under=10 -m  # TODO: raise this back up when we have tests
-      - run: 
+      - run:
           name: Run bandit (Python security) tests
           working_directory: ~/project/nrm_django
           command: |
