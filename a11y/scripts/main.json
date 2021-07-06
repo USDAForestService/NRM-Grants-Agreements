@@ -1,0 +1,38 @@
+{
+    "defaults":
+    {
+        "concurrency": 4,
+        "standard": "WCAG2AA",
+        "runners":
+        [
+            "axe"
+        ],
+        "timeout": 10000,
+        "chromeLaunchConfig":
+        {
+            "args":
+            [
+                "--no-sandbox"
+            ]
+        }
+    },
+    "urls":
+    [
+        {
+            "useIncognitoBrowserContext": true,
+            "url": "http://127.0.0.1:8000/"
+        },
+        {
+            "useIncognitoBrowserContext": true,
+            "url": "http://127.0.0.1:8000/admin/",
+            "actions":
+            [
+                "wait for path to be /admin/login",
+                "set field #id_username to a11y_admin",
+                "set field #id_password to password",
+                "click input[type='submit']",
+                "wait for path to be /admin"
+            ]
+        }
+    ]
+}
