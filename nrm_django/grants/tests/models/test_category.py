@@ -1,8 +1,9 @@
 from django.test import TestCase
 from grants.models import Category
 
+
 class CategoryTestCase(TestCase):
-    def test_something(self):
+    def test_creation(self):
         subject = Category(
             cn=1,
         )
