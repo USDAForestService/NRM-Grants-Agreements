@@ -20,7 +20,7 @@ DATABASES = {"default": database_dict_from_rds_env()}
 ALLOWED_HOSTS = [
     "development.eba-ny2imkrt.us-east-2.elasticbeanstalk.com",
     "ga-development.eba-c5v3ebxp.us-gov-west-1.elasticbeanstalk.com",
-    "ga-dev.fs2c.usda.gov/",
+    "ga-dev.fs2c.usda.gov",
 ]
 try:
     EC2_IP = requests.get("http://169.254.169.254/latest/meta-data/local-ipv4").text
