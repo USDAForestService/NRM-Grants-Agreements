@@ -1,0 +1,32 @@
+name: Default database
+status: accepted
+date: 13 July 2021
+
+context: We will likely need several relational database cluster instances (and likely per-state logical databases) in order to provide good data isolation within the system. However, usage within an individual database is expected to be fairly basic and undemanding.
+
+decision: We have decided to use PostgreSQL across the system and maximize the use of database-agnostic SQL.
+
+consequences:
+  - The PostgreSQL Product-as-a-Service (PaaS), being based on an open source platform, is about 1/3 the hourly price of a similar, commercial database PaaS.
+  - We do not have data on whether or not PostgreSQL is commonly used at the partner agency. By using database-agnostic SQL, we aim to mitigate the risk of introducing a new tool into the partner agency's environment.
+  - PostgreSQL is 18F's default datastore – this eases engineering onboarding during the engagement.
+
+people:
+  responsible:
+    - A. Person <anne.person@usda.gov>
+  accountable:
+    - Some Person <some.person@usda.gov>
+  consulted:
+    - Neil Martinsen-Burrell <neil.mb@gsa.gov>
+    - Matt Cloyd <matt.c@gsa.gov>
+  informed:
+    - Some peeps <some.peeps@usda.gov>
+    - Another peep <another.peep@gsa.gov>
+
+history:
+  -
+    status: proposed
+    date: 10 May 2021
+  -
+    status: accepted
+    date: 13 July 2021
