@@ -22,6 +22,31 @@ We have decided to use PostgreSQL across the system and maximize the use of data
 - PostgreSQL is 18F's default datastore – this eases engineering onboarding during the engagement.
 
 
+## Options
+
+### MySQL
+We considered a MySQL database, which is the deafult on the original product.
+
+#### Pros
+- A pro
+- Another pro
+
+#### Cons
+- A con
+- Another con
+
+### Neo4j
+We considered using a graph database like Neo4j, but ultimately decided against it because it doesn't make sense to use a graph-based schema for something this simple.
+
+#### Pros
+- A pro
+- Another pro
+
+#### Cons
+- A con
+- Another con
+
+
 ## People Involved
 
 ### Responsible

@@ -11,6 +11,26 @@ consequences:
   - We do not have data on whether or not PostgreSQL is commonly used at the partner agency. By using database-agnostic SQL, we aim to mitigate the risk of introducing a new tool into the partner agency's environment.
   - PostgreSQL is 18F's default datastore – this eases engineering onboarding during the engagement.
 
+options:
+  -
+    name: MySQL
+    description: We considered a MySQL database, which is the deafult on the original product.
+    pros:
+      - A pro
+      - Another pro
+    cons:
+      - A con
+      - Another con
+  -
+    name: Neo4j
+    description: We considered using a graph database like Neo4j, but ultimately decided against it because it doesn't make sense to use a graph-based schema for something this simple.
+    pros:
+      - A pro
+      - Another pro
+    cons:
+      - A con
+      - Another con
+
 people:
   responsible:
     - A. Person <anne.person@usda.gov>
