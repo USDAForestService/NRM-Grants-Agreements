@@ -1,0 +1,20 @@
+{
+    "defaults":
+    {
+        "concurrency": 4,
+        "standard": "WCAG2AA",
+        "runners":
+        [
+            "axe"
+        ],
+        "timeout": 2000,
+        "chromeLaunchConfig":
+        {
+            "ignoreHTTPSErrors": true,
+            "args":
+            [
+                "--no-sandbox"
+            ]
+        }
+    }
+}

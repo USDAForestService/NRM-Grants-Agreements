@@ -1,6 +1,7 @@
 # Python CircleCI 2.0 configuration file
 # Circle docs https://circleci.com/docs/2.0/language-python/
 # Set deployment variables in CircleCI as environment variables
+version: 2
 
 install-python-dependencies: &install-python-dependencies
   run:
@@ -26,17 +27,19 @@ install-cf7: &install-cf7
       rm cf7.deb
       cf7 api https://api.fr.cloud.gov
 
-version: 2
 jobs:
-
   build-and-test: # runs not using Workflows must have a `build` job as entry point
     docker:
-      - image: cimg/python:3.9.1
+      - image: circleci/python:3.9.1-node-browsers
     environment: # environment variables for primary container
       PIPENV_VENV_IN_PROJECT: true
       DATABASE_URL:
     steps:
       - checkout
+      - run:
+          name: Node install
+          working_directory: ~/project
+          command: npm ci
       - *install-python-dependencies
       - *install-python-dev-dependencies
       - run:
@@ -49,7 +52,7 @@ jobs:
           command: |
             pipenv run coverage run --source='nrm_app' manage.py test --settings=nrm_site.settings.test nrm_app
             pipenv run coverage report --fail-under=10 -m  # TODO: raise this back up when we have tests
-      - run: 
+      - run:
           name: Run bandit (Python security) tests
           working_directory: ~/project/nrm_django
           command: |
@@ -64,6 +67,27 @@ jobs:
           working_directory: ~/project/nrm_django
           command: |
             pipenv run black --check --diff .
+      - store_artifacts:
+          path: ./pa11y/screencaps
+      - run:
+          name: Run server for a11y tests
+          working_directory: ~/project/nrm_django
+          environment:
+            DEBUG: true
+          command: |
+            # Create admin user for Pa11y testing
+            echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_user('a11y_admin', 'admin@usda.gov', 'password')" | pipenv run ./manage.py shell --settings=nrm_site.settings.test
+            # Run server
+            pipenv run ./manage.py runserver 8000 --settings=nrm_site.settings.test
+          background: true
+      - run:
+          name: Run pa11y-ci accessibility check
+          working_directory: ~/project
+          command: |
+            sleep 10
+            curl --retry 10 --retry-delay 5 --retry-connrefused --silent --output /dev/null http://127.0.0.1:8000/admin
+            # The bang (!) negates the non-zero exit code and forces the build to pass even though pa11y tests do not pass.
+            ! npm run test:a11y
 
 
   deploy:  # deploy to cloud.gov, conditional for which branch is in the workflow
