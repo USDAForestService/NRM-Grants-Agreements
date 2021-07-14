@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "ii_accinst_cont_links",
-                "managed": False,
+                # "managed": False,
             },
         ),
         migrations.CreateModel(
@@ -179,7 +179,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "accplishment_instruments",
-                "managed": False,
+                # "managed": False,
             },
         ),
         migrations.CreateModel(
@@ -200,7 +200,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "admin_units",
-                "managed": False,
+                # "managed": False,
             },
         ),
         migrations.CreateModel(
@@ -405,7 +405,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "ii_contacts",
-                "managed": False,
+                # "managed": False,
             },
         ),
     ]

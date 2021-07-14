@@ -32,12 +32,12 @@ urlpatterns = [
         name="add_grant",
     ),
     re_path(
-        "admin/(?P<app_label>grants)/grant/(?P<pk>[0-9A-Fa-f-]+)/change/$",
+        "admin/(?P<app_label>grants)/grant/(?P<pk>[0-9A-Fa-fX-]+)/change/$",
         GrantUpdateView.as_view(),
         name="change_grant",
     ),
     re_path(
-        "admin/(?P<app_label>grants)/grant/(?P<pk>[0-9A-Fa-f-]+)/details/$",
+        "admin/(?P<app_label>grants)/grant/(?P<pk>[0-9A-Fa-fX-]+)/details/$",
         GrantDetailView.as_view(),
         name="grant_details",
     ),
