@@ -345,7 +345,12 @@ class Grant(models.Model):
         max_digits=12, decimal_places=2, blank=True, null=True
     )
     applicant_est_fund = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True
+        "Total Amount of Funds Requested",
+        help_text="""The total amount of funds being requested for this proposal.""",
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True,
     )
     state_est_fund = models.DecimalField(
         max_digits=12, decimal_places=2, blank=True, null=True
@@ -361,7 +366,10 @@ class Grant(models.Model):
     )
     reroute_from = models.CharField(max_length=10, blank=True, null=True)
     reroute_date = models.DateField(blank=True, null=True)
-    certificaion_date = models.DateField("Certification date", blank=True, null=True)
+
+    certification_date = models.DateField(
+        "Certification date", db_column="certificaion_date", blank=True, null=True
+    )
     applicant_name = models.CharField(
         "Applicant/Cooperator Name", max_length=200, blank=True, null=True
     )

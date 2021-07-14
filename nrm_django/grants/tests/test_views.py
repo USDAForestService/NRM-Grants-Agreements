@@ -1,10 +1,13 @@
 import datetime
 
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from django.test.client import Client
 
-from grants.models import Grant
 from django.contrib.auth import get_user_model
+from django.urls import reverse
+
+from grants.models import Grant
+from grants.views import GrantCreateView
 
 
 class GrantUpdateViewTest(TestCase):
@@ -33,6 +36,7 @@ class GrantUpdateViewTest(TestCase):
         self.client = Client()
         self.user = get_user_model().objects.create_user("admin", "admin@usda.gov", "")
         self.client.login(username="admin", password="")  # nosec
+        self.factory = RequestFactory()
 
     def tearDown(self):
         self.user.delete()
@@ -50,6 +54,7 @@ class GrantUpdateViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_logged_in_uses_correct_template(self):
+        """Uses the styled admin form for grant changes"""
         for grant in self.grants:
             response = self.client.get(
                 f"/admin/grants/grant/{grant.pk}/change/", follow=True
@@ -64,3 +69,27 @@ class GrantUpdateViewTest(TestCase):
                 "grants/update.html",
                 f"The template grants/update.html was not used for grant {grant.cn}.",
             )
+
+
+class GrantProposalCreationTest(GrantUpdateViewTest):
+    def setUp(self):
+        super().setUp()
+        request = self.factory.get(reverse("add_grant", kwargs={"app_label": "grants"}))
+        request.user = self.user
+        response = GrantCreateView.as_view()(request)
+        response.render()
+        self.subject = response.content
+
+    def test_proposal_creation_form_includes_cooperator(self):
+        self.assertIn(b"Applicant/Cooperator Name", self.subject)
+
+    def test_proposal_creation_form_includes_total_funds(self):
+        self.assertIn(b"Total Amount of Funds Requested", self.subject)
+
+    def test_proposal_creation_form_excludes_FFA(self):
+        self.assertNotIn(
+            b"Will this be covered by Federal Financial Assistance", self.subject
+        )
+
+    def test_proposal_creation_form_excludes_advance_allowed(self):
+        self.assertNotIn(b"Advance Allowed", self.subject)

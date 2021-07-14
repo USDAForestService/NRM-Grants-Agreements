@@ -15,17 +15,28 @@ class MinGrantForm(forms.ModelForm):
     Defines the minimum viable Grant/proposal creation form.
     """
 
+    # Require all fields in minimal grant creation form.
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for key in self.Meta.fields:
+            self.fields[key].required = True
+        self.fields[
+            "proposed_start_date"
+        ].help_text = """
+            The date the project is expected to start as negotiated in the agreement.
+        """
+
     class Meta:
         model = Grant
         fields = [
             "proj_title",
             "proj_desc",
+            "applicant_name",
             "app_submit_date",
             "app_received_date",
             "proposed_start_date",
             "proposed_end_date",
             "progrm_responsibility_type",
-            "advance_allowed_ind",
             "master_fed_id",
             "state_eo_date",
             "state_eo_code",
@@ -35,6 +46,7 @@ class MinGrantForm(forms.ModelForm):
             "journal_ind",
             "proj_science_cd",
             "research_type",
+            "applicant_est_fund",
         ]
 
     def save(self, commit=True):
