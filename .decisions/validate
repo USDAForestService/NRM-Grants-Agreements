@@ -11,8 +11,12 @@ import sys
 #  - Date format
 #  - Structure of history and people
 #  - Section headers are all valid
+#  - Optional "amends" key takes a list
 
-# Also to do: work this script into the CI process.
+# Also to do:
+# - Build a main Markdown file `history.md` that includes just the titles,
+#     descriptions, and dates for skimming.
+# - Add this script into the CI process.
 
 print("Not yet implemented")
 sys.exit(1)
