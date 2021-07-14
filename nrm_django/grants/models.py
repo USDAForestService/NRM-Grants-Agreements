@@ -366,8 +366,10 @@ class Grant(models.Model):
     )
     reroute_from = models.CharField(max_length=10, blank=True, null=True)
     reroute_date = models.DateField(blank=True, null=True)
-    # TODO: Is this typo in the source data?
-    certificaion_date = models.DateField("Certification date", blank=True, null=True)
+
+    certification_date = models.DateField(
+        "Certification date", db_column="certificaion_date", blank=True, null=True
+    )
     applicant_name = models.CharField(
         "Applicant/Cooperator Name", max_length=200, blank=True, null=True
     )

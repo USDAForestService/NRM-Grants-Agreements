@@ -49,7 +49,7 @@
   <div id="content-main">
     <h1>Update a proposal or agreement</h1>
     <p class="site-text-intro">Use this form to update a proposal or agreement.</p>
-    
+
     {% block object-tools %}
       {% if change %}
         <ul class="object-tools">
@@ -59,7 +59,7 @@
         </ul>
       {% endif %}
     {% endblock object-tools %}
-    <form {% if form_url %} action="{{ form_url }}" {% endif %} method="post" id="{{ opts.model_name }}_form" 
+    <form {% if form_url %} action="{{ form_url }}" {% endif %} method="post" id="{{ opts.model_name }}_form"
         {% if has_file_field %}enctype="multipart/form-data" {% endif %} novalidate class="aligned">
         {% csrf_token %}{% block form_top %}{% endblock %}
         <div>
@@ -196,7 +196,7 @@
                   {% include "includes/field.html" with field=form.geo_type %}
                   {% include "includes/field.html" with field=form.reroute_from %}
                   {% include "includes/field.html" with field=form.reroute_date %}
-                  {% include "includes/field.html" with field=form.certificaion_date %}
+                  {% include "includes/field.html" with field=form.certification_date %}
                   {% include "includes/field.html" with field=form.format %}
                   {% include "includes/field.html" with field=form.other_approval %}
                   {% include "includes/field.html" with field=form.admin_open %}

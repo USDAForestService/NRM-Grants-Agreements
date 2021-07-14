@@ -70,41 +70,26 @@ class GrantUpdateViewTest(TestCase):
                 f"The template grants/update.html was not used for grant {grant.cn}.",
             )
 
-    # These next 5 tests could be refactored into one containing all of the assertions.
-    def test_proposal_creation_form_includes_cooperator(self):
+
+class GrantProposalCreationTest(GrantUpdateViewTest):
+    def setUp(self):
+        super().setUp()
         request = self.factory.get(reverse("add_grant", kwargs={"app_label": "grants"}))
         request.user = self.user
         response = GrantCreateView.as_view()(request)
         response.render()
-        self.assertIn(b"Applicant/Cooperator Name", response.content)
+        self.subject = response.content
+
+    def test_proposal_creation_form_includes_cooperator(self):
+        self.assertIn(b"Applicant/Cooperator Name", self.subject)
 
     def test_proposal_creation_form_includes_total_funds(self):
-        request = self.factory.get(reverse("add_grant", kwargs={"app_label": "grants"}))
-        request.user = self.user
-        response = GrantCreateView.as_view()(request)
-        response.render()
-        self.assertIn(b"Total Amount of Funds Requested", response.content)
-
-    # TODO: Add help link for proposed start date fields.
-    # def test_proposal_creation_form_includes_help_link(self):
-    #     request = self.factory.get(reverse("add_grant", kwargs={'app_label': 'grants'}))
-    #     request.user = self.user
-    #     response = GrantCreateView.as_view()(request)
-    #     response.render()
-    #     self.assertIn(b"TODO Help Text", response.content)
+        self.assertIn(b"Total Amount of Funds Requested", self.subject)
 
     def test_proposal_creation_form_excludes_FFA(self):
-        request = self.factory.get(reverse("add_grant", kwargs={"app_label": "grants"}))
-        request.user = self.user
-        response = GrantCreateView.as_view()(request)
-        response.render()
         self.assertNotIn(
-            b"Will this be covered by Federal Financial Assistance", response.content
+            b"Will this be covered by Federal Financial Assistance", self.subject
         )
 
     def test_proposal_creation_form_excludes_advance_allowed(self):
-        request = self.factory.get(reverse("add_grant", kwargs={"app_label": "grants"}))
-        request.user = self.user
-        response = GrantCreateView.as_view()(request)
-        response.render()
-        self.assertNotIn(b"Advance Allowed", response.content)
+        self.assertNotIn(b"Advance Allowed", self.subject)
