@@ -1,40 +1,12 @@
 {% include "includes/field.html" with field=form.proj_title %}
 {% include "includes/field.html" with field=form.proj_desc %}
+{% include "includes/field.html" with field=form.applicant_name %}
+{% include "includes/field.html" with field=form.applicant_est_fund %}
 {% include "includes/field.html" with field=form.app_submit_date parent_class="usa-date-picker" default_now_if_empty=True %}
 {% include "includes/field.html" with field=form.app_received_date parent_class="usa-date-picker" default_now_if_empty=True %}
 {% include "includes/field.html" with field=form.proposed_start_date parent_class="usa-date-picker" %}
 {% include "includes/field.html" with field=form.proposed_end_date parent_class="usa-date-picker" %}
 {% include "includes/field.html" with field=form.progrm_responsibility_type %}
-{% include "includes/field.html" with field=form.advance_allowed_ind %}
 {% include "includes/field.html" with field=form.master_fed_id %}
-
-<div class="usa-accordion usa-accordion--bordered">
-    <fieldset>
-        <legend class="usa-accordion__heading">
-            <button class="usa-accordion__button" type="button" aria-expanded="false" aria-controls="ffa">
-                Will this be covered by Federal Financial Assistance?
-            </button>
-        </legend>
-        <div id="ffa" class="usa-accordion__content usa-prose">
-    {% include "includes/field.html" with field=form.state_eo_code %}
-    {% include "includes/field.html" with field=form.state_eo_date parent_class="usa-date-picker" %}
-    {% include "includes/field.html" with field=form.application_type %}
-    {% include "includes/field.html" with field=form.app_submission_type %}
-        </div>
-    </fieldset>
-
-    <fieldset>
-        <legend class="usa-accordion__heading">
-            <button class="usa-accordion__button" type="button" aria-expanded="false" aria-controls="rwu">
-                Is this a research project?
-            </button>
-        </legend>
-        <div id="rwu" class="usa-accordion__content usa-prose">
-            {% include "includes/field.html" with field=form.proj_rwu %}
-            {% include "includes/field.html" with field=form.journal_ind %}
-            {% include "includes/field.html" with field=form.proj_science_cd %}
-            {% include "includes/field.html" with field=form.research_type %}
-        </div>
-    </fieldset>
-</div>
-
+<br />
+<br />
