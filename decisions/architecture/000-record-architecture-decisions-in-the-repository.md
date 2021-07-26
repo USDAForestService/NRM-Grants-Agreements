@@ -32,7 +32,9 @@ Architecture Decision Records are described by Michael Nygard in this article: h
 #### Process
 The typical process might include the following.
 
-When a technical decision needs to be made, someone proposes an ADR and writes it up in the [decisions/architecture folder of the GitHub repository for NRM G&A][repo], following the template format.
+When a technical decision (defined below) needs to be made, someone proposes an ADR and writes it up in the [decisions/architecture folder of the GitHub repository for NRM G&A][repo], following the template format.
+
+A "technical decision" means a decision about the technical architecture, especially that with significant consequences for how we build. This includes (but is not limited to) programming language, frameworks or major consequential libraries/packages, hosting infrastructure, resources (e.g. databases, caches, and other backing services), authentication methods, consequential software architecture patterns, and more.
 
 Toward the bottom of the proposed ADR, the author makes a first attempt at identifying the individuals who are [Responsible, Accountable, Consulted, and Informed][raci]. The shared understanding should be that the first few drafts of this list may be incomplete or inaccurate, and commenters should propose amendments without taking incorrect classifications personally.
 
