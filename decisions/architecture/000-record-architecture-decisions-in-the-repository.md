@@ -1,6 +1,6 @@
 # 0. Record architecture decisions in the repository.
 
-Status: proposed
+Status: proposed   \
 Date: 26 July 2021
 
 This file is itself an ADR.
@@ -43,7 +43,7 @@ Adequate time should be given for:
   2. discussing the proposal and researching the options, and
   3. holding decision-making processes.
 
-Once the decision is made, the decision-makers (or a smaller delegation) fill in the Decision Outcome, Positive Consequences, Negative Consequences, Decision History, Status, and Date. They then submit a Pull Request to commit the decision into the repo history.
+Once the decision is made, the decision-makers (or a smaller delegation) amend the ADR on the unmerged branch. They fill in the Decision Outcome (accepted or rejected), Positive Consequences, Negative Consequences, Decision History, Status, and Date. Someone else reviews the changes and merges the PR. (To clarify: one PR per ADR, to propose, amend, and merge it.)
 
 [raci]: https://www.planstreetinc.com/raci-chart/
 [repo]: https://github.com/USDAForestService/NRM-Grants-Agreements
