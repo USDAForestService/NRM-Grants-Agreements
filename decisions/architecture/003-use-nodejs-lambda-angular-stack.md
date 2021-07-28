@@ -43,6 +43,8 @@ all-TypeScript stack.
 - Aligns with the Forest Service technology modernization vision.
 - Assuming the modernization vision does not change, it helps the Forest
   Service consolidate many applications onto a common tech stack.
+- Increases developer efficiency by using the same language for frontend and
+  backend development which reduces context-switching.
 
 #### Cons
 - This complete stack has not been used in the Forest Service previously.
@@ -51,6 +53,9 @@ all-TypeScript stack.
   be.
 - Tools for deploying and managing applications on Lambda are much less mature
   than on other AWS platform-as-a-service offerings such as Elastic Beanstalk.
+- FS EAD's existing FSApps integration for eAuth is only available for
+  server-side applications. eAuth integration for a client-side application
+  will require additional new development.
 - There are significant "unknown unknowns" with this stack, including:
   - integration testing
   - scaling (scaling Lambda functions are easy but scaling any attached
@@ -77,6 +82,26 @@ for web application development.
 #### Cons
 - Introduces a new programming language to Forest Service, requiring
   contractors with Python skills to develop and maintain the application.
+- Mixes different languages for frontend development (TypeScript) and backend
+  development (Python) which decreases the efficiency of developers due to
+  context-switching.
+- This complete stack has not been used in the Forest Service previously.
+- Migrating legacy apps to this stack has never been done before, and the
+  process has not been experimented with enough to know how difficult it will
+  be.
+- Tools for deploying and managing applications on Lambda are much less mature
+  than on other AWS platform-as-a-service offerings such as Elastic Beanstalk.
+- FS EAD's existing FSApps integration for eAuth is only available for
+  server-side applications. eAuth integration for a client-side application
+  will require additional new development.
+- There are significant "unknown unknowns" with this stack, including:
+  - integration testing
+  - scaling (scaling Lambda functions are easy but scaling any attached
+    resources is harder)
+  - zero-downtime deployments
+  - DevOps engineering needs
+- Based on our research, this stack is significantly more complicated than
+  other stacks that could meet the needs of this application.
 
 
 ### Angular & Java Spring
@@ -88,11 +113,30 @@ backend.
 #### Pros
 - Matches the technology architecture described in the NRM Modernization
   solicitation that is being awarded.
+- Assuming the technology listed in the solicitation is accurate, it would
+  help the Forest Service consolidate many applications onto this common tech
+  stack.
 
 #### Cons
 - Java packaging, deployment, and runtimes are famously resource-intensive and
   Lambda charges increase with the time and resources that an application
   needs.
+- Mixes different languages for frontend development (TypeScript) and backend
+  development (Java) which decreases the efficiency of developers due to
+  context-switching.
+- Tools for deploying and managing applications on Lambda are much less mature
+  than on other AWS platform-as-a-service offerings such as Elastic Beanstalk.
+- FS EAD's existing FSApps integration for eAuth is only available for
+  server-side applications. eAuth integration for a client-side application
+  will require additional new development.
+- There are significant "unknown unknowns" with this stack, including:
+  - integration testing
+  - scaling (scaling Lambda functions are easy but scaling any attached
+    resources is harder)
+  - zero-downtime deployments
+  - DevOps engineering needs
+- Based on our research, this stack is significantly more complicated than
+  other stacks that could meet the needs of this application.
 
 
 ### Server-side Python application
@@ -100,16 +144,18 @@ backend.
 #### Pros
 
 - A server-side application is the most appropriate level of "innovative": it
-  is perhaps the safest, most boring technology choice that would meet the
-  needs of the G&A application.
-- Allows for rapid progress on this application, leveraging existing
-  prototype development work.
+  is the safest, most boring technology choice that would meet the needs of
+  the G&A application.
+- Allows for rapid progress on this application, leveraging existing prototype
+  development work.
+- EAD's existing FSApps integration with eAuth is usable by a server-side
+  application.
 - Server-side applications are much easier to get approved for cybersecurity
   compliance because the security risks are more easily understood.
-- There are very few unknown unknowns: the "failure modes" of Python are well-known
-  and solved, both with unit testing and integration testing
-- Django is the #1 web framework for Python, which is by some metrics the 3rd most
-  popular computer language in the world.
+- There are very few unknown unknowns: the "failure modes" of Python are
+  well-known and solved, both with unit testing and integration testing
+- Django is the #1 web framework for Python, which is by some metrics the 3rd
+  most popular computer language in the world.
 - Python developers/vendors are common and highly available.
 - Aligns with the Forest Service CIO vision to have API access to data. Python
   libraries make the development of REST APIs straightforward.
