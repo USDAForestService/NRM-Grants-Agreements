@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     # command: pipenv run ./manage.py migrate --settings=nrm_site.settings.dev
 
-  web:
+  api:
     build: .
     volumes:
       - .:/code
@@ -22,3 +22,15 @@ services:
     command: pipenv run /code/nrm_django/manage.py runserver 0.0.0.0:8000 --settings=nrm_site.settings.dev
     depends_on:
       - postgres
+
+  web:
+    build: ./frontend
+    volumes:
+      - ./frontend:/code
+    expose:
+      - "4200"
+    ports:
+      - "4200:4200"
+    command: npm run start
+    depends_on:
+      - api
