@@ -1,12 +1,12 @@
 # 0. Record architecture decisions in the repository.
 
-Status: proposed   \
+Status: accepted   \
 Date: 26 July 2021
 
 This file is itself an ADR.
 
 
-## Decision Proposed
+## Decision
 
 In order to support clear decision-making, enable a smooth vendor transition, arrive at appopriately stable technical decisions, and provide a clear historical record of technical decisions, we are proposing the use of Architectural Decision Records (ADRs).
 
@@ -39,6 +39,12 @@ A "technical decision" means a decision about the technical architecture, especi
 Toward the bottom of the proposed ADR, the author makes a first attempt at identifying the individuals who are [Responsible, Accountable, Consulted, and Informed][raci]. The shared understanding should be that the first few drafts of this list may be incomplete or inaccurate, and commenters should propose amendments without taking incorrect classifications personally.
 
 The author commits the proposal to a new branch and submits a pull request. They also open a [discussion thread][discussion], linking the ADR in the first post.
+
+On the pull request, the author should make a comment that mentions the
+decision-makers by their Github handle and requests them to make a decision on
+the ADR. For example, “@jaybergjr This is a new ADR that you need to read and
+comment on.  If you approve the decision, leave a comment on this pull request
+to that effect.”
 
 Adequate time should be given for:
   1. identifying the relevant decision-makers within the organization, so as to increase the likelihood of the decision persisting,
@@ -101,9 +107,10 @@ To do.
 
 
 ## Decision Method
-To come. (How the decision was made: by consensus, by vote, etc. Example: The Responsible and Accountable parties came to consensus and agreed to accept this ADR.)
+Decided by a voice vote of Jay, Chris, and Adam at a meeting on 28 July 2021.
 
 
 ## Decision History
 
 - Proposed: 26 July 2021
+- Accepted: 28 July 2021
