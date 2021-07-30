@@ -11,15 +11,14 @@ services:
     # command: pipenv run ./manage.py migrate --settings=nrm_site.settings.dev
 
   api:
-    build: .
+    build: ./api
     volumes:
-      - .:/code
-      - .env:/code/nrm_django/.env # Copy local environment variables
+      - ./api:/code
     expose:
-      - "8000"
+      - "3000"
     ports:
-      - "8000:8000"
-    command: pipenv run /code/nrm_django/manage.py runserver 0.0.0.0:8000 --settings=nrm_site.settings.dev
+      - "3000:3000"
+    command: npm run serve
     depends_on:
       - postgres
 

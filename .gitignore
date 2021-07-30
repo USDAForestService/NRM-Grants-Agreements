@@ -1,3 +1,10 @@
+# Compiled JS
+api/bin/*.js
+
+# Sensitive information
+api/claudia.json
+
+
 **/*/__pycache__
 tags
 env
@@ -113,3 +120,4 @@ data/db/
 
 # mkdocs documentation
 /site
+
