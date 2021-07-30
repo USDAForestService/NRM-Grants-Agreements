@@ -54,7 +54,9 @@ Gateway.
 
 #### Cons
 - Request handling happens inside of the Lambda handler, possibly making that
-  function more complex.
+  function more complex. This is only a downside if the tools for managing
+  routing in the programming language-level framework are weaker than those
+  available in of API Gateway.
 
 
 ### [Option] Per-path Lambdas configured in API Gateway 
@@ -77,9 +79,13 @@ for a certain type of information.
 - API Gateway deploys are not zero-downtime, so the more often API Gateway
   configuration changes, the more often that there will be system downtime on
   deploys.
-- Individual Lambda function handlers are slower to start on their first
-  usage, so after a restart, the application can be very slow and the problem
-  is worse with more separate function handlers.
+- Lambda function handlers can be very slow in cold-start situations. Another
+  18F project found that Lambda's shutoff and restart strategy is opaque, so
+  less-used endpoints were often slow because they had been shut down. Some
+  research online suggests that shutoff times [have been made longer by
+  AWS](https://acloudguru.com/blog/engineering/how-long-does-aws-lambda-keep-your-idle-functions-around-before-a-cold-start),
+  but startup times for applications with large dependency loads [can be
+  longer than one second]( https://mikhail.io/serverless/coldstarts/aws/).
 - Route configuration for API Gateway is separate from other
   programming-language level configuration that our application will use.
 - Reversing this decision is harder because it means re-implementing the
@@ -88,22 +94,16 @@ for a certain type of information.
 
 ## Decision Makers
 
-### Responsible
-- [Neil Martinsen-Burrell](neil.martinsen-burrell@gsa.gov) (Consulting Engineer)
-- [[Matt Cloyd](matt.cloyd@gsa.gov) (Consulting Engineer)
-
-### Accountable
+### Accountable and Responsible
 - [Adam Shepherd](mailto:adam.shepherd@usda.gov) (Tech Lead)
 
 ### Consulted
-- [Jay Berg](mailto:gerald.berg@usda.gov) (Product Owner)
-- [Chris Coppenbarger](mailto:chris.coppenbarger@usda.gov) (Product Manager)
+- [Neil Martinsen-Burrell](neil.martinsen-burrell@gsa.gov) (Consulting Engineer)
+- [[Matt Cloyd](matt.cloyd@gsa.gov) (Consulting Engineer)
 
 ### Informed
-- [First Last](mailto:first.last@usda.gov) (Role)
-- [First Last](mailto:first.last@usda.gov) (Role)
-- [First Last](mailto:first.last@usda.gov) (Role)
-- [First Last](mailto:first.last@usda.gov) (Role)
+- [Jay Berg](mailto:gerald.berg@usda.gov) (Product Owner)
+- [Chris Coppenbarger](mailto:chris.coppenbarger@usda.gov) (Product Manager)
 
 
 ## Decision Method
