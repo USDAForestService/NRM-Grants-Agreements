@@ -9,7 +9,7 @@ We must select a Continuous Integration / Continuous Delivery platform that is i
 
 ## Decision Proposed
 
-We propose using GitHub Actions for our CI/CD platform.
+We propose using GitHub (ZenHub?) Actions for our CI/CD platform.
 
 ### Positive Consequences
 
