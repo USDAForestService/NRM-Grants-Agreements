@@ -49,21 +49,6 @@ jobs:
       - *install-python-dependencies
       - *install-python-dev-dependencies
       - run:
-          name: Create the database
-          working_directory: ~/project/nrm_django
-          command: pipenv run python manage.py migrate --settings=nrm_site.settings.test
-      - run:
-          name: Run unit tests & check coverage
-          working_directory: ~/project/nrm_django
-          command: |
-            pipenv run coverage run --source='nrm_app' manage.py test --settings=nrm_site.settings.test nrm_app
-            pipenv run coverage report --fail-under=10 -m  # TODO: raise this back up when we have tests
-      - run:
-          name: Run bandit (Python security) tests
-          working_directory: ~/project/nrm_django
-          command: |
-            pipenv run bandit -r nrm_django/nrm_app
-      - run:
           name: Run flake8 test for Python code style
           working_directory: ~/project/nrm_django
           command: |
@@ -73,6 +58,27 @@ jobs:
           working_directory: ~/project/nrm_django
           command: |
             pipenv run black --check --diff .
+      - run:
+          name: Run prettier on frontend
+          working_directory: ~/project/frontend
+          command: |
+            npx prettier --check src/**/*.ts
+      - run:
+          name: Run bandit (Python security) tests
+          working_directory: ~/project/nrm_django
+          command: |
+            pipenv run bandit -r nrm_django/nrm_app
+      - run:
+          name: Create the database
+          working_directory: ~/project/nrm_django
+          command: |
+            pipenv run python manage.py migrate --settings=nrm_site.settings.test
+      - run:
+          name: Run unit tests & check coverage
+          working_directory: ~/project/nrm_django
+          command: |
+            pipenv run coverage run --source='nrm_app' manage.py test --settings=nrm_site.settings.test nrm_app
+            pipenv run coverage report --fail-under=10 -m  # TODO: raise this back up when we have tests
       - store_artifacts:
           path: ./pa11y/screencaps
       - run:
