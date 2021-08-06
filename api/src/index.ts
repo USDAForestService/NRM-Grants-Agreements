@@ -3,52 +3,81 @@ import express, { Request, Response, NextFunction } from 'express';
 const app  = express();
 const port = 3000;
 
-app.listen(port, () => {
-  console.log(`Timezones by location app is running on port ${port}.`)
+/**
+ * @todo Set using environment variables for security hardening.
+ */
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin',  '*')
+  res.setHeader('Access-Control-Allow-Methods', '*')
+  res.setHeader('Access-Control-Allow-Headers', '*')
+  next();
 });
 
-interface LocationWithTimezone {
-  location: string;
-  timezoneName: string;
-  timezoneAbbr: string;
-  utcOffset: number;
+enum Status {
+  None = "---",
+  One = "01",
+  Two = "02",
 }
 
-const getLocationsWithTimezones = (
+enum AppSubmissionType {
+  New = 'NEW',
+  Application = 'Application',
+  Preapplication = 'Preapplication',
+  NonConstructionApplication = 'NON-CONSTRUCTION APPLICATION',
+  NonConstructionPreApplication = 'NON-CONSTRUCTION PRE-APPLICATION',
+}
+
+interface Grant {
+  cn: string;
+  projTitle: string;
+  projStatus: Status;
+  appSubmissionType: AppSubmissionType;
+}
+
+const getGrants = (
   request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  let locations: LocationWithTimezone[] = [
+  let grants: Grant[] = [
     {
-      location: 'France',
-      timezoneName: 'Central European Time',
-      timezoneAbbr: 'CET',
-      utcOffset: 1
+      cn: '100X100X100X',
+      projTitle: 'Forest Service Project',
+      projStatus: Status.None,
+      appSubmissionType: AppSubmissionType.New
     },
     {
-      location: 'New England',
-      timezoneName: 'China Standard Time',
-      timezoneAbbr: 'CST',
-      utcOffset: 8
+      cn: '101AB101AB101AB',
+      projTitle: 'Timber Project',
+      projStatus: Status.One,
+      appSubmissionType: AppSubmissionType.Application
     },
     {
-      location: 'Old England',
-      timezoneName: 'Argentina Time',
-      timezoneAbbr: 'ART',
-      utcOffset: -3
+      cn: '202C202C202C',
+      projTitle: 'Swales & Marshes',
+      projStatus: Status.One,
+      appSubmissionType: AppSubmissionType.Preapplication
     },
     {
-      location: 'Japan',
-      timezoneName: 'Japan Standard Time',
-      timezoneAbbr: 'JST',
-      utcOffset: 9
+      cn: '020D020D020D',
+      projTitle: 'Pasture Land',
+      projStatus: Status.Two,
+      appSubmissionType: AppSubmissionType.NonConstructionApplication
     }
   ];
 
-  response.status(200).json(locations);
+  response.status(200).json(grants);
 }
 
-app.get('/timezones', getLocationsWithTimezones);
+app.get('/grants', getGrants);
+
+/**
+ * @environment development
+ * When deployed, the lambda.js file only uses the exported app and
+ * doesn't run app.listen.
+ */
+app.listen(port, () => {
+  console.log(`NRM G&A API running on port ${port}.`)
+});
 
 module.exports = app;
