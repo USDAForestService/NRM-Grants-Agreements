@@ -3,6 +3,18 @@
 # Set deployment variables in CircleCI as environment variables
 version: 2
 
+install-node-dependencies: &install-node-dependencies
+  run:
+    name: Node install
+    working_directory: ~/project
+    command: npm ci
+
+install-node-frontend-deps: &install-node-frontend-deps
+  run:
+    name: Node install
+    working_directory: ~/project/frontend
+    command: npm ci
+
 install-python-dependencies: &install-python-dependencies
   run:
     name: Install python dependencies
@@ -42,10 +54,8 @@ jobs:
 
     steps:
       - checkout
-      - run:
-          name: Node install
-          working_directory: ~/project
-          command: npm ci
+      - *install-node-dependencies
+      - *install-node-frontend-deps
       - *install-python-dependencies
       - *install-python-dev-dependencies
       - run:
@@ -73,6 +83,11 @@ jobs:
           working_directory: ~/project/nrm_django
           command: |
             pipenv run python manage.py migrate --settings=nrm_site.settings.test
+      - run:
+          name: "[frontend] Run spec"
+          working_directory: ~/project/frontend
+          command: |
+            npm run test
       - run:
           name: Run unit tests & check coverage
           working_directory: ~/project/nrm_django
