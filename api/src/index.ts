@@ -1,4 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
+import {
+  Sequelize,
+  Model,
+  DataTypes,
+  Optional,
+} from 'sequelize';
+
+const sequelize = new Sequelize("postgresql://postgres:postgres@postgres/nrm_dev?sslmode=disable");
 
 const app  = express();
 const port = 3000;
@@ -27,49 +35,75 @@ enum AppSubmissionType {
   NonConstructionPreApplication = 'NON-CONSTRUCTION PRE-APPLICATION',
 }
 
-interface Grant {
+interface GrantAttributes {
   cn: string;
   projTitle: string;
   projStatus: Status;
   appSubmissionType: AppSubmissionType;
 }
 
-const getGrants = (
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  let grants: Grant[] = [
-    {
-      cn: '100X100X100X',
-      projTitle: 'Forest Service Project',
-      projStatus: Status.None,
-      appSubmissionType: AppSubmissionType.New
-    },
-    {
-      cn: '101AB101AB101AB',
-      projTitle: 'Timber Project',
-      projStatus: Status.One,
-      appSubmissionType: AppSubmissionType.Application
-    },
-    {
-      cn: '202C202C202C',
-      projTitle: 'Swales & Marshes',
-      projStatus: Status.One,
-      appSubmissionType: AppSubmissionType.Preapplication
-    },
-    {
-      cn: '020D020D020D',
-      projTitle: 'Pasture Land',
-      projStatus: Status.Two,
-      appSubmissionType: AppSubmissionType.NonConstructionApplication
-    }
-  ];
+interface GrantCreationAttributes extends Optional<Grant, "cn">{}
 
-  response.status(200).json(grants);
+class Grant extends Model<GrantAttributes, GrantCreationAttributes>
+  implements GrantAttributes {
+
+  public cn!: string;
+  public projTitle!: string;
+  public projStatus!: Status | null;
+  public appSubmissionType!: AppSubmissionType;
 }
 
-app.get('/grants', getGrants);
+Grant.init(
+  {
+    /**
+      Proposal ID,
+      editable=False,
+      db_index=True,
+      help_text="A system-generated number used to identify the proposal before an agreement number is assigned or the instrument is executed.",
+    */
+    cn: {
+      type: new DataTypes.STRING(34),
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    projTitle: {
+      type: new DataTypes.STRING(200),
+      allowNull: false,
+    },
+    projStatus: {
+      type: new DataTypes.STRING(15),
+      allowNull: true,
+    },
+    appSubmissionType: {
+      type: new DataTypes.STRING(30),
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    underscored: true,
+    timestamps: false,
+    tableName: "ii_grants",
+  }
+)
+
+const awaitErrorHandlerFactory = (middleware: any) => {
+  return async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      await middleware(request, response, next);
+    } catch (err) {
+      next(err);
+    }
+  }
+}
+
+app.get(
+  '/grants',
+  awaitErrorHandlerFactory(async (request: Request, response: Response, next: NextFunction) => {
+    let grants: Grant[] = await Grant.findAll({ limit: 10 });
+    return response.status(200).json(grants);
+  })
+);
 
 /**
  * @environment development
