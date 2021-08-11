@@ -5,8 +5,15 @@ import {
   DataTypes,
   Optional,
 } from 'sequelize';
+import dotenv from 'dotenv';
 
-const sequelize = new Sequelize("postgresql://postgres:postgres@postgres/nrm_dev?sslmode=disable");
+dotenv.config()
+
+
+console.log("----- DATABASE_URL -----")
+console.log(process.env.DATABASE_URL)
+
+const sequelize = new Sequelize(process.env.DATABASE_URL);
 
 const app  = express();
 const port = 3000;
@@ -97,6 +104,9 @@ const awaitErrorHandlerFactory = (middleware: any) => {
   }
 }
 
+/**
+* @todo Set the JSON to be { data: grants } and have Angular read the data
+*/
 app.get(
   '/grants',
   awaitErrorHandlerFactory(async (request: Request, response: Response, next: NextFunction) => {
