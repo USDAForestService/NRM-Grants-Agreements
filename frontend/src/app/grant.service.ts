@@ -9,8 +9,8 @@ import { Grant } from './grant';
 })
 
 /**
-* @todo Get the JSON from they key "data"
-*/
+ * @todo Get the JSON from they key "data"
+ */
 export class GrantService {
   private grantsUrl = `${environment.api_root}/grants`;
 
