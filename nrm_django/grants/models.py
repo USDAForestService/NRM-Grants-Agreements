@@ -58,7 +58,10 @@ class Grant(models.Model):
     )
     # Sys-generated, once initial proposal saved. Control number.
     # Older field, not user viewable. Only used for historical records.
-    application_id = models.CharField(max_length=34, editable=False)
+    application_id = models.CharField(
+        max_length=34,
+        editable=False
+    )
     application_type = models.CharField(
         "Type of application",
         max_length=30,
@@ -75,8 +78,7 @@ class Grant(models.Model):
         choices=APP_SUBMISSION_TYPE_CHOICES,
         default="Other",
         help_text="""
-            Applies to instruments with Federal Financial Assistance (FFA).
-            Select OTHER if not FFA.
+            Applies to instruments with Federal Financial Assistance (FFA). Select OTHER if not FFA.
         """,
     )
     app_submit_date = models.DateField(
@@ -96,8 +98,7 @@ class Grant(models.Model):
     )
     proposed_start_date = models.DateField(
         help_text="""
-            The date the project is expected to start as negotiated in the agreement.
-            This date cannot be after the Expiration date.
+            The date the project is expected to start as negotiated in the agreement. This date cannot be after the Expiration date.
         """
     )
     proposed_end_date = models.DateField(
@@ -110,7 +111,10 @@ class Grant(models.Model):
     # For now, marking it as not-editable.
     # TO-DO: Implement this
     locked_ind = models.CharField(
-        choices=BOOL_CHOICES, max_length=1, default="N", editable=False
+        choices=BOOL_CHOICES,
+        max_length=1,
+        default="N",
+        editable=False
     )
     status = models.CharField(
         "Agreement Status",
@@ -119,30 +123,57 @@ class Grant(models.Model):
         default="NEW-APPLICATION",
         editable=False,
     )
-    status_date = models.DateField(auto_now_add=True)
+    status_date = models.DateField(
+        auto_now_add=True
+    )
     # TO-DO: created_by should record current user on save()
-    created_by = models.CharField(max_length=30, editable=False)  # FK?
-    created_date = models.DateField(auto_now_add=True)
+    created_by = models.CharField(
+        max_length=30,
+        editable=False
+    )  # FK?
+    created_date = models.DateField(
+        auto_now_add=True
+    )
     # Sys generated field. Comes from RACA, says what instance of the application it is.
     # TO-DO: determine how to generate it.
     created_in_instance = models.DecimalField(
-        max_digits=6, decimal_places=0, editable=False
+        max_digits=6,
+        decimal_places=0,
+        editable=False
     )
     # There may be a subset of fields that should trigger this but it will be the current
     # user that did the modification
-    modified_by = models.CharField(max_length=30, blank=True, null=True)  # FK?
-    modified_date = models.DateField(blank=True, null=True, auto_now=True)
+    modified_by = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True
+    )  # FK?
+    modified_date = models.DateField(
+        blank=True,
+        null=True,
+        auto_now=True
+    )
     # Same as created_in_instance, we need to determine how to generate this.
     modified_in_instance = models.DecimalField(
-        max_digits=6, decimal_places=0, blank=True, null=True, editable=False
+        max_digits=6,
+        decimal_places=0,
+        blank=True,
+        null=True,
+        editable=False
     )
     # These are the fields agreement numbers are derived from.
     # Few people interact with them directly though.
     fed_id_fy = models.CharField(
-        max_length=4, blank=True, null=True, choices=YEAR_CHOICES
+        max_length=4,
+        blank=True,
+        null=True,
+        choices=YEAR_CHOICES
     )
     fed_id_type = models.CharField(
-        max_length=2, blank=True, null=True, choices=FED_ID_TYPE_CHOICES
+        max_length=2,
+        blank=True,
+        null=True,
+        choices=FED_ID_TYPE_CHOICES
     )
     fed_id_agency = models.CharField(
         "Agency",
@@ -184,7 +215,11 @@ class Grant(models.Model):
 
     # Fields describing project(s) and significant dates.
     proj_type = models.CharField(
-        "Project Type", max_length=3, blank=True, null=True, choices=AB_CHOICES
+        "Project Type",
+        max_length=3,
+        blank=True,
+        null=True,
+        choices=AB_CHOICES
     )
     proj_desc = models.TextField(
         "Project description",
@@ -200,15 +235,26 @@ class Grant(models.Model):
         help_text="The date the State received the proposal for consideration.",
     )
     proj_execution_dt = models.DateField(
-        "Project execution date", blank=True, null=True
+        "Project execution date",
+        blank=True,
+        null=True
     )
     proj_start_dt = models.DateField(
-        "Start date", blank=True, null=True, help_text=""""""
+        "Start date",
+        blank=True,
+        null=True,
+        help_text=""""""
     )
     proj_obligation_dt = models.DateField(
-        "Project obligation date", blank=True, null=True
+        "Project obligation date",
+        blank=True,
+        null=True
     )
-    proj_expiration_dt = models.DateField("Expires", blank=True, null=True)
+    proj_expiration_dt = models.DateField(
+        "Expires",
+        blank=True,
+        null=True
+    )
     proj_close_dt = models.DateField(
         "Close date",
         blank=True,
@@ -251,11 +297,23 @@ class Grant(models.Model):
         choices=SCIENCE_CODE_CHOICES,
     )
     project_congressional_district = models.CharField(
-        max_length=40, blank=True, null=True
+        max_length=40,
+        blank=True,
+        null=True
     )
-    date_mailed = models.DateField(blank=True, null=True)
-    date_signed = models.DateField(blank=True, null=True)
-    comments = models.TextField(max_length=2000, blank=True, null=True)
+    date_mailed = models.DateField(
+        blank=True,
+        null=True
+    )
+    date_signed = models.DateField(
+        blank=True,
+        null=True
+    )
+    comments = models.TextField(
+        max_length=2000,
+        blank=True,
+        null=True
+    )
     # Per user guide extramural_ind should be represented as a boolean
     # TO-DO: present it as a boolean (may require migration)
     extramural_ind = models.CharField(
@@ -267,11 +325,22 @@ class Grant(models.Model):
         help_text="For reporting FS Research agreement activities only.",
     )  # should be a boolean, but appears to be null in some DB instances
     research_type = models.CharField(
-        max_length=1, blank=True, null=True, choices=RESEARCH_TYPE_CHOICES
+        max_length=1,
+        blank=True,
+        null=True,
+        choices=RESEARCH_TYPE_CHOICES
     )
-    journal_ind = models.CharField("Journal", max_length=1, blank=True, null=True)
+    journal_ind = models.CharField(
+        "Journal",
+        max_length=1,
+        blank=True,
+        null=True
+    )
     mod_number = models.DecimalField(
-        max_digits=3, decimal_places=0, blank=True, null=True
+        max_digits=3,
+        decimal_places=0,
+        blank=True,
+        null=True
     )
     orig_fed_id = models.CharField(
         "Original Agreement Number",
@@ -287,7 +356,10 @@ class Grant(models.Model):
         """,
     )
     master_fed_id = models.CharField(
-        "Master Fed ID", max_length=120, blank=True, null=True
+        "Master Fed ID",
+        max_length=120,
+        blank=True,
+        null=True
     )
     aop_ind = models.CharField(
         "AOP",
@@ -299,8 +371,16 @@ class Grant(models.Model):
             Select Yes from the choice list if the instrument requires an Annual Operating Plan (AOP).
         """,
     )
-    geo_type = models.CharField(max_length=2, blank=True, null=True)
-    managing_state_county = models.CharField(max_length=240, blank=True, null=True)
+    geo_type = models.CharField(
+        max_length=2,
+        blank=True,
+        null=True
+    )
+    managing_state_county = models.CharField(
+        max_length=240,
+        blank=True,
+        null=True
+    )
     areas_effected = models.CharField(
         "Areas Affected",
         max_length=200,
@@ -310,7 +390,12 @@ class Grant(models.Model):
             Areas (states, localities, congressional districts, and other areas) that are affected by the project.
         """,
     )
-    ffis_doc_id = models.CharField("FFIS Doc", max_length=11, blank=True, null=True)
+    ffis_doc_id = models.CharField(
+        "FFIS Doc",
+        max_length=11,
+        blank=True,
+        null=True
+    )
     ffin = models.CharField(
         "FMMI Agreement Number",
         max_length=40,
@@ -320,7 +405,9 @@ class Grant(models.Model):
     )
     # State fields
     state_identifier = models.CharField(
-        max_length=40, blank=True, null=True
+        max_length=40,
+        blank=True,
+        null=True
     )  # choices? FK?
     state_eo_code = models.CharField(
         "Subject to State E.O.",
@@ -342,7 +429,10 @@ class Grant(models.Model):
     )
     # EST Fund fields
     fed_est_fund = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True
     )
     applicant_est_fund = models.DecimalField(
         "Total Amount of Funds Requested",
@@ -353,25 +443,50 @@ class Grant(models.Model):
         null=True,
     )
     state_est_fund = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True
     )
     local_est_fund = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True
     )
     pi_est_fund = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True
     )
     oth_est_fund = models.DecimalField(
-        max_digits=12, decimal_places=2, blank=True, null=True
+        max_digits=12,
+        decimal_places=2,
+        blank=True,
+        null=True
     )
-    reroute_from = models.CharField(max_length=10, blank=True, null=True)
-    reroute_date = models.DateField(blank=True, null=True)
+    reroute_from = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True
+    )
+    reroute_date = models.DateField(
+        blank=True,
+        null=True
+    )
 
     certification_date = models.DateField(
-        "Certification date", db_column="certificaion_date", blank=True, null=True
+        "Certification date",
+        db_column="certificaion_date",
+        blank=True,
+        null=True
     )
     applicant_name = models.CharField(
-        "Applicant/Cooperator Name", max_length=200, blank=True, null=True
+        "Applicant/Cooperator Name",
+        max_length=200,
+        blank=True,
+        null=True
     )
     international_act_ind = models.CharField(
         "International Activities",
@@ -390,16 +505,32 @@ class Grant(models.Model):
         help_text="Indicates if advanced payments are allowed in the instrument. Select Y if advanced payments are allowed.",
     )
     authority_approval = models.CharField(
-        max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
+        max_length=1,
+        blank=True,
+        null=True,
+        choices=BOOL_CHOICES,
+        default="N"
     )
     authority = models.CharField(
-        max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
+        max_length=1,
+        blank=True,
+        null=True,
+        choices=BOOL_CHOICES,
+        default="N"
     )
     format = models.CharField(
-        max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
+        max_length=1,
+        blank=True,
+        null=True,
+        choices=BOOL_CHOICES,
+        default="N"
     )  # we may need to safely rename this column
     other_approval = models.CharField(
-        max_length=1, blank=True, null=True, choices=BOOL_CHOICES, default="N"
+        max_length=1,
+        blank=True,
+        null=True,
+        choices=BOOL_CHOICES,
+        default="N"
     )
     # Per User Guide, this field is not available until the instrument's status is PROP-ACCEPTED
     # TO-DO: Add runtime check for self.status and update form to make this editable if needed.
@@ -432,7 +563,10 @@ class Grant(models.Model):
         editable=False,
     )
     wppp_status_date = models.DateField(
-        "WPAP status date", blank=True, null=True, editable=False
+        "WPAP status date",
+        blank=True,
+        null=True,
+        editable=False
     )
     cooperator_agreement_number = models.CharField(
         max_length=34,
@@ -440,9 +574,19 @@ class Grant(models.Model):
         null=True,
         help_text="Cooperator's agreement number, if different than the Forest Service Agreement Number",
     )  # Is this used to key to a cooperator agreement?
-    gid = models.CharField("Agreement Number", max_length=16, blank=True, null=True)
-    admin_open = models.CharField(max_length=1, blank=True, null=True)
-    last_update = models.DateField(auto_now=True)
+    gid = models.CharField(
+        "Agreement Number",
+        max_length=16,
+        blank=True,
+        null=True
+    )
+    admin_open = models.CharField(max_length=1,
+        blank=True,
+        null=True
+    )
+    last_update = models.DateField(
+        auto_now=True
+    )
 
     class Meta:
         db_table = "ii_grants"

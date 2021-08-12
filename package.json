@@ -7,5 +7,8 @@
   },
   "scripts": {
     "test:a11y": "pa11y-ci --config a11y/scripts/main.json"
+  },
+  "dependencies": {
+    "prettier": "^2.3.2"
   }
 }
