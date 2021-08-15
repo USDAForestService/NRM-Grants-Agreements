@@ -1,12 +1,9 @@
-import dotenv from "dotenv";
-dotenv.config();
+console.log("NODE_ENV: " + process.env.NODE_ENV);
+console.log("DATABASE_URL: " + process.env.DATABASE_URL);
 
 import express, { Request, Response, NextFunction } from "express";
 
 import Grant from "./models";
-
-console.log("----- DATABASE_URL -----");
-console.log(process.env.DATABASE_URL);
 
 const app = express();
 const port = 3000;
@@ -49,6 +46,7 @@ app.get(
  * When deployed, the lambda.js file only uses the exported app and
  * doesn't run app.listen.
  */
+
 if (process.env.NODE_ENV == "development") {
   app.listen(port, () => {
     console.log(`NRM G&A API running on port ${port}.`);
