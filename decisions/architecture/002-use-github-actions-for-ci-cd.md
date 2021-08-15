@@ -9,15 +9,21 @@ We must select a Continuous Integration / Continuous Delivery platform that is i
 
 ## Decision Proposed
 
-To do.
+We propose using the Forest Service Jenkins instance for CI/CD.
+
+Additionally, we propose setting up Jenkins to [integrate with the GitHub Checks API](https://github.com/jenkinsci/github-checks-plugin) for this repository, so that failed checks are reported back to GitHub and merges are blocked until checks all pass.
 
 ### Positive Consequences
 
-To do.
+- Meets technical requirements
+- Aligns with standard practice in the Forest Service
+- Takes advantage of excellent support from Jenkins team
+- No cost to use
 
 ### Negative Consequences
 
-To do.
+- Because support from the Jenkins team is necessary for many CI/CD changes, this might occasionally become a blocker to CI/CD changes.
+- Access to CI/CD checks for new developers depends on some USDA onboarding, leading to minor initial delays.
 
 
 ## Options Under Consideration
