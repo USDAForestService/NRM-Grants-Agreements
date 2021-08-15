@@ -81,3 +81,27 @@ First, ensure Docker Desktop is installed.
 1. TODO: Add instructions to migrate the database and load data once we have an ORM in the Angular/Lambda environment
 
 Visit the Angular app at http://localhost:4200, and the API at http://localhost:3000. (Ports are in the docker-compose.yml file in the project root.)
+
+
+## Sandbox Deployment
+
+Ensure you have AWS Credentials installed per the above directions.
+
+### Backend
+
+Run the following:
+
+```bash
+$ pushd api && npm run update && popd
+```
+
+### Frontend
+
+Ensure you have the AWS CLI (`awscli`) installed. Then run:
+
+```bash
+$ pushd frontend   \
+  && ng build --configuration=sandbox \
+  && aws s3 sync dist/frontend/ s3://gov.usda.fs.nrm.ga \
+  && popd
+```

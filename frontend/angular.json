@@ -53,6 +53,14 @@
               ],
               "outputHashing": "all"
             },
+            "sandbox": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.sandbox.ts"
+                }
+              ],
+            },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
@@ -62,7 +70,7 @@
               "namedChunks": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "sandbox"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
