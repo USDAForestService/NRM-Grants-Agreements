@@ -1,7 +1,7 @@
-# 004. Use a single API Gateway and Lambda function
+# 003. Use a single API Gateway and Lambda function
 
-Status: proposed \
-Date: 29 July 2021 \
+Status: accepted   \
+Date: 6 Aug 2021 \
 Technical Story: https://github.com/USDAForestService/NRM-Grants-Agreements/issues/349
 
 ## Context
@@ -19,23 +19,22 @@ get based on the request path and method.
 
 ## Decision (Proposed)
 
-We propose to use a single API Gateway to proxy all requests to a single
-Lambda function which will handle requests internally based on path and method
+We decided to use a single API Gateway to proxy all requests to a single
+Lambda function, which will handle requests internally based on path and method
 and parameters.
 
 ### Positive Consequences
 
-- 
-- 
+- Minimal downtime for deploys.
+- Route configuration takes place near other application configuration.
+- Reversible decision: can re-configure the API Gateway later, and/or decompose the Express app into separate Lambda functions as optimization needs require.
 
 ### Negative Consequences
+(None apparent. Some complexity moves into Express app, but this isn't necessarily a problem.)
 
-- 
-- 
+## Options Considered
 
-## Options Under Consideration
-
-### [Option] API Gateway proxies to a single Lambda function
+### [Option Chosen] API Gateway proxies to a single Lambda function
 
 API Gateway can be configured to send all requests on a certain path on to a
 Lambda function using [Lambda proxy
@@ -59,7 +58,7 @@ Gateway.
   available in of API Gateway.
 
 
-### [Option] Per-path Lambdas configured in API Gateway 
+### [Option] Per-path Lambdas configured in API Gateway
 
 One way to use Lambda is similar to that embodied by the Serverless framework
 where routing is configured by path at the API Gateway and each portion of the
@@ -108,11 +107,9 @@ for a certain type of information.
 
 ## Decision Method
 
-How the decision was made: by consensus, by vote, etc.
-
-e.g. The Responsible and Accountable parties came to consensus and agreed to accept this ADR.
-
+Adam approved the ADR via GitHub. [(Link)](https://github.com/USDAForestService/NRM-Grants-Agreements/pull/367#pullrequestreview-724632547)
 
 ## Decision History
 
-- Proposed:   29 July 2021
+- Accepted: 6 Aug 2021
+- Proposed: 29 July 2021
