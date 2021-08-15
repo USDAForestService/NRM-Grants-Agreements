@@ -4,8 +4,8 @@
   <li *ngFor="let grant of grants">
     <h3>{{ grant.projTitle | titlecase }}</h3>
     <div><span>ID: </span><code>{{ grant.cn }}</code></div>
-    <div><span>Status: </span>{{ grant.projStatus }}</div>
     <div><span>Type: </span>{{ grant.appSubmissionType | titlecase }}</div>
+    <div><span>Last Updated: </span>{{ grant.lastUpdate | date:'longDate' }}</div>
   </li>
 </ul>
 
