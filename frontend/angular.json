@@ -24,12 +24,23 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/uswds/dist/fonts",
+                "output": "assets/fonts/"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/uswds/dist/img",
+                "output": "assets/img/"
+              }
             ],
             "styles": [
+              "node_modules/uswds/dist/css/uswds.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": ["node_modules/uswds/dist/js/uswds.min.js"]
           },
           "configurations": {
             "production": {
