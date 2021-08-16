@@ -1,30 +1,29 @@
 # 0. Record architecture decisions in the repository.
 
 Status: accepted   \
-Date: 26 July 2021
+Date: 28 July 2021
 
 This file is itself an ADR.
 
 
 ## Decision
 
-In order to support clear decision-making, enable a smooth vendor transition, arrive at appopriately stable technical decisions, and provide a clear historical record of technical decisions, we are proposing the use of Architectural Decision Records (ADRs).
+We have decided to use Architectural Decision Records (ADRs), and to keep them in the repository at `decisions/architecture`.
+
+## Positive Consequences
+
+- Defines a process for clear decision-making (See [Process][#process].)
+- Provides a clear historical record of technical decisions
+- Helps team arrive at appopriately stable technical decisions
+- Enables a smoother vendor transition
+
+## Negative Consequences
+(None apparent.)
 
 
-## Options Under Consideration
+## Options Considered
 
-### [Option] Don't use ADRs
-The "do-nothing" option is to not use ADRs and not document decisions.
-
-#### Pros
-- Some time saved not writing ADRs, socializing them, and making decisions explicit.
-
-#### Cons
-- Decision-making may continue to be opaque, even to team members.
-- Technical stack churn and misalignment is likely to continue. This will more than make up for time saved by not using ADRs.
-- Vendor may not have a clear understanding of the rationale for the technical stack and related decisions; could lead to further churn and confusion during transition process.
-
-### [Option] Use ADRs in the repository
+### [Option Chosen] Use ADRs in the repository
 We could start to use ADRs to document our technical decisions. This file is an example of an ADR.
 
 Architecture Decision Records are described by Michael Nygard in this article: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
@@ -75,6 +74,18 @@ Once the decision is made, the decision-makers (or a smaller delegation) amend t
 - Setting up an ADR requires some familiarity with GitHub ([counterargument] but this can be done entirely through the GitHub GUI/web interface).
 
 
+### [Option] Don't use ADRs
+The "do-nothing" option is to not use ADRs and not document decisions.
+
+#### Pros
+- Some time saved not writing ADRs, socializing them, and making decisions explicit.
+
+#### Cons
+- Decision-making may continue to be opaque, even to team members.
+- Technical stack churn and misalignment is likely to continue. This will more than make up for time saved by not using ADRs.
+- Vendor may not have a clear understanding of the rationale for the technical stack and related decisions; could lead to further churn and confusion during transition process.
+
+
 ### [Option] Use ADRs stored in other platforms
 
 ### Pros
@@ -107,10 +118,12 @@ To do.
 
 
 ## Decision Method
+
 Decided by a voice vote of Jay, Chris, and Adam at a meeting on 28 July 2021.
 
 
 ## Decision History
 
-- Proposed: 26 July 2021
 - Accepted: 28 July 2021
+- Proposed: 26 July 2021
+
