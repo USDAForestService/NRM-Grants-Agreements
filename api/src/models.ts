@@ -199,11 +199,6 @@ class Grant
   public lastUpdate!: Date;
 }
 
-/**
- * When copying from the spreadsheet, remember to:
- * - [ ] Comment out "noUpdate" lines (need to fix this, noUpdate blocks should be working)
- * - [ ] Remove all `auto_now*` and `choices` lines.
- */
 Grant.init(
   {
     cn: {
