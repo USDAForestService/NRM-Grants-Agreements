@@ -59,20 +59,13 @@ jobs:
       - *install-python-dependencies
       - *install-python-dev-dependencies
       - run:
-          name: Run flake8 test for Python code style
-          working_directory: ~/project/nrm_django
+          name: Run prettier
+          working_directory: ~/project
           command: |
-            pipenv run flake8 --exclude .venv
-      - run:
-          name: Run black to verify code auto-formatting
-          working_directory: ~/project/nrm_django
-          command: |
-            pipenv run black --check --diff .
-      - run:
-          name: Run prettier on frontend
-          working_directory: ~/project/frontend
-          command: |
-            npx prettier --check src/**/*.ts
+            npx prettier --check api/src/**/*.ts
+            npx prettier --check frontend/src/**/*.ts
+      - *install-python-dependencies
+      - *install-python-dev-dependencies
       - run:
           name: Run bandit (Python security) tests
           working_directory: ~/project/nrm_django

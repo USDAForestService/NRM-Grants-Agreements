@@ -1,4 +1,8 @@
 'use strict'
+
+require('dotenv').config({ path: '.build.env' })
+console.log('---- BUILD ENV: ' + process.env.NODE_ENV + ' ----')
+
 const awsServerlessExpress = require('aws-serverless-express')
 const app = require('./bin/index')
 const binaryMimeTypes = [
