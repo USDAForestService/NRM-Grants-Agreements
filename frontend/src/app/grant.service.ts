@@ -7,6 +7,10 @@ import { Grant } from './grant';
 @Injectable({
   providedIn: 'root',
 })
+
+/**
+ * @todo Get the JSON from they key "data"
+ */
 export class GrantService {
   private grantsUrl = `${environment.api_root}/grants`;
 

@@ -1,4 +1,9 @@
+console.log("NODE_ENV: " + process.env.NODE_ENV);
+console.log("DATABASE_URL: " + process.env.DATABASE_URL);
+
 import express, { Request, Response, NextFunction } from "express";
+
+import Grant from "./models";
 
 const app = express();
 const port = 3000;
@@ -13,71 +18,38 @@ app.use(function (req, res, next) {
   next();
 });
 
-enum Status {
-  None = "---",
-  One = "01",
-  Two = "02",
-}
-
-enum AppSubmissionType {
-  New = "NEW",
-  Application = "Application",
-  Preapplication = "Preapplication",
-  NonConstructionApplication = "NON-CONSTRUCTION APPLICATION",
-  NonConstructionPreApplication = "NON-CONSTRUCTION PRE-APPLICATION",
-}
-
-interface Grant {
-  cn: string;
-  projTitle: string;
-  projStatus: Status;
-  appSubmissionType: AppSubmissionType;
-}
-
-const getGrants = (
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  let grants: Grant[] = [
-    {
-      cn: "100X100X100X",
-      projTitle: "Forest Service Project",
-      projStatus: Status.None,
-      appSubmissionType: AppSubmissionType.New,
-    },
-    {
-      cn: "101AB101AB101AB",
-      projTitle: "Timber Project",
-      projStatus: Status.One,
-      appSubmissionType: AppSubmissionType.Application,
-    },
-    {
-      cn: "202C202C202C",
-      projTitle: "Swales & Marshes",
-      projStatus: Status.One,
-      appSubmissionType: AppSubmissionType.Preapplication,
-    },
-    {
-      cn: "020D020D020D",
-      projTitle: "Pasture Land",
-      projStatus: Status.Two,
-      appSubmissionType: AppSubmissionType.NonConstructionApplication,
-    },
-  ];
-
-  response.status(200).json(grants);
+const awaitErrorHandlerFactory = (middleware: any) => {
+  return async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      await middleware(request, response, next);
+    } catch (err) {
+      next(err);
+    }
+  };
 };
 
-app.get("/grants", getGrants);
+/**
+ * @todo Set the JSON to be { data: grants } and have Angular read the data
+ */
+app.get(
+  "/grants",
+  awaitErrorHandlerFactory(
+    async (request: Request, response: Response, next: NextFunction) => {
+      let grants: Grant[] = await Grant.findAll({ limit: 10 });
+      return response.status(200).json(grants);
+    }
+  )
+);
 
 /**
  * @environment development
  * When deployed, the lambda.js file only uses the exported app and
  * doesn't run app.listen.
  */
-app.listen(port, () => {
-  console.log(`NRM G&A API running on port ${port}.`);
-});
+if (process.env.NODE_ENV == "development") {
+  app.listen(port, () => {
+    console.log(`NRM G&A API running on port ${port}.`);
+  });
+}
 
 module.exports = app;
