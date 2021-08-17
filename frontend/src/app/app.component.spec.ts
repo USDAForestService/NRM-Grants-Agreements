@@ -24,6 +24,8 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.usa-logo__text')?.textContent).toContain('Grants & Agreements');
+    expect(compiled.querySelector('.usa-logo__text')?.textContent).toContain(
+      'Grants & Agreements'
+    );
   });
 });
