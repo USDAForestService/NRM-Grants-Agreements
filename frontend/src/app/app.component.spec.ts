@@ -14,16 +14,18 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'NRM G&A'`, () => {
+  it(`should have as title 'Grants & Agreements'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('NRM G&A');
+    expect(app.title).toEqual('Grants & Agreements');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('NRM');
+    expect(compiled.querySelector('.usa-logo__text')?.textContent).toContain(
+      'Grants & Agreements'
+    );
   });
 });

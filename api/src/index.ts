@@ -46,7 +46,6 @@ app.get(
  * When deployed, the lambda.js file only uses the exported app and
  * doesn't run app.listen.
  */
-
 if (process.env.NODE_ENV == "development") {
   app.listen(port, () => {
     console.log(`NRM G&A API running on port ${port}.`);

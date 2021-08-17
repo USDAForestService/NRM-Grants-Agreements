@@ -1,12 +1,32 @@
-<h2>Grants</h2>
-
-<ul class="grants">
-  <li *ngFor="let grant of grants">
-    <h3>{{ grant.projTitle | titlecase }}</h3>
-    <div><span>ID: </span><code>{{ grant.cn }}</code></div>
-    <div><span>Type: </span>{{ grant.appSubmissionType | titlecase }}</div>
-    <div><span>Last Updated: </span>{{ grant.lastUpdate | date:'longDate' }}</div>
-  </li>
-</ul>
-
-
+<div class="usa-table-container--scrollable">
+  <table class="usa-table usa-table--borderless">
+    <caption>
+      Sample grants data
+    </caption>
+    <thead>
+      <tr>
+        <th data-sortable scope="col" role="columnheader">Title</th>
+        <th data-sortable scope="col" role="columnheader">ID</th>
+        <th data-sortable scope="col" role="columnheader">Status Code</th>
+        <th data-sortable scope="col" role="columnheader">Submission Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let grant of grants">
+        <th scope="row">{{ grant.projTitle }}</th>
+        <td [attr.data-sort-value]="grant.cn">{{ grant.cn }}</td>
+        <td
+          [attr.data-sort-value]="grant.projStatus"
+          class="font-mono-sm text-tabular text-right"
+        >
+          {{ grant.projStatus }}
+        </td>
+        <td [attr.data-sort-value]="grant.appSubmissionType">{{ grant.appSubmissionType | titlecase }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div
+    class="usa-sr-only usa-table__announcement-region"
+    aria-live="polite"
+  ></div>
+</div>
