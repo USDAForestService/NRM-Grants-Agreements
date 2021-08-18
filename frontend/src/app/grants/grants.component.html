@@ -13,7 +13,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let grant of grants">
-        <th scope="row">{{ grant.projTitle }}</th>
+        <th scope="row">{{ grant.projTitle | titlecase }}</th>
         <td [attr.data-sort-value]="grant.cn">{{ grant.cn }}</td>
         <td
           [attr.data-sort-value]="grant.projStatus"

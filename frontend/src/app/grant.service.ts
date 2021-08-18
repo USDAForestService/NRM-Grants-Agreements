@@ -16,7 +16,7 @@ export class GrantService {
 
   constructor(private http: HttpClient) {}
 
-  getGrants(): Observable<Grant[]> {
-    return this.http.get<Grant[]>(this.grantsUrl);
+  getGrants(): Observable<any> {
+    return this.http.get(this.grantsUrl);
   }
 }

@@ -20,7 +20,6 @@ services:
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@postgres/nrm_dev?sslmode=disable
-
     command: npm run serve
     depends_on:
       - postgres
