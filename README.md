@@ -58,3 +58,21 @@ $ pushd frontend   \
   && aws s3 sync dist/frontend/ s3://gov.usda.fs.nrm.ga \
   && popd
 ```
+
+### Git Hooks
+
+We use [husky](https://github.com/typicode/husky) to manage git hooks.
+
+To opt-in to using the hooks, run either:
+
+```sh
+npx husky install
+```
+
+or
+
+```sh
+git config --add core.hooksPath .husky
+```
+
+Test that the setup worked by creating a commit—you should see, at minimum, `prettier` checks being run on TypeScript files.
