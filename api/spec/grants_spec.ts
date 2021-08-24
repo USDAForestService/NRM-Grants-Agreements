@@ -6,10 +6,10 @@ function hasDataKey(response) {
   if (!('data' in response.body)) throw new Error("missing 'data' key");
 }
 
-describe('Grants', () => {
-  describe('without a version', () => {
-    describe('with JSON:API Content-Type', () => {
-      it('Returns a 400 Bad Request', (done) => {
+describe('/grants', () => {
+  describe('conforms to JSON:API', () => {
+    describe('get', () => {
+      it('has a root "data" key', (done) => {
         request(app)
           .get('/grants')
           .set('Accept', 'application/vnd.api+json; gov.usda.fs.nrm.ga.api.version=1')

@@ -15,19 +15,23 @@ const apiVersions = [1];
 
 /**
  * The version in the header is namespaced, specified as:
- *   gov.usda.fs.nrm.ga.version={VERSION}
+ *
+ * ```
+ * gov.usda.fs.nrm.ga.version={VERSION}
+ * ````
  *
  * As presently written, versions can only be whole integers.
- *
  */
 const apiVersionHeader = /gov\.usda\.fs\.nrm\.ga\.api\.version=(\d+)/;
 
 /**
  * This matches the first segment of the request path, formatted as:
- *   v{VERSION}
+ *
+ * ```
+ * v{VERSION}
+ * ````
  *
  * As presently written, versions can only be whole integers.
- *
  */
 const apiVersionPath = /^v(\d+)$/;
 
@@ -41,6 +45,9 @@ app.use(function (req, res, next) {
   next();
 });
 
+/**
+ * Wrapper to handle errors around requests.
+ */
 const awaitErrorHandlerFactory = (middleware: any) => {
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
@@ -76,8 +83,9 @@ const versionMessages = {
 };
 
 /**
- * Adds a `version` property to Express.Request, so we can attach
- * that metadata as we resolve the version.
+ * Adds a `version` property to Express.Request, so we can attach that metadata as we resolve the version.
+ *
+ * @todo Is there a way to rewrite this without a global declaration?
  */
 declare global {
   namespace Express {
@@ -87,6 +95,13 @@ declare global {
   }
 }
 
+/**
+ * Version Resolver middleware. Attempts to resolve the version.
+ *
+ * If it's able to, it rewrites the URL without the version segment (if included) and passes on to the main app router.
+ *
+ * Otherwise, returns an appropriate error code with an informative message.
+ */
 app.use(function (request, response, next) {
   let [statusCode, version] = resolveVersions(request);
   if (statusCode == 200) {
@@ -112,6 +127,20 @@ app.use(function (request, response, next) {
   }
 });
 
+/**
+ * @todo Refactor so that each version has a router module, and the main application function calls the router for the requested version.
+ *
+ * This might look like:
+ *
+ * ```typescript
+ * app.all(
+ *   '*',
+ *   switch (req.version) {
+ *     case 1: { app.use(version1Router); }
+ *   }
+ * )
+ * ```
+ */
 app.get(
   "/grants",
   awaitErrorHandlerFactory(
@@ -121,6 +150,11 @@ app.get(
           let grants: Grant[] = await Grant.findAll({ limit: 10 });
           return response.status(200).json({ data: grants });
         }
+        /**
+         * We're unlikely to trigger this default clause, but it's here
+         * to make sure if we do, that there's an informative error
+         * message instead of a silent failure with no clear source.
+         */
         default: {
           return response.status(500).json({
             error: {
@@ -135,6 +169,10 @@ app.get(
 );
 
 /**
+ * @param request  Express Request object
+ * @returns Array of status code, resolved version. Status code
+ *   will always be a number; version will be either the resolved
+ *   version, or `undefined` if the version cannot be resolved.
  * If no version is given, return 400 Bad Request.
  * If conflicting versions are given, return 409 Conflict.
  * If unavailable versions are given, return 404 Not Found.
@@ -168,6 +206,12 @@ function resolveVersions(request: Request): number[] {
   }
 }
 
+/**
+ * @param request  Express Request object
+ * @returns Two-element array of the version number extracted from
+ *   the header, then the version number extracted from the path.
+ *  Values will either be type `number` or will be `undefined`.
+ */
 function getVersions(request: Request): number[] {
   let headerVersion: number;
   let pathVersion: number;
