@@ -3,12 +3,10 @@
   "version": "0.1.0",
   "description": "USFS NRM App",
   "devDependencies": {
-    "husky": "^7.0.1",
     "pa11y-ci": "^2.4.2"
   },
   "scripts": {
-    "test:a11y": "pa11y-ci --config a11y/scripts/main.json",
-    "prepare": "husky install"
+    "test:a11y": "pa11y-ci --config a11y/scripts/main.json"
   },
   "dependencies": {
     "prettier": "^2.3.2"
