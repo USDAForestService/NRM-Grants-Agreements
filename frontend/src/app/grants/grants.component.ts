@@ -17,6 +17,8 @@ export class GrantsComponent implements OnInit {
   }
 
   getGrants(): void {
-    this.grantService.getGrants().subscribe((data) => (this.grants = data));
+    this.grantService
+      .getGrants()
+      .subscribe((response) => (this.grants = response.data));
   }
 }

@@ -18,7 +18,7 @@ import {
   WpapStatusChoices,
 } from "./choices";
 
-const sequelize = new Sequelize(process.env.DATABASE_URL);
+const sequelize = new Sequelize(process.env.DATABASE_URL, { logging: false });
 /**
  * @todo Fix this, the model should be allowing noUpdate attributes.
  */

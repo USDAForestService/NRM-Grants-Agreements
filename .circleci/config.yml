@@ -9,6 +9,12 @@ install-node-dependencies: &install-node-dependencies
     working_directory: ~/project
     command: npm ci
 
+install-node-api-deps: &install-node-api-deps
+  run:
+    name: Node install
+    working_directory: ~/project/api
+    command: npm ci
+
 install-node-frontend-deps: &install-node-frontend-deps
   run:
     name: Node install
@@ -55,6 +61,7 @@ jobs:
     steps:
       - checkout
       - *install-node-dependencies
+      - *install-node-api-deps
       - *install-node-frontend-deps
       - *install-python-dependencies
       - *install-python-dev-dependencies
@@ -76,6 +83,11 @@ jobs:
           working_directory: ~/project/nrm_django
           command: |
             pipenv run python manage.py migrate --settings=nrm_site.settings.test
+      - run:
+          name: "[api] Run spec"
+          working_directory: ~/project/api
+          command: |
+            npm run test
       - run:
           name: "[frontend] Run spec"
           working_directory: ~/project/frontend

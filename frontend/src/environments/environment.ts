@@ -4,7 +4,15 @@
 
 export const environment = {
   production: false,
-  api_root: 'http://localhost:3000',
+
+  /**
+   * @todo Remove `v1` from the URL string and intercept outbound
+   * requests to the API to set default headers for Content-Type and
+   * version, or implement JSON:API client library.
+   *
+   * https://angular.io/guide/http#setting-default-headers
+   */
+  api_root: 'http://localhost:3000/v1',
 };
 
 /*
