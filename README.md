@@ -3,7 +3,19 @@ The focal point for an 18F/TTS project with the United States Forest Service on 
 
 
 ## Welcome!
-18F is partnering with the United States Forest Service on a project focused on their Grants & Agreements program. This repo contains documentation describing the project. To learn about the project, what it can do, and why it's important, head to our project wiki.
+18F is partnering with the United States Forest Service on a project focused on their Grants & Agreements program. This repo contains documentation describing the project. To learn about the project, what it can do, and why it's important, head to our [project wiki](https://github.com/USDAForestService/NRM-Grants-Agreements/wiki).
+
+## Status: September 2021
+18F had been working with Forest Service to prepare this project to be ready for a vendor to begin product development. We focused on user research, experimentation and prototyping to de-risk core functionality, rather than developing the solution following the Product Roadmap.
+
+We are pausing this prototyping work to get alignment across Forest Service on:
+
+* The vision for the product
+* The roles and responsibilities for product development.
+
+The present prototyping team is being re-assigned and a reconfigured team will work on these alignment issues. This README describes how to work with the prototype application that we developed. See the page on [Platform and Technologies](https://github.com/USDAForestService/NRM-Grants-Agreements/wiki/Platform-and-Technologies) for more on how the production application will run.
+
+# Getting Started with the Prototype
 
 ## Local development with Docker
 
