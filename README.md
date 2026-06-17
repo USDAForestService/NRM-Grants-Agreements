@@ -1,6 +1,12 @@
 # USFS Grants & Agreements
-The focal point for an 18F/TTS project with the United States Forest Service on their Grants & Agreements program.
+• This repository has been archived and is no longer maintained.   
 
+• The code is provided for historical reference and may contain unpatched or unknown vulnerabilities.  
+
+• It should not be used in production systems. 
+
+
+The focal point for an 18F/TTS project with the United States Forest Service on their Grants & Agreements program.
 
 ## Welcome!
 18F is partnering with the United States Forest Service on a project focused on their Grants & Agreements program. This repo contains documentation describing the project. To learn about the project, what it can do, and why it's important, head to our [project wiki](https://github.com/USDAForestService/NRM-Grants-Agreements/wiki).
